@@ -1,108 +1,94 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatCardModule } from '@angular/material/card';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { OpportunityService } from '../../../../core/services/opportunity.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
+import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';
+import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
+import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
+import { ErrorStateComponent } from '../../../../shared/components/error-state/error-state.component';
 import { OpportunityListItem } from '../../../../core/models/opportunity.model';
-import { PaginationMeta } from '../../../../core/models/api-response.model';
+import * as OpportunitiesActions from '../../store/opportunities.actions';
+import * as OpportunitiesSelectors from '../../store/opportunities.selectors';
 
+/**
+ * Opportunity list container component. Dispatches load action to NgRx store.
+ * Renders via shared components (page-header, status-badge, loading, empty, error states).
+ */
 @Component({
   selector: 'app-opportunity-list',
   standalone: true,
   imports: [
-    CommonModule, RouterLink, MatTableModule, MatButtonModule,
-    MatIconModule, MatChipsModule, MatCardModule, MatProgressSpinnerModule
+    CommonModule, RouterLink, PageHeaderComponent,
+    LoadingStateComponent, EmptyStateComponent, StatusBadgeComponent, ErrorStateComponent
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="page-header">
-      <h1>Land Opportunities</h1>
-      <a mat-raised-button color="primary" routerLink="/opportunities/new">
-        <mat-icon>add</mat-icon> New Opportunity
-      </a>
-    </div>
+    <app-page-header title="Land Opportunities" subtitle="Manage your acquisition pipeline">
+      <a routerLink="/opportunities/new" class="btn btn-primary btn-sm">+ New Opportunity</a>
+    </app-page-header>
 
-    @if (loading) {
-      <mat-spinner></mat-spinner>
+    @if (loading$ | async) {
+      <app-loading-state message="Loading opportunities..."></app-loading-state>
+    } @else if (error$ | async; as error) {
+      <app-error-state [message]="error" (retry)="loadOpportunities()"></app-error-state>
+    } @else if ((opportunities$ | async)?.length === 0) {
+      <app-empty-state title="No opportunities yet" message="Create your first land opportunity to get started.">
+        <a routerLink="/opportunities/new" class="btn btn-primary btn-sm">Create Opportunity</a>
+      </app-empty-state>
     } @else {
-      <mat-card>
-        <table mat-table [dataSource]="opportunities" class="full-width">
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Name</th>
-            <td mat-cell *matCellDef="let row">
-              <a [routerLink]="['/opportunities', row.id]">{{ row.name }}</a>
-            </td>
-          </ng-container>
+      <div class="card bg-base-100 shadow-sm border border-base-300">
+        <div class="overflow-x-auto">
+          <table class="table table-zebra" aria-label="Land opportunities">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Size</th>
+                <th>Asking Price</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (opp of opportunities$ | async; track opp.id) {
+                <tr class="hover cursor-pointer" [routerLink]="['/opportunities', opp.id]">
+                  <td class="font-medium">{{ opp.name }}</td>
+                  <td>{{ opp.location }}</td>
+                  <td>{{ opp.landSize }} {{ opp.landSizeUnit }}</td>
+                  <td>{{ opp.askingPrice ? ('£' + (opp.askingPrice | number:'1.0-0')) : '—' }}</td>
+                  <td><app-status-badge [status]="opp.status"></app-status-badge></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-          <ng-container matColumnDef="location">
-            <th mat-header-cell *matHeaderCellDef>Location</th>
-            <td mat-cell *matCellDef="let row">{{ row.location }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="landSize">
-            <th mat-header-cell *matHeaderCellDef>Size</th>
-            <td mat-cell *matCellDef="let row">{{ row.landSize }} {{ row.landSizeUnit }}</td>
-          </ng-container>
-
-          <ng-container matColumnDef="askingPrice">
-            <th mat-header-cell *matHeaderCellDef>Asking Price</th>
-            <td mat-cell *matCellDef="let row">
-              {{ row.askingPrice | currency:'GBP':'symbol':'1.0-0' }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="status">
-            <th mat-header-cell *matHeaderCellDef>Status</th>
-            <td mat-cell *matCellDef="let row">
-              <mat-chip [class]="'status-' + row.status.toLowerCase()">{{ row.status }}</mat-chip>
-            </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      </mat-card>
-
-      @if (pagination) {
-        <p class="pagination-info">
-          Showing {{ opportunities.length }} of {{ pagination.totalCount }} opportunities
-          (Page {{ pagination.page }} of {{ pagination.totalPages }})
-        </p>
-      }
+      <div class="text-center text-sm text-base-content/60 mt-4">
+        {{ (opportunities$ | async)?.length }} of {{ totalCount$ | async }} opportunities
+      </div>
     }
-  `,
-  styles: [`
-    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .page-header h1 { color: #1a237e; margin: 0; }
-    .full-width { width: 100%; }
-    a { text-decoration: none; color: #1a237e; font-weight: 500; }
-    .pagination-info { margin-top: 16px; color: #666; text-align: center; }
-  `]
+  `
 })
 export class OpportunityListComponent implements OnInit {
-  opportunities: OpportunityListItem[] = [];
-  pagination: PaginationMeta | null = null;
-  loading = true;
-  displayedColumns = ['name', 'location', 'landSize', 'askingPrice', 'status'];
+  opportunities$: Observable<OpportunityListItem[]>;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
+  totalCount$: Observable<number>;
 
-  constructor(private opportunityService: OpportunityService) {}
+  constructor(private store: Store) {
+    this.opportunities$ = this.store.select(OpportunitiesSelectors.selectAllOpportunities);
+    this.loading$ = this.store.select(OpportunitiesSelectors.selectOpportunitiesLoading);
+    this.error$ = this.store.select(OpportunitiesSelectors.selectOpportunitiesError);
+    this.totalCount$ = this.store.select(OpportunitiesSelectors.selectOpportunitiesTotalCount);
+  }
 
   ngOnInit(): void {
     this.loadOpportunities();
   }
 
-  private loadOpportunities(): void {
-    this.opportunityService.getAll({ page: 1, pageSize: 50 }).subscribe({
-      next: (response) => {
-        this.opportunities = response.data;
-        this.pagination = response.pagination ?? null;
-        this.loading = false;
-      },
-      error: () => { this.loading = false; }
-    });
+  loadOpportunities(): void {
+    this.store.dispatch(OpportunitiesActions.loadOpportunities({ page: 1, pageSize: 50 }));
   }
 }

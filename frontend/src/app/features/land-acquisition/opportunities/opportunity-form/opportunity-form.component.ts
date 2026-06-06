@@ -1,105 +1,107 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { OpportunityService } from '../../../../core/services/opportunity.service';
+import { RouterLink } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
+import * as OpportunitiesActions from '../../store/opportunities.actions';
+import * as OpportunitiesSelectors from '../../store/opportunities.selectors';
 
+/**
+ * Opportunity create form. Container component — dispatches create action to NgRx store.
+ * Navigation on success handled by NgRx effect.
+ */
 @Component({
   selector: 'app-opportunity-form',
   standalone: true,
-  imports: [
-    CommonModule, ReactiveFormsModule, MatCardModule,
-    MatFormFieldModule, MatInputModule, MatButtonModule, MatProgressSpinnerModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, PageHeaderComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <h1>New Opportunity</h1>
-    <mat-card>
-      <mat-card-content>
+    <app-page-header title="New Opportunity" subtitle="Add a land opportunity to the pipeline">
+      <a routerLink="/opportunities" class="btn btn-ghost btn-sm">← Back</a>
+    </app-page-header>
+
+    <div class="card bg-base-100 shadow-sm border border-base-300">
+      <div class="card-body">
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
-          <div class="form-grid">
-            <mat-form-field appearance="outline">
-              <mat-label>Name</mat-label>
-              <input matInput formControlName="name" placeholder="e.g. Riverside Land">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-control">
+              <label class="label" for="name"><span class="label-text">Name *</span></label>
+              <input id="name" type="text" formControlName="name" class="input input-bordered"
+                [class.input-error]="form.get('name')?.invalid && form.get('name')?.touched"
+                placeholder="e.g. Riverside Land" />
               @if (form.get('name')?.hasError('required') && form.get('name')?.touched) {
-                <mat-error>Name is required</mat-error>
+                <label class="label"><span class="label-text-alt text-error">Name is required</span></label>
               }
-            </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Location</mat-label>
-              <input matInput formControlName="location" placeholder="e.g. London, UK">
+            <div class="form-control">
+              <label class="label" for="location"><span class="label-text">Location *</span></label>
+              <input id="location" type="text" formControlName="location" class="input input-bordered"
+                [class.input-error]="form.get('location')?.invalid && form.get('location')?.touched"
+                placeholder="e.g. London, UK" />
               @if (form.get('location')?.hasError('required') && form.get('location')?.touched) {
-                <mat-error>Location is required</mat-error>
+                <label class="label"><span class="label-text-alt text-error">Location is required</span></label>
               }
-            </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Land Size (Acres)</mat-label>
-              <input matInput formControlName="landSize" type="number">
+            <div class="form-control">
+              <label class="label" for="landSize"><span class="label-text">Land Size (Acres) *</span></label>
+              <input id="landSize" type="number" formControlName="landSize" class="input input-bordered"
+                [class.input-error]="form.get('landSize')?.invalid && form.get('landSize')?.touched"
+                step="0.01" />
               @if (form.get('landSize')?.hasError('min') && form.get('landSize')?.touched) {
-                <mat-error>Must be greater than 0</mat-error>
+                <label class="label"><span class="label-text-alt text-error">Must be greater than 0</span></label>
               }
-            </mat-form-field>
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Asking Price (£)</mat-label>
-              <input matInput formControlName="askingPrice" type="number">
-            </mat-form-field>
+            <div class="form-control">
+              <label class="label" for="askingPrice"><span class="label-text">Asking Price (£)</span></label>
+              <input id="askingPrice" type="number" formControlName="askingPrice" class="input input-bordered" />
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Source</mat-label>
-              <input matInput formControlName="source" placeholder="e.g. Agent Referral">
-            </mat-form-field>
+            <div class="form-control">
+              <label class="label" for="source"><span class="label-text">Source</span></label>
+              <input id="source" type="text" formControlName="source" class="input input-bordered"
+                placeholder="e.g. Agent Referral" />
+            </div>
 
-            <mat-form-field appearance="outline">
-              <mat-label>Agent Name</mat-label>
-              <input matInput formControlName="agentName">
-            </mat-form-field>
+            <div class="form-control">
+              <label class="label" for="agentName"><span class="label-text">Agent Name</span></label>
+              <input id="agentName" type="text" formControlName="agentName" class="input input-bordered" />
+            </div>
           </div>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Notes</mat-label>
-            <textarea matInput formControlName="notes" rows="3"></textarea>
-          </mat-form-field>
+          <div class="form-control mt-4">
+            <label class="label" for="notes"><span class="label-text">Notes</span></label>
+            <textarea id="notes" formControlName="notes" class="textarea textarea-bordered" rows="3"></textarea>
+          </div>
 
-          @if (errorMessage) {
-            <p class="error-text">{{ errorMessage }}</p>
+          @if (error$ | async; as error) {
+            <div role="alert" class="alert alert-error mt-4">
+              <span class="text-sm">{{ error }}</span>
+            </div>
           }
 
-          <div class="form-actions">
-            <button mat-button type="button" (click)="cancel()">Cancel</button>
-            <button mat-raised-button color="primary" type="submit" [disabled]="loading || form.invalid">
-              @if (loading) { <mat-spinner diameter="20"></mat-spinner> }
-              @else { Create Opportunity }
+          <div class="card-actions justify-end mt-6">
+            <a routerLink="/opportunities" class="btn btn-ghost">Cancel</a>
+            <button type="submit" class="btn btn-primary" [disabled]="form.invalid || (loading$ | async)"
+              [class.loading]="loading$ | async">
+              @if (!(loading$ | async)) { Create Opportunity }
             </button>
           </div>
         </form>
-      </mat-card-content>
-    </mat-card>
-  `,
-  styles: [`
-    h1 { color: #1a237e; margin-bottom: 24px; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .full-width { width: 100%; }
-    .form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px; }
-    .error-text { color: #f44336; font-size: 14px; }
-  `]
+      </div>
+    </div>
+  `
 })
 export class OpportunityFormComponent {
   form: FormGroup;
-  loading = false;
-  errorMessage = '';
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
 
-  constructor(
-    private fb: FormBuilder,
-    private opportunityService: OpportunityService,
-    private router: Router
-  ) {
+  constructor(private fb: FormBuilder, private store: Store) {
     this.form = this.fb.group({
       name: ['', Validators.required],
       location: ['', Validators.required],
@@ -109,29 +111,12 @@ export class OpportunityFormComponent {
       agentName: [''],
       notes: ['']
     });
+    this.loading$ = this.store.select(OpportunitiesSelectors.selectOpportunitiesLoading);
+    this.error$ = this.store.select(OpportunitiesSelectors.selectOpportunitiesError);
   }
 
   onSubmit(): void {
     if (this.form.invalid) return;
-
-    this.loading = true;
-    this.errorMessage = '';
-
-    this.opportunityService.create(this.form.value).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.router.navigate(['/opportunities']);
-        }
-      },
-      error: (err) => {
-        this.loading = false;
-        this.errorMessage = err.error?.errors?.[0] || 'Failed to create opportunity.';
-      },
-      complete: () => { this.loading = false; }
-    });
-  }
-
-  cancel(): void {
-    this.router.navigate(['/opportunities']);
+    this.store.dispatch(OpportunitiesActions.createOpportunity({ request: this.form.value }));
   }
 }

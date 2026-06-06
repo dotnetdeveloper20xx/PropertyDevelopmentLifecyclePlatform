@@ -1,85 +1,69 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { OpportunityService } from '../../core/services/opportunity.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { StatCardComponent } from '../../shared/components/stat-card/stat-card.component';
+import { LoadingStateComponent } from '../../shared/components/loading-state/loading-state.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { OpportunityStats } from '../../core/models/opportunity.model';
+import * as OpportunitiesActions from '../land-acquisition/store/opportunities.actions';
+import * as OpportunitiesSelectors from '../land-acquisition/store/opportunities.selectors';
 
+/**
+ * Dashboard container component. Dispatches to NgRx store, renders via shared components.
+ * Answers: What is happening? What requires attention? What should I do next?
+ */
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatProgressSpinnerModule],
+  imports: [CommonModule, StatCardComponent, LoadingStateComponent, PageHeaderComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <h1>Land Acquisition Dashboard</h1>
+    <app-page-header title="Land Acquisition Dashboard" subtitle="Pipeline overview and key metrics"></app-page-header>
 
-    @if (loading) {
-      <mat-spinner></mat-spinner>
-    } @else if (stats) {
-      <div class="stats-grid">
-        <mat-card class="stat-card">
-          <mat-card-content>
-            <div class="stat-value">{{ stats.totalOpportunities }}</div>
-            <div class="stat-label">Total Opportunities</div>
-          </mat-card-content>
-        </mat-card>
-        <mat-card class="stat-card">
-          <mat-card-content>
-            <div class="stat-value">{{ stats.totalPipelineValue | currency:'GBP':'symbol':'1.0-0' }}</div>
-            <div class="stat-label">Pipeline Value</div>
-          </mat-card-content>
-        </mat-card>
-        <mat-card class="stat-card">
-          <mat-card-content>
-            <div class="stat-value">{{ stats.identified }}</div>
-            <div class="stat-label">Identified</div>
-          </mat-card-content>
-        </mat-card>
-        <mat-card class="stat-card">
-          <mat-card-content>
-            <div class="stat-value">{{ stats.dueDiligence }}</div>
-            <div class="stat-label">Due Diligence</div>
-          </mat-card-content>
-        </mat-card>
-        <mat-card class="stat-card">
-          <mat-card-content>
-            <div class="stat-value">{{ stats.offerMade }}</div>
-            <div class="stat-label">Offer Made</div>
-          </mat-card-content>
-        </mat-card>
-        <mat-card class="stat-card">
-          <mat-card-content>
-            <div class="stat-value">{{ stats.acquired }}</div>
-            <div class="stat-label">Acquired</div>
-          </mat-card-content>
-        </mat-card>
+    @if (statsLoading$ | async) {
+      <app-loading-state message="Loading dashboard..."></app-loading-state>
+    } @else if (stats$ | async; as stats) {
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+        <app-stat-card label="Total" [value]="stats.totalOpportunities"></app-stat-card>
+        <app-stat-card label="Identified" [value]="stats.identified"></app-stat-card>
+        <app-stat-card label="Due Diligence" [value]="stats.dueDiligence"></app-stat-card>
+        <app-stat-card label="Offer Made" [value]="stats.offerMade"></app-stat-card>
+        <app-stat-card label="Under Contract" [value]="stats.underContract"></app-stat-card>
+        <app-stat-card label="Acquired" [value]="stats.acquired"></app-stat-card>
+      </div>
+
+      <!-- Pipeline Value -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="card bg-base-100 shadow-sm border border-base-300">
+          <div class="card-body">
+            <h2 class="card-title text-sm text-base-content/60">Total Pipeline Value</h2>
+            <p class="text-3xl font-bold text-primary">£{{ stats.totalPipelineValue | number:'1.0-0' }}</p>
+          </div>
+        </div>
+        <div class="card bg-base-100 shadow-sm border border-base-300">
+          <div class="card-body">
+            <h2 class="card-title text-sm text-base-content/60">Average Asking Price</h2>
+            <p class="text-3xl font-bold text-accent">
+              {{ stats.averageAskingPrice ? ('£' + (stats.averageAskingPrice | number:'1.0-0')) : 'N/A' }}
+            </p>
+          </div>
+        </div>
       </div>
     }
-  `,
-  styles: [`
-    h1 { margin-bottom: 24px; color: #1a237e; }
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
-    }
-    .stat-card { text-align: center; }
-    .stat-value { font-size: 32px; font-weight: bold; color: #1a237e; }
-    .stat-label { font-size: 14px; color: #666; margin-top: 8px; }
-  `]
+  `
 })
 export class DashboardComponent implements OnInit {
-  stats: OpportunityStats | null = null;
-  loading = true;
+  stats$: Observable<OpportunityStats | null>;
+  statsLoading$: Observable<boolean>;
 
-  constructor(private opportunityService: OpportunityService) {}
+  constructor(private store: Store) {
+    this.stats$ = this.store.select(OpportunitiesSelectors.selectOpportunitiesStats);
+    this.statsLoading$ = this.store.select(OpportunitiesSelectors.selectStatsLoading);
+  }
 
   ngOnInit(): void {
-    this.opportunityService.getStats().subscribe({
-      next: (response) => {
-        this.stats = response.data;
-        this.loading = false;
-      },
-      error: () => { this.loading = false; }
-    });
+    this.store.dispatch(OpportunitiesActions.loadStats());
   }
 }

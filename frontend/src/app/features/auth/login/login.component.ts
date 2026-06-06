@@ -1,93 +1,82 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../../../core/services/auth.service';
 
+/**
+ * Login page component. Handles authentication form submission.
+ * Uses DaisyUI card and form components.
+ */
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatProgressSpinnerModule
-  ],
+  imports: [CommonModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="login-container">
-      <mat-card class="login-card">
-        <mat-card-header>
-          <mat-card-title>BuildEstate Pro</mat-card-title>
-          <mat-card-subtitle>Property Development Lifecycle Platform</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Email</mat-label>
-              <input matInput formControlName="email" type="email" placeholder="admin&#64;buildestate.co.uk">
-              @if (loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
-                <mat-error>Email is required</mat-error>
-              }
-            </mat-form-field>
+    <div class="min-h-screen flex items-center justify-center bg-base-200 px-4">
+      <div class="card w-full max-w-md bg-base-100 shadow-xl">
+        <div class="card-body">
+          <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold text-primary">BuildEstate Pro</h1>
+            <p class="text-sm text-base-content/60 mt-2">Property Development Lifecycle Platform</p>
+          </div>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Password</mat-label>
-              <input matInput formControlName="password" type="password">
-              @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
-                <mat-error>Password is required</mat-error>
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="form-control w-full">
+              <label class="label" for="email">
+                <span class="label-text">Email</span>
+              </label>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                placeholder="admin&#64;buildestate.co.uk"
+                class="input input-bordered w-full"
+                [class.input-error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+                autocomplete="email"
+              />
+              @if (loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
+                <label class="label"><span class="label-text-alt text-error">Email is required</span></label>
               }
-            </mat-form-field>
+            </div>
+
+            <div class="form-control w-full mt-4">
+              <label class="label" for="password">
+                <span class="label-text">Password</span>
+              </label>
+              <input
+                id="password"
+                type="password"
+                formControlName="password"
+                class="input input-bordered w-full"
+                [class.input-error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                autocomplete="current-password"
+              />
+              @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+                <label class="label"><span class="label-text-alt text-error">Password is required</span></label>
+              }
+            </div>
 
             @if (errorMessage) {
-              <p class="error-text">{{ errorMessage }}</p>
+              <div role="alert" class="alert alert-error mt-4">
+                <span class="text-sm">{{ errorMessage }}</span>
+              </div>
             }
 
-            <button mat-raised-button color="primary" type="submit" class="full-width" [disabled]="loading || loginForm.invalid">
-              @if (loading) {
-                <mat-spinner diameter="20"></mat-spinner>
-              } @else {
-                Sign In
-              }
+            <button
+              type="submit"
+              class="btn btn-primary w-full mt-6"
+              [disabled]="loading || loginForm.invalid"
+              [class.loading]="loading"
+            >
+              @if (!loading) { Sign In }
             </button>
           </form>
-        </mat-card-content>
-      </mat-card>
+        </div>
+      </div>
     </div>
-  `,
-  styles: [`
-    .login-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: #f5f5f5;
-    }
-    .login-card {
-      width: 100%;
-      max-width: 400px;
-      padding: 24px;
-    }
-    .full-width {
-      width: 100%;
-      margin-bottom: 16px;
-    }
-    .error-text {
-      color: #f44336;
-      font-size: 14px;
-      margin-bottom: 16px;
-    }
-    mat-card-header {
-      margin-bottom: 24px;
-    }
-  `]
+  `
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -119,7 +108,7 @@ export class LoginComponent {
       },
       error: (err) => {
         this.loading = false;
-        this.errorMessage = err.error?.errors?.[0] || 'Login failed. Please check your credentials.';
+        this.errorMessage = err.error?.errors?.[0] || 'Invalid email or password.';
       },
       complete: () => { this.loading = false; }
     });

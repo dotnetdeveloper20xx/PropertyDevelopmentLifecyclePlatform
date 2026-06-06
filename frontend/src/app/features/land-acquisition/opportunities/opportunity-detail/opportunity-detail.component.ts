@@ -1,127 +1,107 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';
+import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
+import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
 import { OpportunityService } from '../../../../core/services/opportunity.service';
 import { OpportunityDetail } from '../../../../core/models/opportunity.model';
 
+/**
+ * Opportunity detail page. Loads single opportunity via service (not store — detail is transient).
+ * Uses tabbed layout for Details, Due Diligence, Offers, Documents sections.
+ */
 @Component({
   selector: 'app-opportunity-detail',
   standalone: true,
-  imports: [
-    CommonModule, RouterLink, MatCardModule, MatTabsModule,
-    MatChipsModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule
-  ],
+  imports: [CommonModule, RouterLink, LoadingStateComponent, StatusBadgeComponent, PageHeaderComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     @if (loading) {
-      <mat-spinner></mat-spinner>
+      <app-loading-state message="Loading opportunity..."></app-loading-state>
     } @else if (opportunity) {
-      <div class="page-header">
-        <div>
-          <h1>{{ opportunity.name }}</h1>
-          <p class="subtitle">{{ opportunity.location }}</p>
-        </div>
-        <mat-chip [class]="'status-' + opportunity.status.toLowerCase()">
-          {{ opportunity.status }}
-        </mat-chip>
+      <app-page-header [title]="opportunity.name" [subtitle]="opportunity.location">
+        <app-status-badge [status]="opportunity.status"></app-status-badge>
+      </app-page-header>
+
+      <!-- Tabs -->
+      <div role="tablist" class="tabs tabs-bordered mb-6">
+        <button role="tab" class="tab" [class.tab-active]="activeTab === 'details'" (click)="activeTab = 'details'">Details</button>
+        <button role="tab" class="tab" [class.tab-active]="activeTab === 'dd'" (click)="activeTab = 'dd'">Due Diligence ({{ opportunity.dueDiligenceCount }})</button>
+        <button role="tab" class="tab" [class.tab-active]="activeTab === 'offers'" (click)="activeTab = 'offers'">Offers ({{ opportunity.offerCount }})</button>
+        <button role="tab" class="tab" [class.tab-active]="activeTab === 'docs'" (click)="activeTab = 'docs'">Documents ({{ opportunity.documentCount }})</button>
       </div>
 
-      <mat-tab-group>
-        <mat-tab label="Details">
-          <div class="tab-content">
-            <div class="detail-grid">
-              <mat-card>
-                <mat-card-header><mat-card-title>Land Information</mat-card-title></mat-card-header>
-                <mat-card-content>
-                  <dl>
-                    <dt>Size</dt><dd>{{ opportunity.landSize }} {{ opportunity.landSizeUnit }}</dd>
-                    <dt>Current Use</dt><dd>{{ opportunity.currentUse || 'N/A' }}</dd>
-                    <dt>Title Number</dt><dd>{{ opportunity.titleNumber || 'N/A' }}</dd>
-                    <dt>Post Code</dt><dd>{{ opportunity.postCode || 'N/A' }}</dd>
-                  </dl>
-                </mat-card-content>
-              </mat-card>
-
-              <mat-card>
-                <mat-card-header><mat-card-title>Financial</mat-card-title></mat-card-header>
-                <mat-card-content>
-                  <dl>
-                    <dt>Asking Price</dt><dd>{{ opportunity.askingPrice | currency:'GBP':'symbol':'1.0-0' }}</dd>
-                    <dt>Estimated Value</dt><dd>{{ opportunity.estimatedValue | currency:'GBP':'symbol':'1.0-0' }}</dd>
-                    <dt>Dev Cost</dt><dd>{{ opportunity.estimatedDevelopmentCost | currency:'GBP':'symbol':'1.0-0' }}</dd>
-                    <dt>ROI</dt><dd>{{ opportunity.roi ? (opportunity.roi + '%') : 'N/A' }}</dd>
-                  </dl>
-                </mat-card-content>
-              </mat-card>
-
-              <mat-card>
-                <mat-card-header><mat-card-title>Source</mat-card-title></mat-card-header>
-                <mat-card-content>
-                  <dl>
-                    <dt>Source</dt><dd>{{ opportunity.source || 'N/A' }}</dd>
-                    <dt>Agent</dt><dd>{{ opportunity.agentName || 'N/A' }}</dd>
-                    <dt>Owner</dt><dd>{{ opportunity.landOwnerName || 'N/A' }}</dd>
-                  </dl>
-                </mat-card-content>
-              </mat-card>
-
-              <mat-card>
-                <mat-card-header><mat-card-title>Related</mat-card-title></mat-card-header>
-                <mat-card-content>
-                  <dl>
-                    <dt>Due Diligence Checks</dt><dd>{{ opportunity.dueDiligenceCount }}</dd>
-                    <dt>Offers</dt><dd>{{ opportunity.offerCount }}</dd>
-                    <dt>Documents</dt><dd>{{ opportunity.documentCount }}</dd>
-                  </dl>
-                </mat-card-content>
-              </mat-card>
+      @if (activeTab === 'details') {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Land Info Card -->
+          <div class="card bg-base-100 shadow-sm border border-base-300">
+            <div class="card-body">
+              <h3 class="card-title text-sm">Land Information</h3>
+              <dl class="space-y-2 mt-2 text-sm">
+                <div><dt class="text-base-content/50">Size</dt><dd class="font-medium">{{ opportunity.landSize }} {{ opportunity.landSizeUnit }}</dd></div>
+                <div><dt class="text-base-content/50">Current Use</dt><dd>{{ opportunity.currentUse || '—' }}</dd></div>
+                <div><dt class="text-base-content/50">Title Number</dt><dd>{{ opportunity.titleNumber || '—' }}</dd></div>
+                <div><dt class="text-base-content/50">Post Code</dt><dd>{{ opportunity.postCode || '—' }}</dd></div>
+              </dl>
             </div>
           </div>
-        </mat-tab>
-        <mat-tab label="Due Diligence ({{ opportunity.dueDiligenceCount }})">
-          <div class="tab-content">
-            <p>Due diligence checks will be displayed here.</p>
-          </div>
-        </mat-tab>
-        <mat-tab label="Offers ({{ opportunity.offerCount }})">
-          <div class="tab-content">
-            <p>Offers history will be displayed here.</p>
-          </div>
-        </mat-tab>
-        <mat-tab label="Documents ({{ opportunity.documentCount }})">
-          <div class="tab-content">
-            <p>Attached documents will be displayed here.</p>
-          </div>
-        </mat-tab>
-      </mat-tab-group>
 
-      <div class="actions">
-        <a mat-button routerLink="/opportunities">
-          <mat-icon>arrow_back</mat-icon> Back to List
-        </a>
+          <!-- Financial Card -->
+          <div class="card bg-base-100 shadow-sm border border-base-300">
+            <div class="card-body">
+              <h3 class="card-title text-sm">Financial</h3>
+              <dl class="space-y-2 mt-2 text-sm">
+                <div><dt class="text-base-content/50">Asking Price</dt><dd class="font-medium">{{ opportunity.askingPrice ? ('£' + (opportunity.askingPrice | number:'1.0-0')) : '—' }}</dd></div>
+                <div><dt class="text-base-content/50">Estimated Value</dt><dd>{{ opportunity.estimatedValue ? ('£' + (opportunity.estimatedValue | number:'1.0-0')) : '—' }}</dd></div>
+                <div><dt class="text-base-content/50">Dev Cost</dt><dd>{{ opportunity.estimatedDevelopmentCost ? ('£' + (opportunity.estimatedDevelopmentCost | number:'1.0-0')) : '—' }}</dd></div>
+                <div><dt class="text-base-content/50">ROI</dt><dd>{{ opportunity.roi ? (opportunity.roi + '%') : '—' }}</dd></div>
+              </dl>
+            </div>
+          </div>
+
+          <!-- Source Card -->
+          <div class="card bg-base-100 shadow-sm border border-base-300">
+            <div class="card-body">
+              <h3 class="card-title text-sm">Source & Agent</h3>
+              <dl class="space-y-2 mt-2 text-sm">
+                <div><dt class="text-base-content/50">Source</dt><dd>{{ opportunity.source || '—' }}</dd></div>
+                <div><dt class="text-base-content/50">Agent</dt><dd>{{ opportunity.agentName || '—' }}</dd></div>
+                <div><dt class="text-base-content/50">Owner</dt><dd>{{ opportunity.landOwnerName || '—' }}</dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      }
+
+      @if (activeTab === 'dd') {
+        <div class="card bg-base-100 shadow-sm border border-base-300 p-6">
+          <p class="text-base-content/60">Due diligence checks will be listed here.</p>
+        </div>
+      }
+
+      @if (activeTab === 'offers') {
+        <div class="card bg-base-100 shadow-sm border border-base-300 p-6">
+          <p class="text-base-content/60">Offer history will be listed here.</p>
+        </div>
+      }
+
+      @if (activeTab === 'docs') {
+        <div class="card bg-base-100 shadow-sm border border-base-300 p-6">
+          <p class="text-base-content/60">Attached documents will be listed here.</p>
+        </div>
+      }
+
+      <div class="mt-6">
+        <a routerLink="/opportunities" class="btn btn-ghost btn-sm">← Back to List</a>
       </div>
     }
-  `,
-  styles: [`
-    .page-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 24px; }
-    .page-header h1 { margin: 0; color: #1a237e; }
-    .subtitle { color: #666; margin: 4px 0 0; }
-    .tab-content { padding: 24px 0; }
-    .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-    dl { margin: 0; }
-    dt { font-weight: 500; color: #666; font-size: 12px; text-transform: uppercase; margin-top: 12px; }
-    dd { margin: 4px 0 0; font-size: 16px; }
-    .actions { margin-top: 24px; }
-  `]
+  `
 })
 export class OpportunityDetailComponent implements OnInit {
   opportunity: OpportunityDetail | null = null;
   loading = true;
+  activeTab = 'details';
 
   constructor(
     private route: ActivatedRoute,
