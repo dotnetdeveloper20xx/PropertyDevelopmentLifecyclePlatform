@@ -1,3 +1,4 @@
+using BuildEstate.API.Controllers.LandAcquisition.Requests;
 using BuildEstate.Application.Features.LandAcquisition.Opportunities.Commands.ChangeOpportunityStatus;
 using BuildEstate.Application.Features.LandAcquisition.Opportunities.Commands.CreateOpportunity;
 using BuildEstate.Application.Features.LandAcquisition.Opportunities.Commands.DeleteOpportunity;
@@ -5,7 +6,6 @@ using BuildEstate.Application.Features.LandAcquisition.Opportunities.Commands.Up
 using BuildEstate.Application.Features.LandAcquisition.Opportunities.DTOs;
 using BuildEstate.Application.Features.LandAcquisition.Opportunities.Queries.GetOpportunities;
 using BuildEstate.Application.Features.LandAcquisition.Opportunities.Queries.GetOpportunityById;
-using BuildEstate.Domain.Enums;
 using BuildEstate.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -129,8 +129,3 @@ public class OpportunitiesController : ControllerBase
         return NoContent();
     }
 }
-
-/// <summary>
-/// Request body for status change endpoint.
-/// </summary>
-public record ChangeStatusRequest(OpportunityStatus NewStatus);

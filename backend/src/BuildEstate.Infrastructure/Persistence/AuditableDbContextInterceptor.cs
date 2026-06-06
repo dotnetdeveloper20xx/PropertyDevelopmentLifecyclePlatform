@@ -105,6 +105,10 @@ public class AuditableDbContextInterceptor : SaveChangesInterceptor
 
         foreach (var property in entry.Properties)
         {
+            // Only audit scalar/owned properties — skip navigation and shadow properties
+            if (property.Metadata.IsShadowProperty())
+                continue;
+
             var propertyName = property.Metadata.Name;
 
             switch (entry.State)

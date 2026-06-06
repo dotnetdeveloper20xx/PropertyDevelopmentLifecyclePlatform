@@ -4,6 +4,9 @@ namespace BuildEstate.Application.Features.LandAcquisition.Opportunities.Command
 
 /// <summary>
 /// Validates UpdateOpportunityCommand before handler execution.
+/// 
+/// Since Update is a full PUT (replace), ALL required fields must be present
+/// and valid. This prevents accidental data loss from partial submissions.
 /// </summary>
 public class UpdateOpportunityCommandValidator : AbstractValidator<UpdateOpportunityCommand>
 {
@@ -12,6 +15,7 @@ public class UpdateOpportunityCommandValidator : AbstractValidator<UpdateOpportu
         RuleFor(x => x.Id)
             .NotEmpty().WithMessage("Opportunity ID is required.");
 
+        // Required fields — must be present on every update
         RuleFor(x => x.Name)
             .NotEmpty().WithMessage("Opportunity name is required.")
             .MaximumLength(200).WithMessage("Opportunity name cannot exceed 200 characters.");
@@ -23,6 +27,7 @@ public class UpdateOpportunityCommandValidator : AbstractValidator<UpdateOpportu
         RuleFor(x => x.LandSize)
             .GreaterThan(0).WithMessage("Land size must be greater than zero.");
 
+        // Optional fields — validate only when provided
         RuleFor(x => x.AskingPrice)
             .GreaterThan(0).When(x => x.AskingPrice.HasValue)
             .WithMessage("Asking price must be positive.");
@@ -30,5 +35,27 @@ public class UpdateOpportunityCommandValidator : AbstractValidator<UpdateOpportu
         RuleFor(x => x.EstimatedValue)
             .GreaterThan(0).When(x => x.EstimatedValue.HasValue)
             .WithMessage("Estimated value must be positive.");
+
+        RuleFor(x => x.EstimatedDevelopmentCost)
+            .GreaterThan(0).When(x => x.EstimatedDevelopmentCost.HasValue)
+            .WithMessage("Estimated development cost must be positive.");
+
+        RuleFor(x => x.EstimatedProfit)
+            .GreaterThan(0).When(x => x.EstimatedProfit.HasValue)
+            .WithMessage("Estimated profit must be positive.");
+
+        RuleFor(x => x.ROI)
+            .InclusiveBetween(-100, 10000).When(x => x.ROI.HasValue)
+            .WithMessage("ROI must be between -100% and 10000%.");
+
+        RuleFor(x => x.PostCode)
+            .MaximumLength(20).When(x => !string.IsNullOrEmpty(x.PostCode));
+
+        RuleFor(x => x.Address)
+            .MaximumLength(500).When(x => !string.IsNullOrEmpty(x.Address));
+
+        RuleFor(x => x.ExpectedAcquisitionDate)
+            .GreaterThan(DateTime.UtcNow.Date).When(x => x.ExpectedAcquisitionDate.HasValue)
+            .WithMessage("Expected acquisition date must be in the future.");
     }
 }

@@ -8,7 +8,10 @@ namespace BuildEstate.Application.Features.LandAcquisition.Opportunities.Command
 
 /// <summary>
 /// Handles updating an existing land opportunity.
-/// Validates existence, applies changes, and persists.
+/// 
+/// Design decision: This is a full PUT (replace all fields). The validator
+/// ensures all required fields are present and valid before this handler executes.
+/// Status cannot be changed via this endpoint — use ChangeStatus command instead.
 /// </summary>
 public class UpdateOpportunityCommandHandler : IRequestHandler<UpdateOpportunityCommand, Unit>
 {
@@ -35,12 +38,16 @@ public class UpdateOpportunityCommandHandler : IRequestHandler<UpdateOpportunity
             throw new NotFoundException(nameof(LandOpportunity), request.Id);
         }
 
+        // Apply updates — this is a full PUT replacement
+        // Required fields (validated by UpdateOpportunityCommandValidator)
         entity.Name = request.Name;
         entity.Location = request.Location;
+        entity.LandSize = request.LandSize;
+
+        // Optional fields — always set (even if null, to allow clearing values)
         entity.Address = request.Address;
         entity.PostCode = request.PostCode;
-        entity.LandSize = request.LandSize;
-        entity.LandSizeUnit = request.LandSizeUnit ?? entity.LandSizeUnit;
+        entity.LandSizeUnit = request.LandSizeUnit ?? "Acres";
         entity.CurrentUse = request.CurrentUse;
         entity.TitleNumber = request.TitleNumber;
         entity.PlanningStatus = request.PlanningStatus;
@@ -61,8 +68,7 @@ public class UpdateOpportunityCommandHandler : IRequestHandler<UpdateOpportunity
         await _repository.UpdateAsync(entity, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        _logger.LogInformation(
-            "Opportunity {OpportunityId} updated", entity.Id);
+        _logger.LogInformation("Opportunity {OpportunityId} updated", entity.Id);
 
         return Unit.Value;
     }

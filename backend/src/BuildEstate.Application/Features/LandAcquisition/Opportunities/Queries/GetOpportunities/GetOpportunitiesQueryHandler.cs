@@ -11,10 +11,19 @@ namespace BuildEstate.Application.Features.LandAcquisition.Opportunities.Queries
 /// Handles paginated retrieval of opportunities with filtering and sorting.
 /// Uses projection (Select) to only fetch columns needed for the list view.
 /// Uses AsNoTracking for read-only performance.
+/// 
+/// Design decisions:
+/// - Defaults are applied here (single source of truth), not on the query record
+/// - Search relies on SQL Server collation (CI) — no ToLower() to preserve index usage
+/// - Sorting uses switch expression for explicit allowed fields only
 /// </summary>
 public class GetOpportunitiesQueryHandler
     : IRequestHandler<GetOpportunitiesQuery, ApiResponse<List<OpportunityListItemDto>>>
 {
+    private const int DefaultPage = 1;
+    private const int DefaultPageSize = 20;
+    private const int MaxPageSize = 100;
+
     private readonly IRepository<LandOpportunity> _repository;
 
     public GetOpportunitiesQueryHandler(IRepository<LandOpportunity> repository)
@@ -34,32 +43,29 @@ public class GetOpportunitiesQueryHandler
             query = query.Where(x => x.Status == request.Status.Value);
         }
 
-        // Search by name or location
+        // Search by name or location (relies on SQL Server CI collation — no ToLower needed)
         if (!string.IsNullOrWhiteSpace(request.Search))
         {
-            var search = request.Search.ToLower();
+            var search = request.Search.Trim();
             query = query.Where(x =>
-                x.Name.ToLower().Contains(search) ||
-                x.Location.ToLower().Contains(search));
+                x.Name.Contains(search) ||
+                x.Location.Contains(search));
         }
 
-        // Get total count before pagination
+        // Total count before pagination (for PaginationMeta)
         var totalCount = await query.CountAsync(cancellationToken);
 
-        // Sorting
-        query = request.SortBy?.ToLower() switch
-        {
-            "name" => request.SortDir == "asc" ? query.OrderBy(x => x.Name) : query.OrderByDescending(x => x.Name),
-            "location" => request.SortDir == "asc" ? query.OrderBy(x => x.Location) : query.OrderByDescending(x => x.Location),
-            "landsize" => request.SortDir == "asc" ? query.OrderBy(x => x.LandSize) : query.OrderByDescending(x => x.LandSize),
-            "askingprice" => request.SortDir == "asc" ? query.OrderBy(x => x.AskingPrice) : query.OrderByDescending(x => x.AskingPrice),
-            "status" => request.SortDir == "asc" ? query.OrderBy(x => x.Status) : query.OrderByDescending(x => x.Status),
-            _ => query.OrderByDescending(x => x.CreatedAt)
-        };
+        // Apply sorting
+        query = ApplySorting(query, request.SortBy, request.SortDir);
 
-        // Pagination
-        var page = request.Page < 1 ? 1 : request.Page;
-        var pageSize = request.PageSize < 1 ? 20 : request.PageSize > 100 ? 100 : request.PageSize;
+        // Apply pagination with safe defaults
+        var page = request.Page is > 0 ? request.Page.Value : DefaultPage;
+        var pageSize = request.PageSize switch
+        {
+            > 0 and <= MaxPageSize => request.PageSize.Value,
+            > MaxPageSize => MaxPageSize,
+            _ => DefaultPageSize
+        };
 
         var items = await query
             .Skip((page - 1) * pageSize)
@@ -88,5 +94,24 @@ public class GetOpportunitiesQueryHandler
         };
 
         return ApiResponse<List<OpportunityListItemDto>>.Paginated(items, pagination);
+    }
+
+    private static IQueryable<LandOpportunity> ApplySorting(
+        IQueryable<LandOpportunity> query,
+        string? sortBy,
+        string? sortDir)
+    {
+        var ascending = string.Equals(sortDir, "asc", StringComparison.OrdinalIgnoreCase);
+
+        return sortBy?.ToLower() switch
+        {
+            "name" => ascending ? query.OrderBy(x => x.Name) : query.OrderByDescending(x => x.Name),
+            "location" => ascending ? query.OrderBy(x => x.Location) : query.OrderByDescending(x => x.Location),
+            "landsize" => ascending ? query.OrderBy(x => x.LandSize) : query.OrderByDescending(x => x.LandSize),
+            "askingprice" => ascending ? query.OrderBy(x => x.AskingPrice) : query.OrderByDescending(x => x.AskingPrice),
+            "status" => ascending ? query.OrderBy(x => x.Status) : query.OrderByDescending(x => x.Status),
+            "createdat" => ascending ? query.OrderBy(x => x.CreatedAt) : query.OrderByDescending(x => x.CreatedAt),
+            _ => query.OrderByDescending(x => x.CreatedAt) // Default sort
+        };
     }
 }
