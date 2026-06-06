@@ -6,6 +6,7 @@ using BuildEstate.Application.Features.LandAcquisition.Opportunities.Commands.Up
 using BuildEstate.Application.Features.LandAcquisition.Opportunities.DTOs;
 using BuildEstate.Application.Features.LandAcquisition.Opportunities.Queries.GetOpportunities;
 using BuildEstate.Application.Features.LandAcquisition.Opportunities.Queries.GetOpportunityById;
+using BuildEstate.Application.Features.LandAcquisition.Opportunities.Queries.GetOpportunityStats;
 using BuildEstate.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -127,5 +128,17 @@ public class OpportunitiesController : ControllerBase
             new ChangeOpportunityStatusCommand(id, request.NewStatus),
             cancellationToken);
         return NoContent();
+    }
+
+    /// <summary>
+    /// Get pipeline statistics (count by status, total value, average price).
+    /// </summary>
+    [HttpGet("stats")]
+    [Authorize(Roles = "SuperAdmin,AcquisitionManager,FinanceDirector")]
+    [ProducesResponseType(typeof(ApiResponse<OpportunityStatsDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetStats(CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new GetOpportunityStatsQuery(), cancellationToken);
+        return Ok(ApiResponse<OpportunityStatsDto>.Ok(result));
     }
 }
