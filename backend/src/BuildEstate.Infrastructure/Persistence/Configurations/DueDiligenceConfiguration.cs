@@ -15,6 +15,13 @@ public class DueDiligenceConfiguration : IEntityTypeConfiguration<DueDiligence>
         builder.Property(x => x.AssignedTo).HasMaxLength(200);
         builder.Property(x => x.RiskLevel).HasMaxLength(50);
 
+        // Indexes for query performance
+        builder.HasIndex(x => x.OpportunityId);
+        builder.HasIndex(x => x.Status);
+        builder.HasIndex(x => x.Type);
+        builder.HasIndex(x => new { x.OpportunityId, x.Type });
+
+        // Relationships
         builder.HasOne(x => x.Opportunity)
             .WithMany(o => o.DueDiligences)
             .HasForeignKey(x => x.OpportunityId)

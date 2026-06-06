@@ -1,5 +1,7 @@
 using System.Reflection;
+using BuildEstate.Application.Behaviors;
 using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildEstate.Application;
@@ -13,8 +15,13 @@ public static class DependencyInjection
     {
         var assembly = Assembly.GetExecutingAssembly();
 
-        // MediatR
-        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(assembly));
+        // MediatR with pipeline behaviors
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(assembly);
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        });
 
         // FluentValidation
         services.AddValidatorsFromAssembly(assembly);

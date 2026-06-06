@@ -16,6 +16,12 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
         builder.Property(x => x.Currency).HasMaxLength(10).HasDefaultValue("GBP");
         builder.Property(x => x.CounterOfferAmount).HasPrecision(18, 2);
 
+        // Indexes for query performance
+        builder.HasIndex(x => x.OpportunityId);
+        builder.HasIndex(x => x.Status);
+        builder.HasIndex(x => new { x.OpportunityId, x.Status });
+
+        // Relationships
         builder.HasOne(x => x.Opportunity)
             .WithMany(o => o.Offers)
             .HasForeignKey(x => x.OpportunityId)

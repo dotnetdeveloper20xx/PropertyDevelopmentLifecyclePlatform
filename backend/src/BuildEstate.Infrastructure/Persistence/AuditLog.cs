@@ -2,6 +2,8 @@ namespace BuildEstate.Infrastructure.Persistence;
 
 /// <summary>
 /// Immutable audit log entry for tracking all data changes.
+/// This entity is append-only — no updates or deletes are permitted.
+/// Supports compliance reporting, investigation, and regulatory audits.
 /// </summary>
 public class AuditLog
 {
@@ -16,4 +18,6 @@ public class AuditLog
     public string? AffectedColumns { get; set; }
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
     public string? IpAddress { get; set; }
+    public string? CorrelationId { get; set; }
+    public string? UserAgent { get; set; }
 }

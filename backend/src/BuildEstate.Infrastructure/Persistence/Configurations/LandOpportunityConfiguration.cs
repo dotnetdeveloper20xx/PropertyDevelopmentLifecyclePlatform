@@ -26,6 +26,14 @@ public class LandOpportunityConfiguration : IEntityTypeConfiguration<LandOpportu
         builder.Property(x => x.Source).HasMaxLength(200);
         builder.Property(x => x.AgentName).HasMaxLength(200);
 
+        // Indexes for query performance
+        builder.HasIndex(x => x.Status);
+        builder.HasIndex(x => x.CreatedAt);
+        builder.HasIndex(x => new { x.Status, x.CreatedAt });
+        builder.HasIndex(x => x.LandOwnerId);
+        builder.HasIndex(x => new { x.Name, x.Location });
+
+        // Relationships
         builder.HasOne(x => x.LandOwner)
             .WithMany(o => o.Opportunities)
             .HasForeignKey(x => x.LandOwnerId)

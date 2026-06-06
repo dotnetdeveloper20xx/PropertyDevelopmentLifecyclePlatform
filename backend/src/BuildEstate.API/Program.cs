@@ -1,7 +1,10 @@
 using System.Text;
 using BuildEstate.API.Middleware;
+using BuildEstate.API.Services;
 using BuildEstate.Application;
+using BuildEstate.Application.Interfaces;
 using BuildEstate.Infrastructure;
+using BuildEstate.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -12,9 +15,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// Current User Service (must be before Infrastructure so interceptor can use it)
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
 // JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var secretKey = jwtSettings["Secret"] ?? "BuildEstatePro-SuperSecret-Key-That-Is-Long-Enough-2024!";
+var secretKey = jwtSettings["Secret"]
+    ?? throw new InvalidOperationException("JwtSettings:Secret is not configured. Application cannot start without a valid JWT secret.");
 
 builder.Services.AddAuthentication(options =>
 {
@@ -91,7 +99,15 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Middleware pipeline
+// Seed database in development
+if (app.Environment.IsDevelopment())
+{
+    await DatabaseSeeder.SeedAsync(app.Services);
+}
+
+// Middleware pipeline (order matters)
+app.UseMiddleware<CorrelationIdMiddleware>();
+app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseMiddleware<GlobalExceptionHandler>();
 
 if (app.Environment.IsDevelopment())

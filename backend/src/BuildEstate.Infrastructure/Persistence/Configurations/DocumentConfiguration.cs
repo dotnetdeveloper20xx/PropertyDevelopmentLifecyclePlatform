@@ -16,6 +16,11 @@ public class DocumentConfiguration : IEntityTypeConfiguration<Document>
         builder.Property(x => x.FilePath).IsRequired().HasMaxLength(1000);
         builder.Property(x => x.ContentType).HasMaxLength(100);
 
+        // Indexes for query performance
+        builder.HasIndex(x => x.OpportunityId);
+        builder.HasIndex(x => x.DocType);
+
+        // Relationships
         builder.HasOne(x => x.Opportunity)
             .WithMany(o => o.Documents)
             .HasForeignKey(x => x.OpportunityId)

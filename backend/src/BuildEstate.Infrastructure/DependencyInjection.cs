@@ -1,3 +1,4 @@
+using BuildEstate.Application.Interfaces;
 using BuildEstate.Domain.Interfaces;
 using BuildEstate.Infrastructure.Identity;
 using BuildEstate.Infrastructure.Persistence;
@@ -15,11 +16,18 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        // Audit interceptor
+        services.AddScoped<AuditableDbContextInterceptor>();
+
         // Database
-        services.AddDbContext<BuildEstateDbContext>(options =>
+        services.AddDbContext<BuildEstateDbContext>((serviceProvider, options) =>
+        {
+            var interceptor = serviceProvider.GetRequiredService<AuditableDbContextInterceptor>();
             options.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly(typeof(BuildEstateDbContext).Assembly.FullName)));
+                b => b.MigrationsAssembly(typeof(BuildEstateDbContext).Assembly.FullName));
+            options.AddInterceptors(interceptor);
+        });
 
         // Identity
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -30,6 +38,8 @@ public static class DependencyInjection
             options.Password.RequireUppercase = true;
             options.Password.RequireLowercase = true;
             options.User.RequireUniqueEmail = true;
+            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
         })
         .AddEntityFrameworkStores<BuildEstateDbContext>()
         .AddDefaultTokenProviders();
