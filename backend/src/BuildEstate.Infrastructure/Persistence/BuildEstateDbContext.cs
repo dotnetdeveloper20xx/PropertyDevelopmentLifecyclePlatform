@@ -1,6 +1,6 @@
+using BuildEstate.Domain.Entities.Identity;
 using BuildEstate.Domain.Entities.LandAcquisition;
 using BuildEstate.Infrastructure.Identity;
-using BuildEstate.Infrastructure.Persistence.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +15,9 @@ public class BuildEstateDbContext : IdentityDbContext<ApplicationUser, Applicati
         : base(options)
     {
     }
+
+    // Identity
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     // Land Acquisition
     public DbSet<LandOpportunity> LandOpportunities => Set<LandOpportunity>();

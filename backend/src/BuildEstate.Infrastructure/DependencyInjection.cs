@@ -2,6 +2,7 @@ using BuildEstate.Application.Interfaces;
 using BuildEstate.Domain.Interfaces;
 using BuildEstate.Infrastructure.Identity;
 using BuildEstate.Infrastructure.Persistence;
+using BuildEstate.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -47,6 +48,10 @@ public static class DependencyInjection
         // Repositories
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        // Services
+        services.AddScoped<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }
