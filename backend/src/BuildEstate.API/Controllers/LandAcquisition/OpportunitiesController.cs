@@ -37,24 +37,9 @@ public class OpportunitiesController : ControllerBase
     [Authorize(Roles = "SuperAdmin,AcquisitionManager,FinanceDirector")]
     [ProducesResponseType(typeof(ApiResponse<List<OpportunityListItemDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll(
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 20,
-        [FromQuery] string? sortBy = null,
-        [FromQuery] string sortDir = "desc",
-        [FromQuery] string? search = null,
-        [FromQuery] OpportunityStatus? status = null,
-        CancellationToken cancellationToken = default)
+        [FromQuery] GetOpportunitiesQuery query,
+        CancellationToken cancellationToken)
     {
-        var query = new GetOpportunitiesQuery
-        {
-            Page = page,
-            PageSize = pageSize,
-            SortBy = sortBy,
-            SortDir = sortDir,
-            Search = search,
-            Status = status
-        };
-
         var result = await _mediator.Send(query, cancellationToken);
         return Ok(result);
     }
