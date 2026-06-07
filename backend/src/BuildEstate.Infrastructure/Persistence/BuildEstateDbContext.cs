@@ -4,6 +4,7 @@ using BuildEstate.Domain.Entities.Identity;
 using BuildEstate.Domain.Entities.LandAcquisition;
 using BuildEstate.Domain.Entities.Legal;
 using BuildEstate.Domain.Entities.Planning;
+using BuildEstate.Domain.Entities.Procurement;
 using BuildEstate.Domain.Entities.Projects;
 using BuildEstate.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -54,6 +55,10 @@ public class BuildEstateDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<ConstructionStage> ConstructionStages => Set<ConstructionStage>();
     public DbSet<Inspection> Inspections => Set<Inspection>();
     public DbSet<Snag> Snags => Set<Snag>();
+
+    // Procurement & Materials
+    public DbSet<PurchaseOrder> PurchaseOrders => Set<PurchaseOrder>();
+    public DbSet<Delivery> Deliveries => Set<Delivery>();
 
     // Audit
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
