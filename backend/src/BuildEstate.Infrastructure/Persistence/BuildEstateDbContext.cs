@@ -1,5 +1,6 @@
 using BuildEstate.Domain.Common;
 using BuildEstate.Domain.Entities.Construction;
+using BuildEstate.Domain.Entities.Contractors;
 using BuildEstate.Domain.Entities.Identity;
 using BuildEstate.Domain.Entities.LandAcquisition;
 using BuildEstate.Domain.Entities.Legal;
@@ -59,6 +60,9 @@ public class BuildEstateDbContext : IdentityDbContext<ApplicationUser, Applicati
     // Procurement & Materials
     public DbSet<PurchaseOrder> PurchaseOrders => Set<PurchaseOrder>();
     public DbSet<Delivery> Deliveries => Set<Delivery>();
+
+    // Contractors & Suppliers
+    public DbSet<Contractor> Contractors => Set<Contractor>();
 
     // Audit
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
