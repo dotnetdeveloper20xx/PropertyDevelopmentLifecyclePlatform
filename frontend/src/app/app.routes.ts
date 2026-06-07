@@ -89,6 +89,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
         data: { pageKey: 'land-acquisition-dashboard' }
       },
+      // Project Management
+      {
+        path: 'projects',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'project-management' }
+      },
       // Design & Construction
       {
         path: 'construction',

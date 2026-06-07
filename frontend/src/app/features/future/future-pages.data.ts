@@ -68,6 +68,26 @@ export const FUTURE_PAGES: Record<string, FuturePageConfig> = {
   },
 
   // ─── DESIGN & CONSTRUCTION ───
+  'project-management': {
+    pageTitle: 'Project Management',
+    subtitle: 'Plan projects, track milestones, manage tasks, and monitor risks',
+    moduleName: 'Project Management',
+    status: 'Planned',
+    description: 'The Project Management module is the orchestration layer for development projects. It manages project planning, milestones, timelines, task assignments, resource allocation, risk registers, and progress tracking across the full project lifecycle.',
+    features: [
+      { icon: '📋', title: 'Project Planning', description: 'Create project plans with phases, milestones, and dependencies' },
+      { icon: '📅', title: 'Timeline & Gantt', description: 'Visual timeline with critical path analysis' },
+      { icon: '✅', title: 'Tasks & Assignments', description: 'Assign tasks to team members with deadlines and priorities' },
+      { icon: '⚠️', title: 'Risks & Issues', description: 'Risk register with mitigation plans and issue tracking' },
+      { icon: '📊', title: 'Progress Tracking', description: 'Track % complete, earned value, and schedule variance' },
+      { icon: '👥', title: 'Resource Management', description: 'Allocate people and equipment to projects' }
+    ],
+    kpis: [{ label: 'Active Projects', value: '—' }, { label: 'On Schedule', value: '—%' }, { label: 'Open Risks', value: '—' }, { label: 'Overdue Tasks', value: '—' }],
+    relatedPages: [{ label: 'Construction', route: '/construction' }, { label: 'Finance', route: '/finance' }],
+    showTablePreview: true,
+    tableColumns: ['Project', 'Phase', 'Progress', 'Target Date', 'Risks', 'Status'],
+    breadcrumbs: [{ label: 'Home', url: '/dashboard' }, { label: 'Project Management' }]
+  },
   'construction-dashboard': {
     pageTitle: 'Construction Dashboard',
     subtitle: 'Project progress, milestones, and site activity overview',
