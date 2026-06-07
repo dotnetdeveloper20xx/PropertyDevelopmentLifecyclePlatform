@@ -21,6 +21,13 @@ export const HELP_CATEGORIES: HelpCategory[] = [
     articleCount: 4
   },
   {
+    id: 'planning',
+    label: 'Planning & Approvals',
+    description: 'Manage planning applications, conditions, and appeals.',
+    icon: '📋',
+    articleCount: 4
+  },
+  {
     id: 'workflows',
     label: 'Workflows & Approvals',
     description: 'Understand how tasks, approvals, and status changes work.',
@@ -538,6 +545,146 @@ Charts, trend lines, and risk indicators will be added in upcoming releases.
     category: HELP_CATEGORIES[4],
     tags: ['dashboard', 'kpi', 'metrics', 'overview'],
     lastUpdated: '2026-06-01'
+  },
+  // Planning & Approvals
+  {
+    id: 'planning-overview',
+    title: 'What is Planning & Approvals?',
+    summary: 'An overview of the Planning & Approvals module and how it fits into the development lifecycle.',
+    content: `
+## What is Planning & Approvals?
+
+After land is acquired, a planning application must be submitted to the local council before development can begin. The Planning & Approvals module helps you manage this process end-to-end.
+
+## What You Can Do
+
+- **Track Applications** — Manage your portfolio of planning applications across multiple sites and councils
+- **Monitor Status** — Follow each application through its lifecycle from pre-application to decision
+- **Manage Conditions** — Track and discharge planning conditions attached to approved applications
+- **Handle Appeals** — Submit and track appeals for refused applications
+
+## How It Works
+
+1. Create a planning application linked to a land opportunity
+2. Track status as the council processes it (Submitted → Validated → Under Review → Decision)
+3. If approved with conditions, track and discharge each condition
+4. If refused, submit an appeal and monitor the outcome
+`,
+    category: HELP_CATEGORIES[2],
+    tags: ['planning', 'applications', 'council', 'overview'],
+    lastUpdated: '2026-06-07'
+  },
+  {
+    id: 'planning-lifecycle',
+    title: 'Planning Application Lifecycle',
+    summary: 'Understanding the stages a planning application goes through from submission to decision.',
+    content: `
+## Application Lifecycle
+
+A planning application follows this lifecycle:
+
+1. **Pre-Application** — Initial preparation and pre-app advice from the council
+2. **Submitted** — Application formally submitted with all required documents
+3. **Validated** — Council confirms all required information is present
+4. **Under Review** — Planning officer assesses the application
+5. **Committee Review** — (If required) Goes to planning committee for decision
+6. **Approved / Approved with Conditions / Refused** — Council decision issued
+
+## Status Transitions
+
+Not all transitions are possible. The system enforces valid transitions:
+- Pre-Application → Submitted or Withdrawn
+- Submitted → Validated or Withdrawn
+- Validated → Under Review or Withdrawn
+- Under Review → Committee Review, Approved, Approved with Conditions, Refused, or Withdrawn
+- Refused → Appeal
+
+## Key Dates
+
+The system tracks important dates automatically:
+- **Submission Date** — Set when status changes to Submitted
+- **Validation Date** — Set when status changes to Validated
+- **Decision Date** — Set when a decision is made (Approved/Refused)
+`,
+    category: HELP_CATEGORIES[2],
+    tags: ['planning', 'lifecycle', 'status', 'transitions'],
+    lastUpdated: '2026-06-07'
+  },
+  {
+    id: 'planning-conditions',
+    title: 'Managing Planning Conditions',
+    summary: 'How to track, manage, and discharge planning conditions attached to approved applications.',
+    content: `
+## What Are Planning Conditions?
+
+When a planning application is approved with conditions, specific requirements must be met before or during development. Common conditions include:
+
+- Landscaping schemes
+- Materials samples
+- Construction management plans
+- Drainage strategies
+- Ecological surveys
+
+## Tracking Conditions
+
+Each condition is automatically numbered and tracked with:
+- **Title** — What the condition requires
+- **Status** — Pending, Submitted, Partially Discharged, or Discharged
+- **Due Date** — When it needs to be discharged by
+- **Assigned To** — Who is responsible
+
+## Discharging Conditions
+
+To discharge a condition:
+1. Navigate to the application detail page
+2. Open the Conditions tab
+3. Click "Discharge" on the relevant condition
+4. Choose full or partial discharge
+5. Optionally add a discharge reference number
+
+Conditions can be partially discharged if only some elements have been approved.
+`,
+    category: HELP_CATEGORIES[2],
+    tags: ['planning', 'conditions', 'discharge', 'approval'],
+    lastUpdated: '2026-06-07'
+  },
+  {
+    id: 'planning-appeals',
+    title: 'Planning Appeals',
+    summary: 'How to submit and track appeals against refused planning applications.',
+    content: `
+## When Can You Appeal?
+
+An appeal can only be submitted when a planning application has been refused by the local council.
+
+## How to Submit an Appeal
+
+1. Navigate to the refused application's detail page
+2. Open the Appeals tab
+3. Click "Submit Appeal"
+4. Provide the appeal reference, grounds, and any hearing details
+
+## Appeal Lifecycle
+
+- **Submitted** — Appeal filed with the Planning Inspectorate
+- **In Progress** — Inspector assigned, evidence being reviewed
+- **Allowed** — Appeal successful, planning permission granted
+- **Dismissed** — Appeal unsuccessful, refusal upheld
+
+## What Happens After
+
+- If **Allowed**: The parent application status updates to Approved
+- If **Dismissed**: The application remains Refused
+
+## Tips
+
+- Ensure your grounds for appeal are clearly documented
+- Include the inspector's name once assigned
+- Track hearing dates to ensure preparation is timely
+`,
+    category: HELP_CATEGORIES[2],
+    tags: ['planning', 'appeals', 'refused', 'inspectorate'],
+    lastUpdated: '2026-06-07'
   }
 ];
 

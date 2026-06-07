@@ -112,7 +112,9 @@ import * as OpportunitiesSelectors from '../land-acquisition/store/opportunities
       <h2 class="text-sm font-semibold text-base-content/50 uppercase tracking-wider mb-3">Quick Actions</h2>
       <div class="flex flex-wrap gap-3">
         <a routerLink="/opportunities/new" class="btn btn-primary btn-sm">Create Land Opportunity</a>
+        <a routerLink="/planning/new" class="btn btn-primary btn-sm">Create Planning Application</a>
         <a routerLink="/opportunities" class="btn btn-ghost btn-sm">View All Opportunities</a>
+        <a routerLink="/planning" class="btn btn-ghost btn-sm">View Planning Applications</a>
         <a routerLink="/help/getting-started" class="btn btn-ghost btn-sm">Getting Started Guide</a>
       </div>
     } @else {

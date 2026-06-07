@@ -90,6 +90,27 @@ interface ReleaseNote {
 export class ReleaseNotesComponent {
   releases: ReleaseNote[] = [
     {
+      version: '1.3.0',
+      date: '7 June 2026',
+      title: 'Module 2: Planning & Approvals',
+      highlights: [
+        'Full Planning & Approvals module — track applications through their lifecycle',
+        'Planning Conditions management — create, track, and discharge conditions',
+        'Planning Appeals — submit and track appeals for refused applications',
+        'State machine enforcement for planning application status transitions',
+        'Planning Dashboard with KPIs (applications by status, pending conditions)',
+        'Help Centre articles for Planning module'
+      ],
+      improvements: [
+        'Sidebar updated with Planning & Approvals navigation section',
+        'CSV export on planning applications list',
+        'Tabbed detail view (Details, Conditions, Appeals, Activity)',
+        'Confirmation dialog on application withdrawal',
+        'Toast notifications on all planning operations'
+      ],
+      fixes: []
+    },
+    {
       version: '1.2.0',
       date: '7 June 2026',
       title: 'Help Centre & Enhanced UX',

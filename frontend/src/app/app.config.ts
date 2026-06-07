@@ -9,6 +9,8 @@ import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { opportunitiesReducer } from './features/land-acquisition/store/opportunities.reducer';
 import { OpportunitiesEffects } from './features/land-acquisition/store/opportunities.effects';
+import { planningReducer } from './features/planning/store/planning.reducer';
+import { PlanningEffects } from './features/planning/store/planning.effects';
 
 /**
  * Application configuration.
@@ -20,8 +22,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
-    provideStore({ opportunities: opportunitiesReducer }),
-    provideEffects([OpportunitiesEffects]),
+    provideStore({ opportunities: opportunitiesReducer, planning: planningReducer }),
+    provideEffects([OpportunitiesEffects, PlanningEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: false })
   ]
 };

@@ -108,7 +108,7 @@ interface NavItem {
           </nav>
           <!-- Sidebar footer -->
           <div class="p-4 border-t border-white/10">
-            <p class="text-xs text-neutral-content/40 text-center">v1.0.0 — Land Acquisition</p>
+            <p class="text-xs text-neutral-content/40 text-center">v1.1.0 — Planning & Approvals</p>
           </div>
         </aside>
       </div>
@@ -157,6 +157,16 @@ export class MainLayoutComponent implements OnInit {
           label: 'Opportunities',
           route: '/opportunities',
           icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>'
+        }
+      ]
+    },
+    {
+      label: 'Planning & Approvals',
+      items: [
+        {
+          label: 'Applications',
+          route: '/planning',
+          icon: '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>'
         }
       ]
     },

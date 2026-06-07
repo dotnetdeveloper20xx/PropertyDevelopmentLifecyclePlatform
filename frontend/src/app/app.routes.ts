@@ -39,6 +39,23 @@ export const routes: Routes = [
         path: 'opportunities/:id/edit',
         loadComponent: () => import('./features/land-acquisition/opportunities/opportunity-edit/opportunity-edit.component').then(m => m.OpportunityEditComponent)
       },
+      // Planning & Approvals
+      {
+        path: 'planning',
+        loadComponent: () => import('./features/planning/planning-list/planning-list.component').then(m => m.PlanningListComponent)
+      },
+      {
+        path: 'planning/new',
+        loadComponent: () => import('./features/planning/planning-form/planning-form.component').then(m => m.PlanningFormComponent)
+      },
+      {
+        path: 'planning/:id',
+        loadComponent: () => import('./features/planning/planning-detail/planning-detail.component').then(m => m.PlanningDetailComponent)
+      },
+      {
+        path: 'planning/:id/edit',
+        loadComponent: () => import('./features/planning/planning-edit/planning-edit.component').then(m => m.PlanningEditComponent)
+      },
       // Help Centre
       {
         path: 'help',
