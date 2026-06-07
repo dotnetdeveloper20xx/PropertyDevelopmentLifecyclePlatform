@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
+  // Root redirect
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   // Auth Layout (no sidebar/header)
   {
     path: '',
@@ -92,8 +94,15 @@ export const routes: Routes = [
       // Project Management
       {
         path: 'projects',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'project-management' }
+        loadComponent: () => import('./features/projects/project-list/project-list.component').then(m => m.ProjectListComponent)
+      },
+      {
+        path: 'projects/new',
+        loadComponent: () => import('./features/projects/project-form/project-form.component').then(m => m.ProjectFormComponent)
+      },
+      {
+        path: 'projects/:id',
+        loadComponent: () => import('./features/projects/project-detail/project-detail.component').then(m => m.ProjectDetailComponent)
       },
       // Design & Construction
       {

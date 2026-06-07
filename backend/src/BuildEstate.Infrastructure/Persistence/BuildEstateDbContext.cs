@@ -3,6 +3,7 @@ using BuildEstate.Domain.Entities.Identity;
 using BuildEstate.Domain.Entities.LandAcquisition;
 using BuildEstate.Domain.Entities.Legal;
 using BuildEstate.Domain.Entities.Planning;
+using BuildEstate.Domain.Entities.Projects;
 using BuildEstate.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,12 @@ public class BuildEstateDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<LegalDocument> LegalDocuments => Set<LegalDocument>();
     public DbSet<ComplianceCheck> ComplianceChecks => Set<ComplianceCheck>();
     public DbSet<LegalTask> LegalTasks => Set<LegalTask>();
+
+    // Project Management
+    public DbSet<Project> Projects => Set<Project>();
+    public DbSet<Milestone> Milestones => Set<Milestone>();
+    public DbSet<ProjectTask> ProjectTasks => Set<ProjectTask>();
+    public DbSet<ProjectRisk> ProjectRisks => Set<ProjectRisk>();
 
     // Audit
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
