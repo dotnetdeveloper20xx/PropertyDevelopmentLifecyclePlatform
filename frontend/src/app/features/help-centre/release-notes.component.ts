@@ -90,6 +90,28 @@ interface ReleaseNote {
 export class ReleaseNotesComponent {
   releases: ReleaseNote[] = [
     {
+      version: '1.4.0',
+      date: '7 June 2026',
+      title: 'Module 3: Legal & Compliance',
+      highlights: [
+        'Contracts management — create, track, and manage legal contracts end-to-end',
+        'Contract status state machine (Draft → Under Review → Awaiting Signature → Exchanged → Completed)',
+        'Compliance Checks — AML, KYC, title verification, environmental, and more',
+        'Legal Tasks — priority-based task management with due dates and inline status changes',
+        'Risk level flagging on compliance checks (Low/Medium/High/Critical)',
+        'Help Centre articles for Legal & Compliance module'
+      ],
+      improvements: [
+        'Sidebar updated with Legal & Compliance section (Contracts + Tasks)',
+        'Confirmation dialogs on contract termination and withdrawal',
+        'Tabbed contract detail view (Details, Documents, Tasks, Activity)',
+        'Toast notifications on all legal operations',
+        'CSV export on contracts list',
+        'Inline task creation form'
+      ],
+      fixes: []
+    },
+    {
       version: '1.3.0',
       date: '7 June 2026',
       title: 'Module 2: Planning & Approvals',

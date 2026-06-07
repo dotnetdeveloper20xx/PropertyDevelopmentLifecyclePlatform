@@ -11,6 +11,8 @@ import { opportunitiesReducer } from './features/land-acquisition/store/opportun
 import { OpportunitiesEffects } from './features/land-acquisition/store/opportunities.effects';
 import { planningReducer } from './features/planning/store/planning.reducer';
 import { PlanningEffects } from './features/planning/store/planning.effects';
+import { legalReducer } from './features/legal/store/legal.reducer';
+import { LegalEffects } from './features/legal/store/legal.effects';
 
 /**
  * Application configuration.
@@ -22,8 +24,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
-    provideStore({ opportunities: opportunitiesReducer, planning: planningReducer }),
-    provideEffects([OpportunitiesEffects, PlanningEffects]),
+    provideStore({ opportunities: opportunitiesReducer, planning: planningReducer, legal: legalReducer }),
+    provideEffects([OpportunitiesEffects, PlanningEffects, LegalEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: false })
   ]
 };

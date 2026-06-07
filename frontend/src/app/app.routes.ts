@@ -56,6 +56,23 @@ export const routes: Routes = [
         path: 'planning/:id/edit',
         loadComponent: () => import('./features/planning/planning-edit/planning-edit.component').then(m => m.PlanningEditComponent)
       },
+      // Legal & Compliance
+      {
+        path: 'legal/contracts',
+        loadComponent: () => import('./features/legal/contracts/contract-list/contract-list.component').then(m => m.ContractListComponent)
+      },
+      {
+        path: 'legal/contracts/new',
+        loadComponent: () => import('./features/legal/contracts/contract-form/contract-form.component').then(m => m.ContractFormComponent)
+      },
+      {
+        path: 'legal/contracts/:id',
+        loadComponent: () => import('./features/legal/contracts/contract-detail/contract-detail.component').then(m => m.ContractDetailComponent)
+      },
+      {
+        path: 'legal/tasks',
+        loadComponent: () => import('./features/legal/tasks/legal-tasks.component').then(m => m.LegalTasksComponent)
+      },
       // Help Centre
       {
         path: 'help',

@@ -28,6 +28,13 @@ export const HELP_CATEGORIES: HelpCategory[] = [
     articleCount: 4
   },
   {
+    id: 'legal',
+    label: 'Legal & Compliance',
+    description: 'Manage contracts, compliance checks, and legal tasks.',
+    icon: '⚖️',
+    articleCount: 4
+  },
+  {
     id: 'workflows',
     label: 'Workflows & Approvals',
     description: 'Understand how tasks, approvals, and status changes work.',
@@ -684,6 +691,83 @@ An appeal can only be submitted when a planning application has been refused by 
 `,
     category: HELP_CATEGORIES[2],
     tags: ['planning', 'appeals', 'refused', 'inspectorate'],
+    lastUpdated: '2026-06-07'
+  },
+  // Legal & Compliance
+  {
+    id: 'contracts-overview',
+    title: 'What is Legal & Compliance?',
+    summary: 'An overview of the Legal & Compliance module — contracts, compliance checks, and legal tasks.',
+    content: `
+## What is Legal & Compliance?
+
+The Legal & Compliance module manages all legal activities across the platform — contracts, compliance checks, documents, and legal tasks.
+
+## What You Can Do
+
+- **Manage Contracts** — Track sale & purchase agreements, option agreements, leases
+- **Run Compliance Checks** — AML, KYC, title verification, environmental searches
+- **Track Legal Tasks** — Manage deadlines, reviews, and actions
+- **Link Documents** — Attach title deeds, search reports, and contract copies
+`,
+    category: HELP_CATEGORIES[4],
+    tags: ['legal', 'compliance', 'contracts', 'overview'],
+    lastUpdated: '2026-06-07'
+  },
+  {
+    id: 'contract-lifecycle',
+    title: 'Contract Lifecycle',
+    summary: 'How contracts progress from Draft through to Completion or Termination.',
+    content: `
+## Contract Lifecycle
+
+1. **Draft** — Contract being prepared
+2. **Under Review** — Legal team reviewing terms
+3. **Awaiting Signature** — Sent for signing
+4. **Exchanged** — Both parties signed, deposit paid
+5. **Completed** — Contract fulfilled
+6. **Terminated** — Contract ended before completion
+`,
+    category: HELP_CATEGORIES[4],
+    tags: ['legal', 'contracts', 'lifecycle', 'status'],
+    lastUpdated: '2026-06-07'
+  },
+  {
+    id: 'compliance-checks-guide',
+    title: 'Compliance Checks',
+    summary: 'Types of compliance checks, how to manage them, and risk levels.',
+    content: `
+## Compliance Check Types
+
+AML, KYC, Title Verification, Local Authority, Environmental, Planning, Utilities, Drainage, Highway Search, Mining.
+
+## Risk Levels
+
+Low, Medium, High, Critical — assigned when a check is completed.
+
+## Status Flow
+
+Not Started → In Progress → Passed / Failed / Flagged
+`,
+    category: HELP_CATEGORIES[4],
+    tags: ['legal', 'compliance', 'checks', 'risk'],
+    lastUpdated: '2026-06-07'
+  },
+  {
+    id: 'legal-tasks-guide',
+    title: 'Legal Tasks',
+    summary: 'How to manage legal tasks, deadlines, and assignments.',
+    content: `
+## Legal Tasks
+
+Track action items for the legal team — reviews, submissions, chasing solicitors, completion actions.
+
+Tasks have: Title, Priority (Low/Medium/High/Urgent), Status (Open/InProgress/Completed/Cancelled), Assigned To, Due Date.
+
+Overdue tasks are highlighted. Status can be changed directly from the table.
+`,
+    category: HELP_CATEGORIES[4],
+    tags: ['legal', 'tasks', 'deadlines', 'management'],
     lastUpdated: '2026-06-07'
   }
 ];

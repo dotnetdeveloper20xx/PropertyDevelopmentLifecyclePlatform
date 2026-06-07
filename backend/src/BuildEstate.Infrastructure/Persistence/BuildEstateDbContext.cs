@@ -1,6 +1,7 @@
 using BuildEstate.Domain.Common;
 using BuildEstate.Domain.Entities.Identity;
 using BuildEstate.Domain.Entities.LandAcquisition;
+using BuildEstate.Domain.Entities.Legal;
 using BuildEstate.Domain.Entities.Planning;
 using BuildEstate.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -34,6 +35,12 @@ public class BuildEstateDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<PlanningCondition> PlanningConditions => Set<PlanningCondition>();
     public DbSet<PlanningAppeal> PlanningAppeals => Set<PlanningAppeal>();
     public DbSet<PlanningDocument> PlanningDocuments => Set<PlanningDocument>();
+
+    // Legal & Compliance
+    public DbSet<Contract> Contracts => Set<Contract>();
+    public DbSet<LegalDocument> LegalDocuments => Set<LegalDocument>();
+    public DbSet<ComplianceCheck> ComplianceChecks => Set<ComplianceCheck>();
+    public DbSet<LegalTask> LegalTasks => Set<LegalTask>();
 
     // Audit
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
