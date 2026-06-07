@@ -1,12 +1,16 @@
 using BuildEstate.Domain.Common;
 using BuildEstate.Domain.Entities.Construction;
 using BuildEstate.Domain.Entities.Contractors;
+using BuildEstate.Domain.Entities.Finance;
 using BuildEstate.Domain.Entities.Identity;
 using BuildEstate.Domain.Entities.LandAcquisition;
 using BuildEstate.Domain.Entities.Legal;
 using BuildEstate.Domain.Entities.Planning;
 using BuildEstate.Domain.Entities.Procurement;
 using BuildEstate.Domain.Entities.Projects;
+using BuildEstate.Domain.Entities.Rentals;
+using BuildEstate.Domain.Entities.Sales;
+using BuildEstate.Domain.Entities.Units;
 using BuildEstate.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -63,6 +67,20 @@ public class BuildEstateDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     // Contractors & Suppliers
     public DbSet<Contractor> Contractors => Set<Contractor>();
+
+    // Finance & Budget
+    public DbSet<BudgetLine> BudgetLines => Set<BudgetLine>();
+    public DbSet<FinancialTransaction> FinancialTransactions => Set<FinancialTransaction>();
+    public DbSet<Investor> Investors => Set<Investor>();
+
+    // Property Units
+    public DbSet<PropertyUnit> PropertyUnits => Set<PropertyUnit>();
+
+    // Sales
+    public DbSet<SalesLead> SalesLeads => Set<SalesLead>();
+
+    // Rentals
+    public DbSet<Tenancy> Tenancies => Set<Tenancy>();
 
     // Audit
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();

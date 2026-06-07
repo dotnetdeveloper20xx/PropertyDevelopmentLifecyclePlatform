@@ -132,32 +132,27 @@ export const routes: Routes = [
       // Finance & Budget Control
       {
         path: 'finance',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'finance-dashboard' }
+        loadComponent: () => import('./features/finance/finance-list/finance-list.component').then(m => m.FinanceListComponent)
       },
       // Investors & Funding
       {
         path: 'investors',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'investors-dashboard' }
+        loadComponent: () => import('./features/investors/investor-list/investor-list.component').then(m => m.InvestorListComponent)
       },
       // Property Units
       {
         path: 'units',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'units-dashboard' }
+        loadComponent: () => import('./features/units/unit-list/unit-list.component').then(m => m.UnitListComponent)
       },
       // Sales & Marketing
       {
         path: 'sales',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'sales-dashboard' }
+        loadComponent: () => import('./features/sales/sales-list/sales-list.component').then(m => m.SalesListComponent)
       },
       // Rental Management
       {
         path: 'rentals',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'rental-dashboard' }
+        loadComponent: () => import('./features/rentals/tenancy-list/tenancy-list.component').then(m => m.TenancyListComponent)
       },
       // Documents & Knowledge
       {
