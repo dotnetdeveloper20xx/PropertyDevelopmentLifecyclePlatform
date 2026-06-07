@@ -63,6 +63,7 @@ import * as OpportunitiesSelectors from '../../store/opportunities.selectors';
       <div class="text-xs text-base-content/50">
         {{ totalCount$ | async }} total
       </div>
+      <button class="btn btn-ghost btn-xs" (click)="exportCsv()" aria-label="Export to CSV">📥 Export CSV</button>
     </div>
 
     @if (loading$ | async) {
@@ -270,5 +271,26 @@ export class OpportunityListComponent implements OnInit {
   onPageSizeChange(): void {
     this.currentPage = 1;
     this.loadOpportunities();
+  }
+
+  exportCsv(): void {
+    const headers = ['Name', 'Location', 'Land Size', 'Asking Price', 'Status', 'Source', 'Created'];
+    const rows = this.allOpportunities.map(o => [
+      o.name,
+      o.location,
+      `${o.landSize} ${o.landSizeUnit}`,
+      o.askingPrice ? `£${o.askingPrice}` : '',
+      o.status,
+      o.source ?? '',
+      o.createdAt
+    ]);
+    const csv = [headers.join(','), ...rows.map(r => r.map(c => `"${c}"`).join(','))].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `opportunities_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
   }
 }

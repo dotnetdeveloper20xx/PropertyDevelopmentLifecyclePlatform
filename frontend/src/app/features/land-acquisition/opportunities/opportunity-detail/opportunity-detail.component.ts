@@ -14,6 +14,7 @@ import { DueDiligenceService, DueDiligenceListItem, DueDiligenceStatus } from '.
 import { OfferService, OfferListItem, OfferStatus } from '../../../../core/services/offer.service';
 import { DocumentService, DocumentListItem, DocumentType } from '../../../../core/services/document.service';
 import { ActivityService, ActivityItem } from '../../../../core/services/activity.service';
+import { AcquisitionService, AcquisitionRecord } from '../../../../core/services/acquisition.service';
 import { ModalService } from '../../../../core/services/modal.service';
 import { ToastService } from '../../../../core/services/toast.service';
 import { OpportunityDetail } from '../../../../core/models/opportunity.model';
@@ -52,6 +53,7 @@ import { OpportunityDetail } from '../../../../core/models/opportunity.model';
         <button role="tab" class="tab" [class.tab-active]="activeTab==='offers'" (click)="switchTab('offers')">Offers ({{offers.length}})</button>
         <button role="tab" class="tab" [class.tab-active]="activeTab==='docs'" (click)="switchTab('docs')">Documents ({{documents.length}})</button>
         <button role="tab" class="tab" [class.tab-active]="activeTab==='activity'" (click)="switchTab('activity')">Activity</button>
+        <button role="tab" class="tab" [class.tab-active]="activeTab==='acquisition'" (click)="switchTab('acquisition')">Acquisition</button>
       </div>
 
       <!-- DETAILS TAB -->
@@ -190,6 +192,48 @@ import { OpportunityDetail } from '../../../../core/models/opportunity.model';
         }
       }
 
+      <!-- ACQUISITION TAB -->
+      @if (activeTab==='acquisition') {
+        @if (acquisitionRecord) {
+          <div class="card bg-base-100 border border-base-300 shadow-sm">
+            <div class="card-body">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-semibold">Acquisition Record</h3>
+                <span class="badge badge-success">{{acquisitionRecord.status}}</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div><dt class="text-xs text-base-content/50">Purchase Price</dt><dd class="font-bold text-lg">£{{acquisitionRecord.purchasePrice|number:'1.0-0'}}</dd></div>
+                <div><dt class="text-xs text-base-content/50">Completion Date</dt><dd class="font-medium">{{acquisitionRecord.completionDate|date:'mediumDate'}}</dd></div>
+                <div><dt class="text-xs text-base-content/50">Registry Reference</dt><dd>{{acquisitionRecord.registryReference||'Pending'}}</dd></div>
+                <div><dt class="text-xs text-base-content/50">Solicitor</dt><dd>{{acquisitionRecord.solicitorName||'—'}}</dd></div>
+                <div><dt class="text-xs text-base-content/50">Solicitor Contact</dt><dd>{{acquisitionRecord.solicitorContact||'—'}}</dd></div>
+                <div><dt class="text-xs text-base-content/50">Notes</dt><dd>{{acquisitionRecord.notes||'—'}}</dd></div>
+              </div>
+            </div>
+          </div>
+        } @else if (!showAcquisitionForm()) {
+          <app-empty-state title="Not Yet Acquired" message="Once contracts are exchanged and the purchase is complete, record the acquisition details here. This moves the opportunity to 'Acquired' status.">
+            <button class="btn btn-primary btn-sm" (click)="showAcquisitionForm.set(true)" [disabled]="opportunity.status==='Withdrawn'">Record Acquisition</button>
+          </app-empty-state>
+        }
+        @if (showAcquisitionForm() && !acquisitionRecord) {
+          <div class="card bg-base-100 border border-primary/30 shadow-sm"><div class="card-body">
+            <h3 class="font-semibold mb-3">Record Acquisition Completion</h3>
+            <form [formGroup]="acquisitionForm" (ngSubmit)="createAcquisition()">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <app-form-field label="Purchase Price (£)" fieldId="acqPrice" [required]="true" helpTooltip="The final agreed purchase price"><input id="acqPrice" type="number" formControlName="purchasePrice" class="input input-bordered w-full" /></app-form-field>
+                <app-form-field label="Completion Date" fieldId="acqDate" [required]="true" helpTooltip="Date the purchase was legally completed"><input id="acqDate" type="date" formControlName="completionDate" class="input input-bordered w-full" /></app-form-field>
+                <app-form-field label="Land Registry Reference" fieldId="acqReg" helpTooltip="Registry reference number (if already registered)"><input id="acqReg" type="text" formControlName="registryReference" class="input input-bordered w-full" placeholder="e.g., LR12345" /></app-form-field>
+                <app-form-field label="Solicitor Name" fieldId="acqSol"><input id="acqSol" type="text" formControlName="solicitorName" class="input input-bordered w-full" /></app-form-field>
+                <app-form-field label="Solicitor Contact" fieldId="acqSolC"><input id="acqSolC" type="text" formControlName="solicitorContact" class="input input-bordered w-full" /></app-form-field>
+                <app-form-field label="Notes" fieldId="acqNotes"><input id="acqNotes" type="text" formControlName="notes" class="input input-bordered w-full" /></app-form-field>
+              </div>
+              <div class="flex justify-end gap-2 mt-4"><button type="button" class="btn btn-ghost btn-sm" (click)="showAcquisitionForm.set(false)">Cancel</button><button type="submit" class="btn btn-primary btn-sm" [disabled]="acquisitionForm.invalid">Complete Acquisition</button></div>
+            </form>
+          </div></div>
+        }
+      }
+
       <div class="mt-6"><a routerLink="/opportunities" class="btn btn-ghost btn-sm">← Back to List</a></div>
     } @else {
       <div class="card bg-base-100 border border-base-300 p-8 text-center"><div class="text-4xl mb-4">🔍</div><h3 class="text-lg font-semibold">Opportunity Not Found</h3><a routerLink="/opportunities" class="btn btn-primary btn-sm mt-4">Back to Opportunities</a></div>
@@ -206,26 +250,38 @@ export class OpportunityDetailComponent implements OnInit {
   offers: OfferListItem[] = [];
   documents: DocumentListItem[] = [];
   activities: ActivityItem[] = [];
+  acquisitionRecord: AcquisitionRecord | null = null;
 
   showDdForm = signal(false);
   showOfferForm = signal(false);
   showDocForm = signal(false);
+  showAcquisitionForm = signal(false);
   editingDdId = signal<string | null>(null);
 
   ddForm: FormGroup;
   offerForm: FormGroup;
   docForm: FormGroup;
+  acquisitionForm: FormGroup;
 
   constructor(
     private route: ActivatedRoute, private router: Router, private fb: FormBuilder,
     private opportunityService: OpportunityService, private ddService: DueDiligenceService,
     private offerService: OfferService, private documentService: DocumentService,
-    private activityService: ActivityService, private modalService: ModalService,
+    private activityService: ActivityService, private acquisitionService: AcquisitionService,
+    private modalService: ModalService,
     private toastService: ToastService, private cdr: ChangeDetectorRef
   ) {
     this.ddForm = this.fb.group({ type: ['', Validators.required], assignedTo: [''], notes: [''] });
     this.offerForm = this.fb.group({ amount: [null, [Validators.required, Validators.min(1)]], validUntil: [''], conditions: [''] });
     this.docForm = this.fb.group({ fileName: ['', Validators.required], docType: ['', Validators.required], description: [''] });
+    this.acquisitionForm = this.fb.group({
+      purchasePrice: [null, [Validators.required, Validators.min(1)]],
+      completionDate: ['', Validators.required],
+      registryReference: [''],
+      solicitorName: [''],
+      solicitorContact: [''],
+      notes: ['']
+    });
   }
 
   ngOnInit(): void {
@@ -240,6 +296,7 @@ export class OpportunityDetailComponent implements OnInit {
     if (tab === 'offers' && this.offers.length === 0) this.loadOffers();
     if (tab === 'docs' && this.documents.length === 0) this.loadDocuments();
     if (tab === 'activity' && this.activities.length === 0) this.loadActivity();
+    if (tab === 'acquisition' && !this.acquisitionRecord) this.loadAcquisition();
   }
 
   private loadOpportunity(): void {
@@ -306,6 +363,26 @@ export class OpportunityDetailComponent implements OnInit {
           error: () => this.toastService.error('Failed to delete document')
         });
       }
+    });
+  }
+
+  private loadAcquisition(): void {
+    this.acquisitionService.getByOpportunity(this.opportunityId).subscribe({
+      next: r => { this.acquisitionRecord = r.data ?? null; this.cdr.markForCheck(); }
+    });
+  }
+
+  createAcquisition(): void {
+    if (this.acquisitionForm.invalid) return;
+    this.acquisitionService.create(this.opportunityId, this.acquisitionForm.value).subscribe({
+      next: r => {
+        this.acquisitionRecord = r.data ?? null;
+        this.showAcquisitionForm.set(false);
+        this.toastService.success('Acquisition recorded — opportunity marked as Acquired');
+        if (this.opportunity) this.opportunity = { ...this.opportunity, status: 'Acquired' };
+        this.cdr.markForCheck();
+      },
+      error: (err) => this.toastService.error(err.error?.errors?.[0] ?? 'Failed to record acquisition')
     });
   }
 
