@@ -1,106 +1,86 @@
 # BuildEstate Pro — Implementation Log
 
-This document tracks important design decisions, their rationale, and outcomes.
-Every significant architectural choice must be recorded here.
+> Tracks what has been implemented, when, and what remains.  
+> Last updated: 7 June 2026
 
 ---
 
-## Decision Log
+## Completed Modules
 
-### DEC-001: Clean Architecture with CQRS
-**Date:** 2026-06-06
-**Decision:** Use Clean Architecture (4 layers) with CQRS pattern via MediatR.
-**Rationale:**
-- Strict separation allows independent testing of business logic
-- CQRS separates read/write concerns — queries are fast (no validation overhead), commands are safe (full validation)
-- MediatR provides a clean dispatch mechanism without coupling controllers to handlers
-- Pipeline behaviors allow cross-cutting concerns (validation, logging, audit) without code duplication
-**Trade-offs:**
-- More files per feature (command + handler + validator + DTO)
-- Learning curve for developers unfamiliar with MediatR
-- Slight indirection overhead (negligible in real-world perf)
-**Alternatives Considered:**
-- Traditional N-Tier (rejected: mixes concerns, harder to test)
-- Vertical Slice Architecture (considered: good option but less strict boundaries)
+### Module 1: Land Acquisition (v1.0.0 — 25 May 2026)
+- ✅ Opportunities CRUD (list, create, detail, edit)
+- ✅ Due Diligence sub-resource (create, update, list per opportunity)
+- ✅ Offers sub-resource (create, update, list per opportunity)
+- ✅ Status state machine with enforced transitions
+- ✅ Dashboard with pipeline stats
+- ✅ NgRx store, effects, selectors
+- ✅ 38 unit tests
 
----
+### Module 2: Planning & Approvals (v1.3.0 — 7 June 2026)
+- ✅ Planning Applications CRUD (list, create, detail, edit)
+- ✅ Planning Conditions (create, discharge, list)
+- ✅ Planning Appeals (create, status change, list)
+- ✅ Status state machine with enforced transitions
+- ✅ NgRx store, effects, selectors
+- ✅ 34 unit tests
 
-### DEC-002: Guid Primary Keys
-**Date:** 2026-06-06
-**Decision:** Use Guid (UUID) for all entity primary keys.
-**Rationale:**
-- Distributed-safe: no conflicts when merging data or scaling horizontally
-- Client-side generation: entities have IDs before database round-trip
-- No information leakage (sequential ints reveal record counts)
-**Trade-offs:**
-- 16 bytes vs 4 bytes for int (marginal storage impact)
-- Index fragmentation (mitigated by sequential GUID generation in future)
-- Slightly harder to read in logs (use entity name + short ID in logs)
+### Module 3: Legal & Compliance (v1.4.0 — 7 June 2026)
+- ✅ Contracts CRUD (list, create, detail, status change)
+- ✅ Compliance Checks (create, status change, list per opportunity)
+- ✅ Legal Tasks (create, list, inline status change)
+- ✅ Contract status state machine
+- ✅ NgRx store, effects, selectors
+- ✅ 21 unit tests
 
----
-
-### DEC-003: Soft Delete Pattern
-**Date:** 2026-06-06
-**Decision:** All entities use soft delete (IsDeleted flag + DeletedAt timestamp).
-**Rationale:**
-- Compliance: audit trail requires knowing what existed and when it was removed
-- Recoverability: accidental deletions can be reversed
-- Referential integrity: no orphaned records from cascade delete
-- Reporting: historical data available for analytics
-**Trade-offs:**
-- Query filters must be applied everywhere (EF Core global filter handles this)
-- Database grows over time (mitigated by archival strategy)
-- Must explicitly filter in raw SQL / reporting queries
+### Cross-Cutting (v1.1.0–1.2.0)
+- ✅ JWT Authentication with refresh tokens
+- ✅ Role-based authorization on all endpoints
+- ✅ Audit trail (AuditableDbContextInterceptor)
+- ✅ Global exception handling
+- ✅ Correlation ID middleware
+- ✅ Security headers
+- ✅ Rate limiting
+- ✅ Help Centre (searchable, categorised)
+- ✅ Guided onboarding tour
+- ✅ Shared component library (24+ components)
 
 ---
 
-### DEC-004: Entity Framework Core with Code-First
-**Date:** 2026-06-06
-**Decision:** Use EF Core Code-First with explicit Fluent API configurations.
-**Rationale:**
-- Domain model drives database schema (not the other way around)
-- Migrations are version-controlled and reviewable
-- Explicit configurations prevent convention surprises
-- Strongly typed — compile-time safety for schema changes
-**Trade-offs:**
-- Less control than raw SQL for complex queries (mitigated: use raw SQL where needed)
-- Migration conflicts in team environments (mitigated: small, frequent migrations)
+## Future Application Map (v1.5.0 — 7 June 2026)
+- ✅ PlaceholderPageComponent (reusable, data-driven)
+- ✅ 14 placeholder pages for all future modules
+- ✅ Full sidebar with status badges (Built / Partial / Planned)
+- ✅ 35 total navigable routes (no 404s)
+- ✅ FUTURE-APPLICATION-MAP.md documentation
 
 ---
 
-### DEC-005: JWT Bearer Authentication
-**Date:** 2026-06-06
-**Decision:** Stateless JWT Bearer tokens for API authentication.
-**Rationale:**
-- Stateless: no server-side session storage needed (horizontal scaling)
-- Standard: widely understood, tooling support everywhere
-- Claims-based: roles and permissions embedded in token
-- Mobile/SPA friendly: works with any client
-**Trade-offs:**
-- Cannot revoke individual tokens (mitigated: short expiry + refresh rotation)
-- Token size grows with claims (keep claims minimal)
-- Must protect from XSS/CSRF (HttpOnly cookies for web, secure storage for mobile)
+## Remaining Modules (Planned)
+
+| # | Module | Priority | Est. Effort |
+|---|--------|----------|-------------|
+| 4 | Project Management | Next | 3-4 weeks |
+| 5 | Design & Construction | High | 4-5 weeks |
+| 6 | Procurement & Materials | Medium | 3 weeks |
+| 7 | Contractors & Suppliers | Medium | 2-3 weeks |
+| 8 | Finance & Budget Control | High | 4 weeks |
+| 9 | Investors & Funding | Medium | 2-3 weeks |
+| 10 | Property Units | Medium | 2-3 weeks |
+| 11 | Sales & Marketing | High | 4 weeks |
+| 12 | Rental Management | Low | 3 weeks |
+| 13 | Documents & Knowledge | Medium | 2-3 weeks |
+| 14 | Reports & Dashboards | High | 3-4 weeks |
+| — | Administration | Medium | 2 weeks |
 
 ---
 
-### DEC-006: Feature-Based Organisation
-**Date:** 2026-06-06
-**Decision:** Organise code by feature/domain, not by technical concern.
-**Rationale:**
-- Everything related to a feature lives together (high cohesion)
-- New developers find code faster (search by business concept, not by type)
-- Modules can be developed and deployed independently (future microservices path)
-- Reduces merge conflicts (teams work in different folders)
-**Trade-offs:**
-- Some shared code needed across features (placed in Shared/Common)
-- Must avoid cross-feature dependencies (enforced by architecture reviews)
+## Test Summary
 
----
+| Module | Tests |
+|--------|-------|
+| Land Acquisition | 38 |
+| Planning & Approvals | 34 |
+| Legal & Compliance | 21 |
+| **Total** | **93** |
 
-## Future Decisions Needed
-- [ ] Message queue technology (Azure Service Bus vs RabbitMQ)
-- [ ] Caching strategy (Redis vs IMemoryCache)
-- [ ] File storage provider (Azure Blob vs AWS S3 — finalise)
-- [ ] CI/CD pipeline tool (GitHub Actions vs Azure DevOps)
-- [ ] Monitoring/APM tool (Application Insights vs Serilog + Seq)
-- [ ] Multi-tenancy strategy (schema per tenant vs row-level filtering)
+All tests passing. Zero failures.

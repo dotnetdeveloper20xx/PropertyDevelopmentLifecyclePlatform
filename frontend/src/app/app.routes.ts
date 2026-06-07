@@ -73,6 +73,108 @@ export const routes: Routes = [
         path: 'legal/tasks',
         loadComponent: () => import('./features/legal/tasks/legal-tasks.component').then(m => m.LegalTasksComponent)
       },
+      {
+        path: 'legal/compliance',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'legal-compliance' }
+      },
+      // Land Acquisition (expanded)
+      {
+        path: 'due-diligence',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'due-diligence' }
+      },
+      {
+        path: 'acquisition/dashboard',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'land-acquisition-dashboard' }
+      },
+      // Design & Construction
+      {
+        path: 'construction',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'construction-dashboard' }
+      },
+      {
+        path: 'construction/projects',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'construction-projects' }
+      },
+      {
+        path: 'construction/inspections',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'construction-inspections' }
+      },
+      // Procurement & Materials
+      {
+        path: 'procurement',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'procurement-dashboard' }
+      },
+      // Contractors & Suppliers
+      {
+        path: 'contractors',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'contractors-dashboard' }
+      },
+      // Finance & Budget Control
+      {
+        path: 'finance',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'finance-dashboard' }
+      },
+      // Investors & Funding
+      {
+        path: 'investors',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'investors-dashboard' }
+      },
+      // Property Units
+      {
+        path: 'units',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'units-dashboard' }
+      },
+      // Sales & Marketing
+      {
+        path: 'sales',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'sales-dashboard' }
+      },
+      // Rental Management
+      {
+        path: 'rentals',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'rental-dashboard' }
+      },
+      // Documents & Knowledge
+      {
+        path: 'documents',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'documents-dashboard' }
+      },
+      // Reports & Dashboards
+      {
+        path: 'reports',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'reports-dashboard' }
+      },
+      // Administration
+      {
+        path: 'admin/users',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'admin-users' }
+      },
+      {
+        path: 'admin/audit',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'admin-audit' }
+      },
+      {
+        path: 'admin/settings',
+        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
+        data: { pageKey: 'admin-settings' }
+      },
       // Help Centre
       {
         path: 'help',
