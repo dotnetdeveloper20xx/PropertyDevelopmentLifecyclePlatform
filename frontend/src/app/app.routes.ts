@@ -35,6 +35,10 @@ export const routes: Routes = [
         path: 'opportunities/:id',
         loadComponent: () => import('./features/land-acquisition/opportunities/opportunity-detail/opportunity-detail.component').then(m => m.OpportunityDetailComponent)
       },
+      {
+        path: 'opportunities/:id/edit',
+        loadComponent: () => import('./features/land-acquisition/opportunities/opportunity-edit/opportunity-edit.component').then(m => m.OpportunityEditComponent)
+      },
       // Help Centre
       {
         path: 'help',

@@ -48,6 +48,10 @@ export class OpportunityService {
     return this.http.post<ApiResponse<{ id: string; name: string; status: string; createdAt: string }>>(this.apiUrl, request);
   }
 
+  update(id: string, request: Partial<CreateOpportunityRequest>): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, { id, ...request });
+  }
+
   changeStatus(id: string, newStatus: OpportunityStatus): Observable<void> {
     return this.http.patch<void>(`${this.apiUrl}/${id}/status`, { newStatus });
   }

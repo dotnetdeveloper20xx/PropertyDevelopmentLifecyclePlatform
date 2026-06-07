@@ -4,16 +4,19 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { map, exhaustMap, catchError, tap } from 'rxjs/operators';
 import { OpportunityService } from '../../../core/services/opportunity.service';
+import { ToastService } from '../../../core/services/toast.service';
 import * as OpportunitiesActions from './opportunities.actions';
 
 /**
  * NgRx Effects for Opportunities.
  * All API calls (side effects) live here — never in components.
+ * Toast notifications provide user feedback on success/failure.
  */
 @Injectable()
 export class OpportunitiesEffects {
   private actions$ = inject(Actions);
   private opportunityService = inject(OpportunityService);
+  private toastService = inject(ToastService);
   private router = inject(Router);
 
   loadOpportunities$ = createEffect(() =>
@@ -24,7 +27,7 @@ export class OpportunitiesEffects {
           map((response) =>
             OpportunitiesActions.loadOpportunitiesSuccess({
               opportunities: response.data,
-              totalCount: response.pagination?.totalCount ?? 0
+              totalCount: response.pagination?.totalCount ?? response.data?.length ?? 0
             })
           ),
           catchError((error) =>
@@ -72,7 +75,24 @@ export class OpportunitiesEffects {
   createOpportunitySuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(OpportunitiesActions.createOpportunitySuccess),
-      tap(() => this.router.navigate(['/opportunities']))
+      tap(() => {
+        this.toastService.success('Opportunity created successfully');
+        this.router.navigate(['/opportunities']);
+      })
+    ), { dispatch: false }
+  );
+
+  createOpportunityFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(OpportunitiesActions.createOpportunityFailure),
+      tap(({ error }) => this.toastService.error(error))
+    ), { dispatch: false }
+  );
+
+  loadOpportunitiesFailure$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(OpportunitiesActions.loadOpportunitiesFailure),
+      tap(({ error }) => this.toastService.error(error))
     ), { dispatch: false }
   );
 }

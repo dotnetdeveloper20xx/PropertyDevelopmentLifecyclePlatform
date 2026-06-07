@@ -14,6 +14,7 @@ import { DueDiligenceService, DueDiligenceListItem, DueDiligenceType, DueDiligen
 import { OfferService, OfferListItem, OfferStatus } from '../../../../core/services/offer.service';
 import { ActivityService, ActivityItem } from '../../../../core/services/activity.service';
 import { ModalService } from '../../../../core/services/modal.service';
+import { ToastService } from '../../../../core/services/toast.service';
 import { OpportunityDetail } from '../../../../core/models/opportunity.model';
 
 @Component({
@@ -38,6 +39,7 @@ import { OpportunityDetail } from '../../../../core/models/opportunity.model';
       <app-page-header [title]="opportunity.name" [subtitle]="opportunity.location">
         <div class="flex items-center gap-2">
           <app-status-badge [status]="opportunity.status"></app-status-badge>
+          <a [routerLink]="['/opportunities', opportunityId, 'edit']" class="btn btn-ghost btn-xs">Edit</a>
           @if (opportunity.status !== 'Withdrawn' && opportunity.status !== 'Acquired') {
             <button class="btn btn-warning btn-xs" (click)="confirmWithdraw()">Withdraw</button>
           }
@@ -317,6 +319,7 @@ export class OpportunityDetailComponent implements OnInit {
     private offerService: OfferService,
     private activityService: ActivityService,
     private modalService: ModalService,
+    private toastService: ToastService,
     private cdr: ChangeDetectorRef
   ) {
     this.ddForm = this.fb.group({
@@ -395,8 +398,10 @@ export class OpportunityDetailComponent implements OnInit {
         if (response.data) this.dueDiligences = [response.data, ...this.dueDiligences];
         this.ddForm.reset();
         this.showDdForm.set(false);
+        this.toastService.success('Due diligence check created');
         this.cdr.markForCheck();
-      }
+      },
+      error: () => this.toastService.error('Failed to create due diligence check')
     });
   }
 
@@ -411,8 +416,10 @@ export class OpportunityDetailComponent implements OnInit {
         if (response.data) this.offers = [response.data, ...this.offers];
         this.offerForm.reset();
         this.showOfferForm.set(false);
+        this.toastService.success('Offer submitted successfully');
         this.cdr.markForCheck();
-      }
+      },
+      error: () => this.toastService.error('Failed to submit offer')
     });
   }
 
@@ -423,9 +430,11 @@ export class OpportunityDetailComponent implements OnInit {
           const idx = this.offers.findIndex(o => o.id === offerId);
           if (idx >= 0) this.offers[idx] = response.data;
           this.offers = [...this.offers];
+          this.toastService.success(`Offer ${newStatus.toLowerCase()}`);
           this.cdr.markForCheck();
         }
-      }
+      },
+      error: () => this.toastService.error('Failed to update offer status')
     });
   }
 
@@ -439,7 +448,10 @@ export class OpportunityDetailComponent implements OnInit {
     }).subscribe(confirmed => {
       if (confirmed) {
         this.opportunityService.changeStatus(this.opportunityId, 'Withdrawn').subscribe({
-          next: () => this.router.navigate(['/opportunities'])
+          next: () => {
+            this.toastService.success('Opportunity withdrawn');
+            this.router.navigate(['/opportunities']);
+          }
         });
       }
     });
@@ -455,7 +467,10 @@ export class OpportunityDetailComponent implements OnInit {
     }).subscribe(confirmed => {
       if (confirmed) {
         this.opportunityService.delete(this.opportunityId).subscribe({
-          next: () => this.router.navigate(['/opportunities'])
+          next: () => {
+            this.toastService.success('Opportunity deleted');
+            this.router.navigate(['/opportunities']);
+          }
         });
       }
     });
