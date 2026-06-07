@@ -6,4 +6,8 @@
     <Project Path="src/BuildEstate.Infrastructure/BuildEstate.Infrastructure.csproj" />
     <Project Path="src/BuildEstate.Shared/BuildEstate.Shared.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BuildEstate.Application.Tests/BuildEstate.Application.Tests.csproj" />
+    <Project Path="tests/BuildEstate.API.Tests/BuildEstate.API.Tests.csproj" />
+  </Folder>
 </Solution>
