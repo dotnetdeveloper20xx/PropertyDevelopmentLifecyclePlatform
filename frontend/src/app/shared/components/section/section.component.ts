@@ -10,10 +10,10 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section class="mb-8" [attr.aria-labelledby]="title ? 'section-' + title.replace(' ', '-') : null">
+    <section class="mb-8" [attr.aria-labelledby]="title ? 'section-' + title.split(' ').join('-') : null">
       @if (title) {
         <div class="mb-4">
-          <h2 class="text-lg font-semibold text-base-content" [id]="'section-' + title.replace(' ', '-')">{{ title }}</h2>
+          <h2 class="text-lg font-semibold text-base-content" [id]="'section-' + title.split(' ').join('-')">{{ title }}</h2>
           @if (description) {
             <p class="text-sm text-base-content/60 mt-1">{{ description }}</p>
           }

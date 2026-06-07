@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,9 +14,8 @@ import { AuthService } from '../../../core/services/auth.service';
   imports: [CommonModule, ReactiveFormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="min-h-screen flex items-center justify-center bg-base-200 px-4">
-      <div class="card w-full max-w-md bg-base-100 shadow-xl">
-        <div class="card-body">
+    <div class="card w-full max-w-md bg-base-100 shadow-xl">
+      <div class="card-body">
           <div class="text-center mb-6">
             <h1 class="text-2xl font-bold text-primary">BuildEstate Pro</h1>
             <p class="text-sm text-base-content/60 mt-2">Property Development Lifecycle Platform</p>
@@ -75,7 +74,6 @@ import { AuthService } from '../../../core/services/auth.service';
           </form>
         </div>
       </div>
-    </div>
   `
 })
 export class LoginComponent {
@@ -86,7 +84,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -109,8 +108,9 @@ export class LoginComponent {
       error: (err) => {
         this.loading = false;
         this.errorMessage = err.error?.errors?.[0] || 'Invalid email or password.';
+        this.cdr.markForCheck();
       },
-      complete: () => { this.loading = false; }
+      complete: () => { this.loading = false; this.cdr.markForCheck(); }
     });
   }
 }

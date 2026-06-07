@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 namespace BuildEstate.Application.Features.LandAcquisition.Opportunities.Queries.GetOpportunityStats;
 
 /// <summary>
-/// Handles retrieval of pipeline statistics. Single DB round trip using GroupBy.
+/// Handles retrieval of pipeline statistics.
+/// Uses SQL-level aggregation (SUM, AVG, COUNT) — never loads all records into memory.
 /// </summary>
 public class GetOpportunityStatsQueryHandler : IRequestHandler<GetOpportunityStatsQuery, OpportunityStatsDto>
 {
@@ -24,15 +25,21 @@ public class GetOpportunityStatsQueryHandler : IRequestHandler<GetOpportunitySta
     {
         var query = _repository.Query().AsNoTracking();
 
+        // Single round-trip: status counts via GroupBy
         var statusCounts = await query
             .GroupBy(x => x.Status)
             .Select(g => new { Status = g.Key, Count = g.Count() })
             .ToListAsync(cancellationToken);
 
-        var financials = await query
+        // SQL-level aggregation for financials — never loads rows into memory
+        var totalPipelineValue = await query
             .Where(x => x.AskingPrice.HasValue)
-            .Select(x => x.AskingPrice!.Value)
-            .ToListAsync(cancellationToken);
+            .SumAsync(x => x.AskingPrice!.Value, cancellationToken);
+
+        var averageAskingPrice = await query
+            .Where(x => x.AskingPrice.HasValue)
+            .Select(x => (decimal?)x.AskingPrice!.Value)
+            .AverageAsync(cancellationToken);
 
         return new OpportunityStatsDto
         {
@@ -44,8 +51,8 @@ public class GetOpportunityStatsQueryHandler : IRequestHandler<GetOpportunitySta
             UnderContract = statusCounts.FirstOrDefault(x => x.Status == OpportunityStatus.UnderContract)?.Count ?? 0,
             Acquired = statusCounts.FirstOrDefault(x => x.Status == OpportunityStatus.Acquired)?.Count ?? 0,
             Withdrawn = statusCounts.FirstOrDefault(x => x.Status == OpportunityStatus.Withdrawn)?.Count ?? 0,
-            TotalPipelineValue = financials.Sum(),
-            AverageAskingPrice = financials.Count > 0 ? financials.Average() : null
+            TotalPipelineValue = totalPipelineValue,
+            AverageAskingPrice = averageAskingPrice
         };
     }
 }
