@@ -15,6 +15,12 @@ import { legalReducer } from './features/legal/store/legal.reducer';
 import { LegalEffects } from './features/legal/store/legal.effects';
 import { projectsReducer } from './features/projects/store/projects.reducer';
 import { ProjectsEffects } from './features/projects/store/projects.effects';
+import { constructionReducer } from './features/construction/store/construction.reducer';
+import { ConstructionEffects } from './features/construction/store/construction.effects';
+import { procurementReducer } from './features/procurement/store/procurement.reducer';
+import { ProcurementEffects } from './features/procurement/store/procurement.effects';
+import { contractorsReducer } from './features/contractors/store/contractors.reducer';
+import { ContractorsEffects } from './features/contractors/store/contractors.effects';
 
 /**
  * Application configuration.
@@ -26,8 +32,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
-    provideStore({ opportunities: opportunitiesReducer, planning: planningReducer, legal: legalReducer, projects: projectsReducer }),
-    provideEffects([OpportunitiesEffects, PlanningEffects, LegalEffects, ProjectsEffects]),
+    provideStore({ opportunities: opportunitiesReducer, planning: planningReducer, legal: legalReducer, projects: projectsReducer, construction: constructionReducer, procurement: procurementReducer, contractors: contractorsReducer }),
+    provideEffects([OpportunitiesEffects, PlanningEffects, LegalEffects, ProjectsEffects, ConstructionEffects, ProcurementEffects, ContractorsEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: false })
   ]
 };

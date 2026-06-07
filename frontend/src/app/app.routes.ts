@@ -107,8 +107,7 @@ export const routes: Routes = [
       // Design & Construction
       {
         path: 'construction',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'construction-dashboard' }
+        loadComponent: () => import('./features/construction/construction-stages/construction-stages.component').then(m => m.ConstructionStagesComponent)
       },
       {
         path: 'construction/projects',
@@ -123,14 +122,12 @@ export const routes: Routes = [
       // Procurement & Materials
       {
         path: 'procurement',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'procurement-dashboard' }
+        loadComponent: () => import('./features/procurement/procurement-list/procurement-list.component').then(m => m.ProcurementListComponent)
       },
       // Contractors & Suppliers
       {
         path: 'contractors',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'contractors-dashboard' }
+        loadComponent: () => import('./features/contractors/contractor-list/contractor-list.component').then(m => m.ContractorListComponent)
       },
       // Finance & Budget Control
       {
