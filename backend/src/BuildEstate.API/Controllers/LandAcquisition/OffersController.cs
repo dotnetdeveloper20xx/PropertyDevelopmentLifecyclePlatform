@@ -1,3 +1,4 @@
+using BuildEstate.Application.Features.LandAcquisition.Offers.Commands.ChangeOfferStatus;
 using BuildEstate.Application.Features.LandAcquisition.Offers.Commands.CreateOffer;
 using BuildEstate.Application.Features.LandAcquisition.Offers.DTOs;
 using BuildEstate.Application.Features.LandAcquisition.Offers.Queries.GetOffersByOpportunity;
@@ -53,5 +54,24 @@ public class OffersController : ControllerBase
         var commandWithId = command with { OpportunityId = opportunityId };
         var result = await _mediator.Send(commandWithId, cancellationToken);
         return StatusCode(StatusCodes.Status201Created, ApiResponse<OfferListItemDto>.Ok(result));
+    }
+
+    /// <summary>
+    /// Change the status of an offer (Accept, Reject, Counter-Offer, Withdraw).
+    /// </summary>
+    [HttpPatch("{id:guid}/status")]
+    [Authorize(Roles = "SuperAdmin,AcquisitionManager,FinanceDirector")]
+    [ProducesResponseType(typeof(ApiResponse<OfferListItemDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ChangeStatus(
+        Guid opportunityId,
+        Guid id,
+        [FromBody] ChangeOfferStatusCommand command,
+        CancellationToken cancellationToken)
+    {
+        var commandWithIds = command with { Id = id, OpportunityId = opportunityId };
+        var result = await _mediator.Send(commandWithIds, cancellationToken);
+        return Ok(ApiResponse<OfferListItemDto>.Ok(result));
     }
 }

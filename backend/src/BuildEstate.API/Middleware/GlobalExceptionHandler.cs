@@ -46,6 +46,10 @@ public class GlobalExceptionHandler
                 HttpStatusCode.BadRequest,
                 ApiResponse<object>.Fail(validation.Errors)
             ),
+            BadRequestException badRequest => (
+                HttpStatusCode.BadRequest,
+                ApiResponse<object>.Fail(badRequest.Message)
+            ),
             ForbiddenException forbidden => (
                 HttpStatusCode.Forbidden,
                 ApiResponse<object>.Fail(forbidden.Message)

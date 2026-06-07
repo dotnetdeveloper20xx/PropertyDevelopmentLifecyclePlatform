@@ -48,6 +48,7 @@ public static class DependencyInjection
         // Repositories
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IAuditLogQuery, AuditLogQueryService>();
 
         // Services
         services.AddScoped<IJwtTokenService, JwtTokenService>();
