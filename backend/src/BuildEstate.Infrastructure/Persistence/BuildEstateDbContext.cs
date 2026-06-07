@@ -1,3 +1,4 @@
+using BuildEstate.Domain.Common;
 using BuildEstate.Domain.Entities.Identity;
 using BuildEstate.Domain.Entities.LandAcquisition;
 using BuildEstate.Infrastructure.Identity;
@@ -35,5 +36,16 @@ public class BuildEstateDbContext : IdentityDbContext<ApplicationUser, Applicati
         base.OnModelCreating(builder);
 
         builder.ApplyConfigurationsFromAssembly(typeof(BuildEstateDbContext).Assembly);
+
+        // Apply RowVersion concurrency token to ALL entities inheriting BaseEntity
+        foreach (var entityType in builder.Model.GetEntityTypes())
+        {
+            if (typeof(BaseEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                builder.Entity(entityType.ClrType)
+                    .Property(nameof(BaseEntity.RowVersion))
+                    .IsRowVersion();
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading.RateLimiting;
 using BuildEstate.API.Middleware;
 using BuildEstate.API.Services;
 using BuildEstate.Application;
@@ -6,6 +7,7 @@ using BuildEstate.Application.Interfaces;
 using BuildEstate.Infrastructure;
 using BuildEstate.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
@@ -18,6 +20,42 @@ builder.Services.AddInfrastructure(builder.Configuration);
 // Current User Service (required by AuditableDbContextInterceptor at runtime)
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
+// Rate Limiting
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+    // Fixed window: 10 requests per 60 seconds per IP for auth endpoints
+    options.AddFixedWindowLimiter("auth", opt =>
+    {
+        opt.PermitLimit = 10;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
+    });
+
+    // General API: 100 requests per 60 seconds per IP
+    options.AddFixedWindowLimiter("api", opt =>
+    {
+        opt.PermitLimit = 100;
+        opt.Window = TimeSpan.FromMinutes(1);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 5;
+    });
+
+    options.OnRejected = async (context, cancellationToken) =>
+    {
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsync(
+            """{"success":false,"errors":["Too many requests. Please try again later."]}""",
+            cancellationToken);
+    };
+});
+
+// Health Checks
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<BuildEstateDbContext>("database");
 
 // JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -126,6 +164,8 @@ app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRateLimiter();
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.Run();

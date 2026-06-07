@@ -17,4 +17,10 @@ public abstract class BaseEntity : IAuditableEntity
     public bool IsDeleted { get; set; }
     public DateTime? DeletedAt { get; set; }
     public string? DeletedBy { get; set; }
+
+    /// <summary>
+    /// Concurrency token for optimistic locking. EF Core checks this on every UPDATE.
+    /// If another user modified the row since we read it, a DbUpdateConcurrencyException is thrown.
+    /// </summary>
+    public byte[] RowVersion { get; set; } = Array.Empty<byte>();
 }

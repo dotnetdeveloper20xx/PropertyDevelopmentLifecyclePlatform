@@ -7,16 +7,18 @@ using BuildEstate.Shared.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace BuildEstate.API.Controllers.Auth;
 
 /// <summary>
 /// Authentication controller. Handles login, registration, token refresh, and user profile.
-/// Login and Register endpoints are public (AllowAnonymous). All others require authentication.
+/// Login and Register endpoints are public (AllowAnonymous) with rate limiting.
 /// </summary>
 [ApiController]
 [Route("api/v1/auth")]
 [Produces("application/json")]
+[EnableRateLimiting("auth")]
 public class AuthController : ControllerBase
 {
     private readonly IMediator _mediator;
