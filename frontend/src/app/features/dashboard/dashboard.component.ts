@@ -13,6 +13,10 @@ import { OpportunityStats } from '../../core/models/opportunity.model';
 import * as OpportunitiesActions from '../land-acquisition/store/opportunities.actions';
 import * as OpportunitiesSelectors from '../land-acquisition/store/opportunities.selectors';
 
+/**
+ * Main dashboard with pipeline stats, financial summary, attention items, and quick actions.
+ * Answers: What happened? What is happening? What needs attention? What should I do next?
+ */
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -23,10 +27,13 @@ import * as OpportunitiesSelectors from '../land-acquisition/store/opportunities
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <app-breadcrumb [items]="[{label: 'Home'}, {label: 'Dashboard'}]"></app-breadcrumb>
-    <app-page-header title="Land Acquisition Dashboard" subtitle="Pipeline overview and key metrics"></app-page-header>
+    <app-page-header title="Land Acquisition Dashboard" subtitle="Pipeline overview and key metrics">
+      <a routerLink="/opportunities/new" class="btn btn-primary btn-sm">+ New Opportunity</a>
+    </app-page-header>
     <app-page-description
       description="This dashboard shows the current state of your land acquisition pipeline. Track how many opportunities are at each stage, monitor total pipeline value, and identify where attention is needed."
-      guidance="Review opportunities stuck in early stages — they may need action to progress."
+      guidance="Review the 'Attention Needed' section for items that require action."
+      helpLink="/help/modules/mod-dashboard"
     ></app-page-description>
 
     @if (statsLoading$ | async) {
@@ -34,6 +41,33 @@ import * as OpportunitiesSelectors from '../land-acquisition/store/opportunities
     } @else if (error$ | async; as error) {
       <app-error-state [message]="error" (retry)="loadStats()"></app-error-state>
     } @else if (stats$ | async; as stats) {
+
+      <!-- Attention Needed Section -->
+      @if (getAttentionItems(stats).length > 0) {
+        <div class="mb-8">
+          <h2 class="text-sm font-semibold text-base-content/50 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-warning animate-pulse"></span>
+            Attention Needed
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            @for (item of getAttentionItems(stats); track item.label) {
+              <div class="card bg-warning/5 border border-warning/30">
+                <div class="card-body p-4 flex-row items-center gap-3">
+                  <div class="text-warning text-xl">{{ item.icon }}</div>
+                  <div class="flex-1">
+                    <p class="text-sm font-medium text-base-content">{{ item.label }}</p>
+                    <p class="text-xs text-base-content/60">{{ item.description }}</p>
+                  </div>
+                  @if (item.action) {
+                    <a [routerLink]="item.action" class="btn btn-ghost btn-xs">View →</a>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
       <!-- Pipeline Status Cards -->
       <h2 class="text-sm font-semibold text-base-content/50 uppercase tracking-wider mb-3">Pipeline by Status</h2>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 mb-8">
@@ -76,18 +110,62 @@ import * as OpportunitiesSelectors from '../land-acquisition/store/opportunities
 
       <!-- Quick Actions -->
       <h2 class="text-sm font-semibold text-base-content/50 uppercase tracking-wider mb-3">Quick Actions</h2>
-      <div class="flex gap-3">
+      <div class="flex flex-wrap gap-3">
         <a routerLink="/opportunities/new" class="btn btn-primary btn-sm">Create Land Opportunity</a>
         <a routerLink="/opportunities" class="btn btn-ghost btn-sm">View All Opportunities</a>
+        <a routerLink="/help/getting-started" class="btn btn-ghost btn-sm">Getting Started Guide</a>
       </div>
     } @else {
-      <div class="card bg-base-100 shadow-sm border border-base-300 p-8 text-center">
-        <div class="text-4xl mb-4">🏗️</div>
-        <h3 class="text-lg font-semibold">Welcome to BuildEstate Pro</h3>
-        <p class="text-base-content/60 mt-2 max-w-md mx-auto">
-          Your land acquisition pipeline is empty. Start by creating your first opportunity to evaluate a potential development site.
-        </p>
-        <a routerLink="/opportunities/new" class="btn btn-primary btn-sm mt-4">Create Your First Opportunity</a>
+      <!-- First-Time User Welcome -->
+      <div class="card bg-base-100 shadow-sm border border-base-300 p-8">
+        <div class="max-w-lg mx-auto text-center">
+          <div class="text-5xl mb-4">🏗️</div>
+          <h3 class="text-xl font-bold">Welcome to BuildEstate Pro</h3>
+          <p class="text-base-content/60 mt-3 leading-relaxed">
+            Your land acquisition pipeline is empty. Start by creating your first opportunity to evaluate a potential development site.
+          </p>
+
+          <div class="divider my-6">Get Started</div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+            <a routerLink="/opportunities/new" class="card bg-primary/5 border border-primary/20 hover:border-primary/50 transition-colors cursor-pointer p-4">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">📍</span>
+                <div>
+                  <p class="font-medium text-sm">Create Opportunity</p>
+                  <p class="text-xs text-base-content/50">Add a land site to evaluate</p>
+                </div>
+              </div>
+            </a>
+            <a routerLink="/help/getting-started/gs-welcome" class="card bg-info/5 border border-info/20 hover:border-info/50 transition-colors cursor-pointer p-4">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">📖</span>
+                <div>
+                  <p class="font-medium text-sm">Read the Guide</p>
+                  <p class="text-xs text-base-content/50">Learn how the platform works</p>
+                </div>
+              </div>
+            </a>
+            <a routerLink="/help/land-acquisition/la-pipeline" class="card bg-accent/5 border border-accent/20 hover:border-accent/50 transition-colors cursor-pointer p-4">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">🔄</span>
+                <div>
+                  <p class="font-medium text-sm">Understand the Pipeline</p>
+                  <p class="text-xs text-base-content/50">How opportunities progress</p>
+                </div>
+              </div>
+            </a>
+            <a routerLink="/help" class="card bg-secondary/5 border border-secondary/20 hover:border-secondary/50 transition-colors cursor-pointer p-4">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">❓</span>
+                <div>
+                  <p class="font-medium text-sm">Help Centre</p>
+                  <p class="text-xs text-base-content/50">FAQs, glossary, and more</p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
       </div>
     }
   `
@@ -110,4 +188,56 @@ export class DashboardComponent implements OnInit {
   loadStats(): void {
     this.store.dispatch(OpportunitiesActions.loadStats());
   }
+
+  /**
+   * Derive attention items from stats. Highlights situations needing user action.
+   */
+  getAttentionItems(stats: OpportunityStats): AttentionItem[] {
+    const items: AttentionItem[] = [];
+
+    if (stats.identified > 5) {
+      items.push({
+        icon: '⚠️',
+        label: `${stats.identified} opportunities stuck in "Identified"`,
+        description: 'These may need initial review to progress.',
+        action: '/opportunities'
+      });
+    }
+
+    if (stats.dueDiligence > 3) {
+      items.push({
+        icon: '🔍',
+        label: `${stats.dueDiligence} opportunities in due diligence`,
+        description: 'Check if any due diligence reports are overdue.',
+        action: '/opportunities'
+      });
+    }
+
+    if (stats.offerMade > 2) {
+      items.push({
+        icon: '💰',
+        label: `${stats.offerMade} offers awaiting response`,
+        description: 'Follow up with sellers or agents on outstanding offers.',
+        action: '/opportunities'
+      });
+    }
+
+    if (stats.totalOpportunities === 0) {
+      items.push({
+        icon: '📭',
+        label: 'Your pipeline is empty',
+        description: 'Create your first opportunity to start tracking land acquisitions.',
+        action: '/opportunities/new'
+      });
+    }
+
+    return items;
+  }
+}
+
+interface AttentionItem {
+  icon: string;
+  label: string;
+  description: string;
+  action?: string;
 }

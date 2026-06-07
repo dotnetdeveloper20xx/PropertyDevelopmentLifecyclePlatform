@@ -16,9 +16,14 @@ export interface NavItem {
   children?: NavItem[];
 }
 
+export interface NavSection {
+  label: string;
+  items: NavItem[];
+}
+
 /**
  * Navigation and breadcrumb service.
- * Manages sidebar navigation items and dynamic breadcrumbs.
+ * Manages sidebar navigation items (grouped by section) and dynamic breadcrumbs.
  */
 @Injectable({ providedIn: 'root' })
 export class NavigationService {
@@ -27,9 +32,33 @@ export class NavigationService {
 
   private previousUrl = '';
 
+  /** Flat list for backwards compatibility */
   readonly sidebarItems: NavItem[] = [
     { label: 'Dashboard', route: '/dashboard', icon: 'dashboard' },
     { label: 'Opportunities', route: '/opportunities', icon: 'landscape', roles: ['SuperAdmin', 'AcquisitionManager', 'FinanceDirector'] },
+    { label: 'Help Centre', route: '/help', icon: 'help' },
+  ];
+
+  /** Grouped navigation for the sidebar */
+  readonly navSections: NavSection[] = [
+    {
+      label: 'Overview',
+      items: [
+        { label: 'Dashboard', route: '/dashboard', icon: 'dashboard' }
+      ]
+    },
+    {
+      label: 'Land Acquisition',
+      items: [
+        { label: 'Opportunities', route: '/opportunities', icon: 'landscape', roles: ['SuperAdmin', 'AcquisitionManager', 'FinanceDirector'] }
+      ]
+    },
+    {
+      label: 'Support',
+      items: [
+        { label: 'Help Centre', route: '/help', icon: 'help' }
+      ]
+    }
   ];
 
   constructor(private router: Router) {

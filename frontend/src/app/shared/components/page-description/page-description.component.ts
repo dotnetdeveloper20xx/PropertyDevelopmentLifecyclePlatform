@@ -1,16 +1,18 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 /**
  * Page description component. Provides business context and guidance below page headers.
  * Answers: "What is this page? Why does it exist? What can I do here?"
- * 
+ *
  * Every major page should include this to make the application self-documenting.
+ * The optional helpLink connects to relevant Help Centre articles.
  */
 @Component({
   selector: 'app-page-description',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="bg-base-100 border border-base-300 rounded-lg p-4 mb-6">
@@ -19,7 +21,7 @@ import { CommonModule } from '@angular/common';
         <p class="text-sm text-primary/80 mt-2 font-medium">💡 {{ guidance }}</p>
       }
       @if (helpLink) {
-        <a [href]="helpLink" class="text-xs text-primary hover:underline mt-2 inline-block">Learn more →</a>
+        <a [routerLink]="helpLink" class="text-xs text-primary hover:underline mt-2 inline-block">Learn more →</a>
       }
     </div>
   `

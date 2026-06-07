@@ -31,6 +31,7 @@ import * as OpportunitiesSelectors from '../../store/opportunities.selectors';
     <app-page-description
       description="Land opportunities represent potential sites for development. Each opportunity progresses through a lifecycle: Identified → Initial Review → Due Diligence → Offer → Contract → Acquired."
       guidance="Click any row to view full details, add due diligence checks, or make offers."
+      helpLink="/help/land-acquisition/la-pipeline"
     ></app-page-description>
 
     @if (loading$ | async) {

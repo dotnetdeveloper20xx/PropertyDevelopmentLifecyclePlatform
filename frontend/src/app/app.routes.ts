@@ -35,6 +35,31 @@ export const routes: Routes = [
         path: 'opportunities/:id',
         loadComponent: () => import('./features/land-acquisition/opportunities/opportunity-detail/opportunity-detail.component').then(m => m.OpportunityDetailComponent)
       },
+      // Help Centre
+      {
+        path: 'help',
+        loadComponent: () => import('./features/help-centre/help-centre.component').then(m => m.HelpCentreComponent)
+      },
+      {
+        path: 'help/release-notes',
+        loadComponent: () => import('./features/help-centre/release-notes.component').then(m => m.ReleaseNotesComponent)
+      },
+      {
+        path: 'help/learning-paths',
+        loadComponent: () => import('./features/help-centre/learning-paths.component').then(m => m.LearningPathsComponent)
+      },
+      {
+        path: 'help/user-bible',
+        loadComponent: () => import('./features/help-centre/user-bible.component').then(m => m.UserBibleComponent)
+      },
+      {
+        path: 'help/:categoryId',
+        loadComponent: () => import('./features/help-centre/help-category.component').then(m => m.HelpCategoryComponent)
+      },
+      {
+        path: 'help/:categoryId/:articleId',
+        loadComponent: () => import('./features/help-centre/help-article.component').then(m => m.HelpArticleComponent)
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
