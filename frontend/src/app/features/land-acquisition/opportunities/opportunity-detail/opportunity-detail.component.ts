@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { LoadingStateComponent } from '../../../../shared/components/loading-state/loading-state.component';
@@ -105,7 +105,8 @@ export class OpportunityDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private opportunityService: OpportunityService
+    private opportunityService: OpportunityService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -115,9 +116,16 @@ export class OpportunityDetailComponent implements OnInit {
         next: (response) => {
           this.opportunity = response.data;
           this.loading = false;
+          this.cdr.markForCheck();
         },
-        error: () => { this.loading = false; }
+        error: (err) => {
+          this.loading = false;
+          this.cdr.markForCheck();
+          console.error('Failed to load opportunity:', err);
+        }
       });
+    } else {
+      this.loading = false;
     }
   }
 }

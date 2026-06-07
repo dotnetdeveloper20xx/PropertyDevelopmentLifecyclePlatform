@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
@@ -12,11 +12,9 @@ import * as OpportunitiesActions from './opportunities.actions';
  */
 @Injectable()
 export class OpportunitiesEffects {
-  constructor(
-    private actions$: Actions,
-    private opportunityService: OpportunityService,
-    private router: Router
-  ) {}
+  private actions$ = inject(Actions);
+  private opportunityService = inject(OpportunityService);
+  private router = inject(Router);
 
   loadOpportunities$ = createEffect(() =>
     this.actions$.pipe(
