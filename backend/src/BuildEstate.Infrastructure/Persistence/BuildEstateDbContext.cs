@@ -1,4 +1,5 @@
 using BuildEstate.Domain.Common;
+using BuildEstate.Domain.Entities.Construction;
 using BuildEstate.Domain.Entities.Identity;
 using BuildEstate.Domain.Entities.LandAcquisition;
 using BuildEstate.Domain.Entities.Legal;
@@ -48,6 +49,11 @@ public class BuildEstateDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<Milestone> Milestones => Set<Milestone>();
     public DbSet<ProjectTask> ProjectTasks => Set<ProjectTask>();
     public DbSet<ProjectRisk> ProjectRisks => Set<ProjectRisk>();
+
+    // Construction Management
+    public DbSet<ConstructionStage> ConstructionStages => Set<ConstructionStage>();
+    public DbSet<Inspection> Inspections => Set<Inspection>();
+    public DbSet<Snag> Snags => Set<Snag>();
 
     // Audit
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
