@@ -215,6 +215,26 @@ export const routes: Routes = [
         path: 'reports/:id',
         loadComponent: () => import('./features/reports/report-detail/report-detail.component').then(m => m.ReportDetailComponent)
       },
+      // Portfolio Strategy
+      {
+        path: 'portfolio',
+        loadComponent: () => import('./features/portfolio/portfolio-list/portfolio-list.component').then(m => m.PortfolioListComponent)
+      },
+      // Feasibility & Viability
+      {
+        path: 'feasibility',
+        loadComponent: () => import('./features/feasibility/feasibility-list/feasibility-list.component').then(m => m.FeasibilityListComponent)
+      },
+      // Design & Professional Services
+      {
+        path: 'design',
+        loadComponent: () => import('./features/design/design-list/design-list.component').then(m => m.DesignListComponent)
+      },
+      // Defects & Warranty
+      {
+        path: 'defects',
+        loadComponent: () => import('./features/defects/defect-list/defect-list.component').then(m => m.DefectListComponent)
+      },
       // Administration
       {
         path: 'admin/users',

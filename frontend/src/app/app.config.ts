@@ -35,6 +35,10 @@ import { documentsReducer } from './features/documents/store/documents.reducer';
 import { DocumentsEffects } from './features/documents/store/documents.effects';
 import { reportsReducer } from './features/reports/store/reports.reducer';
 import { ReportsEffects } from './features/reports/store/reports.effects';
+import { portfolioReducer } from './features/portfolio/store/portfolio.reducer';
+import { PortfolioEffects } from './features/portfolio/store/portfolio.effects';
+import { defectsReducer } from './features/defects/store/defects.reducer';
+import { DefectsEffects } from './features/defects/store/defects.effects';
 
 /**
  * Application configuration.
@@ -46,8 +50,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
-    provideStore({ opportunities: opportunitiesReducer, planning: planningReducer, legal: legalReducer, projects: projectsReducer, construction: constructionReducer, procurement: procurementReducer, contractors: contractorsReducer, finance: financeReducer, investors: investorsReducer, units: unitsReducer, sales: salesReducer, rentals: rentalsReducer, documents: documentsReducer, reports: reportsReducer }),
-    provideEffects([OpportunitiesEffects, PlanningEffects, LegalEffects, ProjectsEffects, ConstructionEffects, ProcurementEffects, ContractorsEffects, FinanceEffects, InvestorsEffects, UnitsEffects, SalesEffects, RentalsEffects, DocumentsEffects, ReportsEffects]),
+    provideStore({ opportunities: opportunitiesReducer, planning: planningReducer, legal: legalReducer, projects: projectsReducer, construction: constructionReducer, procurement: procurementReducer, contractors: contractorsReducer, finance: financeReducer, investors: investorsReducer, units: unitsReducer, sales: salesReducer, rentals: rentalsReducer, documents: documentsReducer, reports: reportsReducer, portfolio: portfolioReducer, defects: defectsReducer }),
+    provideEffects([OpportunitiesEffects, PlanningEffects, LegalEffects, ProjectsEffects, ConstructionEffects, ProcurementEffects, ContractorsEffects, FinanceEffects, InvestorsEffects, UnitsEffects, SalesEffects, RentalsEffects, DocumentsEffects, ReportsEffects, PortfolioEffects, DefectsEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: false })
   ]
 };

@@ -1,12 +1,16 @@
 using BuildEstate.Domain.Common;
 using BuildEstate.Domain.Entities.Construction;
 using BuildEstate.Domain.Entities.Contractors;
+using BuildEstate.Domain.Entities.Defects;
+using BuildEstate.Domain.Entities.Design;
 using BuildEstate.Domain.Entities.Documents;
+using BuildEstate.Domain.Entities.Feasibility;
 using BuildEstate.Domain.Entities.Finance;
 using BuildEstate.Domain.Entities.Identity;
 using BuildEstate.Domain.Entities.LandAcquisition;
 using BuildEstate.Domain.Entities.Legal;
 using BuildEstate.Domain.Entities.Planning;
+using BuildEstate.Domain.Entities.Portfolio;
 using BuildEstate.Domain.Entities.Procurement;
 using BuildEstate.Domain.Entities.Projects;
 using BuildEstate.Domain.Entities.Rentals;
@@ -89,6 +93,18 @@ public class BuildEstateDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     // Reports
     public DbSet<SavedReport> SavedReports => Set<SavedReport>();
+
+    // Portfolio Strategy
+    public DbSet<Portfolio> Portfolios => Set<Portfolio>();
+
+    // Feasibility & Viability
+    public DbSet<FeasibilityAssessment> FeasibilityAssessments => Set<FeasibilityAssessment>();
+
+    // Design & Professional Services
+    public DbSet<DesignPackage> DesignPackages => Set<DesignPackage>();
+
+    // Defects & Warranty
+    public DbSet<Defect> Defects => Set<Defect>();
 
     // Audit
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
