@@ -769,6 +769,406 @@ Overdue tasks are highlighted. Status can be changed directly from the table.
     category: HELP_CATEGORIES[4],
     tags: ['legal', 'tasks', 'deadlines', 'management'],
     lastUpdated: '2026-06-07'
+  },
+
+  // Module 4 — Project Management
+  {
+    id: 'project-overview',
+    title: 'Project Management Overview',
+    summary: 'What the Project Management module does and its key features.',
+    content: `
+## What is Project Management?
+
+The Project Management module is the central hub for planning, tracking, and delivering real estate development projects from inception to completion.
+
+## Key Features
+
+- **Project Registry** — Create and manage all development projects in one place
+- **Milestones & Tasks** — Break projects into phases, milestones, and actionable tasks
+- **Timeline & Gantt** — Visualise project schedules and dependencies
+- **Risk & Issue Tracking** — Identify and mitigate risks before they become problems
+- **Resource Allocation** — Assign team members and track capacity
+
+## How to Use
+
+Navigate to Projects in the sidebar to view all active projects. Use the project detail page to manage milestones, tasks, and team assignments.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['project', 'management', 'milestones', 'tasks', 'timeline'],
+    lastUpdated: '2026-06-15'
+  },
+  {
+    id: 'project-lifecycle',
+    title: 'Project Lifecycle',
+    summary: 'Understanding the stages a project moves through from planning to completion.',
+    content: `
+## What is the Project Lifecycle?
+
+Every project follows a structured lifecycle that ensures proper governance and delivery.
+
+## Lifecycle Stages
+
+- **Planning** — Define scope, budget, timeline, and resources
+- **Pre-Construction** — Design approvals, procurement, contractor appointment
+- **In Progress** — Active construction and development work
+- **Completed** — All works finished, handover and closeout
+
+## How to Use
+
+Project status is updated as the project progresses. Each stage unlocks relevant features and dashboards for that phase of delivery.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['project', 'lifecycle', 'stages', 'planning', 'construction'],
+    lastUpdated: '2026-06-15'
+  },
+
+  // Module 5 — Construction
+  {
+    id: 'construction-stages',
+    title: 'Construction Stages',
+    summary: 'What construction stages are and how to track progress through them.',
+    content: `
+## What are Construction Stages?
+
+Construction stages break a build project into sequential phases, each representing a major milestone in the physical development.
+
+## Key Features
+
+- **Stage Definition** — Define stages like Foundations, Superstructure, Fit-Out, External Works
+- **Progress Tracking** — Record percentage completion per stage
+- **Stage Sign-Off** — Require approval before moving to the next stage
+- **Photo Evidence** — Attach site photos to document progress
+
+## How to Use
+
+Open a project and navigate to the Construction tab. Add stages in order, update progress as work is completed, and sign off each stage before proceeding.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['construction', 'stages', 'progress', 'build', 'site'],
+    lastUpdated: '2026-06-15'
+  },
+  {
+    id: 'inspections-snags',
+    title: 'Inspections & Snagging',
+    summary: 'Types of inspections, what snags are, and how to manage them.',
+    content: `
+## What are Inspections?
+
+Inspections are formal checks carried out at key points during construction to ensure quality, safety, and compliance with design specifications.
+
+## Key Features
+
+- **Inspection Types** — Building Control, Fire Safety, Quality, Health & Safety, Client
+- **Snagging Lists** — Record defects or incomplete work items found during inspections
+- **Assign & Track** — Assign snags to contractors with due dates
+- **Resolution** — Mark snags as resolved once rectified and re-inspected
+
+## How to Use
+
+Create inspections from the project detail page. During inspections, log any snags found. Track resolution progress on the snagging dashboard.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['construction', 'inspections', 'snags', 'defects', 'quality'],
+    lastUpdated: '2026-06-15'
+  },
+
+  // Module 6 — Procurement
+  {
+    id: 'procurement-overview',
+    title: 'Procurement & Materials',
+    summary: 'Overview of procurement — purchase orders, deliveries, and material tracking.',
+    content: `
+## What is Procurement?
+
+The Procurement module manages the ordering, delivery, and tracking of materials and services needed for construction projects.
+
+## Key Features
+
+- **Purchase Orders** — Create and manage orders to suppliers
+- **Delivery Tracking** — Log deliveries against orders and verify quantities
+- **Material Registry** — Catalogue of materials with specifications and pricing
+- **Budget Integration** — Link procurement spend to project budgets
+
+## How to Use
+
+Navigate to Procurement in the sidebar. Create purchase orders linked to projects, track deliveries as they arrive on site, and monitor spend against budget allocations.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['procurement', 'materials', 'purchase orders', 'deliveries', 'supply'],
+    lastUpdated: '2026-06-15'
+  },
+  {
+    id: 'purchase-orders',
+    title: 'Managing Purchase Orders',
+    summary: 'The purchase order lifecycle from Draft to Delivered.',
+    content: `
+## What is a Purchase Order?
+
+A purchase order (PO) is a formal request to a supplier for materials or services, with agreed quantities, prices, and delivery dates.
+
+## Purchase Order Lifecycle
+
+- **Draft** — PO being prepared, not yet sent to supplier
+- **Submitted** — Sent to supplier for confirmation
+- **Approved** — Supplier confirmed and order is active
+- **Partially Delivered** — Some items received, others outstanding
+- **Delivered** — All items received and verified
+
+## How to Use
+
+Create a PO from the Procurement section, link it to a project and supplier, add line items, then submit. Update status as deliveries arrive on site.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['procurement', 'purchase orders', 'lifecycle', 'suppliers', 'orders'],
+    lastUpdated: '2026-06-15'
+  },
+
+  // Module 7 — Contractors
+  {
+    id: 'contractors-overview',
+    title: 'Contractors & Suppliers',
+    summary: 'Managing your contractor and supplier database, types, and performance.',
+    content: `
+## What is Contractors & Suppliers?
+
+This module manages your database of external companies that provide construction services, materials, and specialist expertise.
+
+## Key Features
+
+- **Contractor Registry** — Maintain a database of all contractors and suppliers
+- **Types & Categories** — Classify by trade (groundworks, electrical, plumbing, roofing, etc.)
+- **Performance Tracking** — Rate contractors on quality, timeliness, and value
+- **Compliance Records** — Track insurance, certifications, and health & safety documentation
+- **Payment History** — View payment records and outstanding invoices
+
+## How to Use
+
+Navigate to Contractors in the sidebar. Add new contractors with their trade details, certifications, and contact information. Link contractors to projects and track their performance over time.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['contractors', 'suppliers', 'vendors', 'trades', 'performance'],
+    lastUpdated: '2026-06-15'
+  },
+
+  // Module 8 — Finance
+  {
+    id: 'finance-overview',
+    title: 'Finance & Budget Control',
+    summary: 'Budget lines, cost tracking, transactions, and cash flow management.',
+    content: `
+## What is Finance & Budget Control?
+
+The Finance module provides comprehensive budget planning, cost tracking, and financial oversight for all development projects.
+
+## Key Features
+
+- **Budget Lines** — Define budgets per project broken into categories (land, construction, professional fees, marketing)
+- **Transaction Recording** — Log all income and expenditure against budget lines
+- **Variance Analysis** — Compare actual spend vs budgeted amounts in real-time
+- **Cash Flow Forecasting** — Project future income and outgoings
+- **Financial Approvals** — Require sign-off for expenditure above thresholds
+
+## How to Use
+
+Open a project and navigate to the Finance tab. Set up budget lines, record transactions as they occur, and monitor the dashboard for variances and cash flow health.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['finance', 'budget', 'costs', 'cash flow', 'transactions'],
+    lastUpdated: '2026-06-15'
+  },
+
+  // Module 9 — Investors
+  {
+    id: 'investors-overview',
+    title: 'Investors & Funding',
+    summary: 'Investor profiles, funding rounds, and committed vs deployed capital.',
+    content: `
+## What is Investors & Funding?
+
+The Investors module manages relationships with funding partners, tracks capital commitments, and monitors deployment of funds across projects.
+
+## Key Features
+
+- **Investor Profiles** — Maintain detailed records of each investor and their preferences
+- **Funding Rounds** — Track fundraising activities and capital commitments
+- **Committed vs Deployed** — Monitor how much capital is promised versus actually drawn down
+- **Returns Tracking** — Calculate and report investor returns per project
+- **Communications** — Log interactions and reporting to investors
+
+## How to Use
+
+Navigate to Investors in the sidebar. Add investor profiles, record funding commitments, and track deployment as capital is drawn against projects.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['investors', 'funding', 'capital', 'returns', 'finance'],
+    lastUpdated: '2026-06-15'
+  },
+
+  // Module 10 — Property Units
+  {
+    id: 'units-overview',
+    title: 'Property Units',
+    summary: 'Unit registry, statuses, configuration, and availability tracking.',
+    content: `
+## What are Property Units?
+
+Property Units represent the individual sellable or rentable assets within a development — flats, houses, commercial spaces, or parking bays.
+
+## Key Features
+
+- **Unit Registry** — Define all units within a project with type, size, and specification
+- **Status Tracking** — Monitor each unit: Available, Reserved, Sold, Exchanged, Completed, Rented
+- **Configuration** — Record bedrooms, bathrooms, floor area, floor level, aspect, and features
+- **Pricing** — Set asking prices and track agreed sale prices
+- **Availability Dashboard** — Visual overview of unit availability across the development
+
+## How to Use
+
+Navigate to Property Units from the project detail page. Add units individually or in bulk, configure their details, and update statuses as sales or lettings progress.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['units', 'property', 'availability', 'configuration', 'status'],
+    lastUpdated: '2026-06-15'
+  },
+
+  // Module 11 — Sales
+  {
+    id: 'sales-overview',
+    title: 'Sales & Marketing',
+    summary: 'Leads management, sales pipeline stages, and reservation tracking.',
+    content: `
+## What is Sales & Marketing?
+
+The Sales module manages the journey from marketing a development through to reserving and selling individual units to buyers.
+
+## Key Features
+
+- **Lead Management** — Capture and qualify buyer enquiries from all marketing channels
+- **Pipeline Stages** — Track leads through: Enquiry → Viewing → Reservation → Exchange → Completion
+- **Reservation Management** — Record reservations with deposits and buyer details
+- **Sales Reporting** — Monitor sales velocity, revenue forecasts, and conversion rates
+- **Marketing Integration** — Link marketing campaigns to lead sources
+
+## How to Use
+
+Navigate to Sales in the sidebar. Add leads as enquiries come in, progress them through viewings and reservations, and track through to legal completion.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['sales', 'marketing', 'leads', 'pipeline', 'reservations'],
+    lastUpdated: '2026-06-15'
+  },
+
+  // Module 12 — Rentals
+  {
+    id: 'rentals-overview',
+    title: 'Rental Management',
+    summary: 'Tenancy management, rent collection, and property operations.',
+    content: `
+## What is Rental Management?
+
+The Rental module manages units that are let rather than sold — handling tenancies, rent collection, and ongoing property operations.
+
+## Key Features
+
+- **Tenancy Records** — Create and manage tenancy agreements with start/end dates and terms
+- **Rent Collection** — Track rent due, received, and arrears per tenancy
+- **Maintenance Requests** — Log and manage tenant maintenance issues
+- **Inspections** — Schedule and record periodic property inspections
+- **Renewals & Notices** — Track lease renewals and notice periods
+
+## How to Use
+
+Navigate to Rentals in the sidebar. Create tenancies linked to available units, record rent payments as they arrive, and manage maintenance requests from tenants.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['rentals', 'tenants', 'rent', 'maintenance', 'lettings'],
+    lastUpdated: '2026-06-15'
+  },
+
+  // Module 13 — Documents
+  {
+    id: 'documents-overview',
+    title: 'Documents & Knowledge',
+    summary: 'Document repository, categories, version control, and templates.',
+    content: `
+## What is Documents & Knowledge?
+
+The Documents module provides a centralised repository for all project documentation — contracts, drawings, reports, certificates, and templates.
+
+## Key Features
+
+- **Document Repository** — Upload, store, and organise all project files
+- **Categories** — Classify documents: Legal, Planning, Construction, Financial, Marketing, Compliance
+- **Version Control** — Track document revisions with version history
+- **Templates** — Store reusable document templates for common items
+- **Linking** — Associate documents with projects, units, contractors, or opportunities
+
+## How to Use
+
+Navigate to Documents in the sidebar. Upload files, assign categories, and link them to the relevant project entities. Use version control when updating existing documents.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['documents', 'files', 'repository', 'versioning', 'templates'],
+    lastUpdated: '2026-06-15'
+  },
+
+  // Module 14 — Reports
+  {
+    id: 'reports-overview',
+    title: 'Reports & Dashboards',
+    summary: 'Report types, generation, and executive dashboards.',
+    content: `
+## What are Reports & Dashboards?
+
+The Reports module provides analytics and insights across all platform data — financial summaries, construction progress, sales performance, and executive overviews.
+
+## Key Features
+
+- **Report Types** — Financial, Construction Progress, Sales, Pipeline, Compliance, Investor Returns
+- **Generation** — Run reports on-demand with date range and project filters
+- **Executive Dashboards** — High-level KPIs for leadership decision-making
+- **Export** — Download reports as PDF or Excel for stakeholder distribution
+- **Scheduled Reports** — Configure automatic report generation and delivery
+
+## How to Use
+
+Navigate to Reports in the sidebar. Select a report type, configure filters (date range, project, status), and generate. Pin frequently used reports to your dashboard for quick access.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['reports', 'dashboards', 'analytics', 'kpis', 'insights'],
+    lastUpdated: '2026-06-15'
+  },
+
+  // Admin — Audit Log
+  {
+    id: 'audit-log-overview',
+    title: 'Audit Log',
+    summary: 'What actions are logged, how to filter the audit trail, and compliance usage.',
+    content: `
+## What is the Audit Log?
+
+The Audit Log records every significant action taken in the platform — creating, updating, and deleting records — providing a complete, immutable trail for compliance and accountability.
+
+## What Gets Logged
+
+- **Who** — User name, ID, and role
+- **What** — Action type (Create, Update, Delete) and the entity affected
+- **When** — UTC timestamp of the action
+- **Changes** — Old values and new values for updated fields
+
+## How to Filter
+
+- Filter by user, date range, entity type, or action type
+- Search for specific entity IDs to trace the full history of a record
+- Export filtered results for compliance reviews or audits
+
+## Compliance
+
+The audit trail is immutable — entries cannot be edited or deleted. This meets ISO 27001 and GDPR accountability requirements. Use exports to provide evidence during regulatory audits.
+`,
+    category: HELP_CATEGORIES[6],
+    tags: ['audit', 'log', 'compliance', 'trail', 'admin', 'security'],
+    lastUpdated: '2026-06-15'
   }
 ];
 
