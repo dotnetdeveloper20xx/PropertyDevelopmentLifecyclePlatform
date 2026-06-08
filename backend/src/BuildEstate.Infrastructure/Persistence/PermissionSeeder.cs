@@ -123,6 +123,10 @@ public static class PermissionSeeder
             ("sales@buildestate.co.uk", "Sales@123456", "Lisa", "Brown", "SalesManager"),
             ("finance@buildestate.co.uk", "Fin@123456", "Robert", "Hayes", "FinanceDirector"),
             ("property@buildestate.co.uk", "Prop@123456", "Rachel", "Green", "PropertyManager"),
+            ("completion@buildestate.co.uk", "Comp@123456", "James", "Wilson", "CompletionManager"),
+            ("valuation@buildestate.co.uk", "Val@123456", "Sophie", "Clarke", "ValuationAnalyst"),
+            ("surveyor@buildestate.co.uk", "Surv@123456", "Thomas", "Murphy", "Surveyor"),
+            ("support@buildestate.co.uk", "Supp@123456", "Alice", "Cooper", "Admin"),
         };
 
         foreach (var (email, password, firstName, lastName, role) in demoUsers)
