@@ -136,6 +136,10 @@ export const routes: Routes = [
         path: 'contractors/new',
         loadComponent: () => import('./features/contractors/create-contractor-form/create-contractor-form.component').then(m => m.CreateContractorFormComponent)
       },
+      {
+        path: 'contractors/:id',
+        loadComponent: () => import('./features/contractors/contractor-detail/contractor-detail.component').then(m => m.ContractorDetailComponent)
+      },
       // Finance & Budget Control
       {
         path: 'finance',
@@ -153,6 +157,10 @@ export const routes: Routes = [
       {
         path: 'investors/new',
         loadComponent: () => import('./features/investors/create-investor-form/create-investor-form.component').then(m => m.CreateInvestorFormComponent)
+      },
+      {
+        path: 'investors/:id',
+        loadComponent: () => import('./features/investors/investor-detail/investor-detail.component').then(m => m.InvestorDetailComponent)
       },
       // Property Units
       {
@@ -172,6 +180,10 @@ export const routes: Routes = [
         path: 'sales/new',
         loadComponent: () => import('./features/sales/create-lead-form/create-lead-form.component').then(m => m.CreateLeadFormComponent)
       },
+      {
+        path: 'sales/:id',
+        loadComponent: () => import('./features/sales/sales-detail/sales-detail.component').then(m => m.SalesDetailComponent)
+      },
       // Rental Management
       {
         path: 'rentals',
@@ -180,6 +192,10 @@ export const routes: Routes = [
       {
         path: 'rentals/new',
         loadComponent: () => import('./features/rentals/create-tenancy-form/create-tenancy-form.component').then(m => m.CreateTenancyFormComponent)
+      },
+      {
+        path: 'rentals/:id',
+        loadComponent: () => import('./features/rentals/tenancy-detail/tenancy-detail.component').then(m => m.TenancyDetailComponent)
       },
       // Documents & Knowledge
       {
