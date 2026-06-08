@@ -202,10 +202,18 @@ export const routes: Routes = [
         path: 'documents',
         loadComponent: () => import('./features/documents/document-list/document-list.component').then(m => m.DocumentListComponent)
       },
+      {
+        path: 'documents/:id',
+        loadComponent: () => import('./features/documents/document-detail/document-detail.component').then(m => m.DocumentDetailComponent)
+      },
       // Reports & Dashboards
       {
         path: 'reports',
         loadComponent: () => import('./features/reports/report-list/report-list.component').then(m => m.ReportListComponent)
+      },
+      {
+        path: 'reports/:id',
+        loadComponent: () => import('./features/reports/report-detail/report-detail.component').then(m => m.ReportDetailComponent)
       },
       // Administration
       {

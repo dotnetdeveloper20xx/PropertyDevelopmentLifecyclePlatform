@@ -7,6 +7,7 @@ import { ThemeService } from '../../core/services/theme.service';
 import { GuidedTourService } from '../../core/services/guided-tour.service';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 import { GuidedTourComponent } from '../../shared/components/guided-tour/guided-tour.component';
+import { NotificationCentreComponent } from '../../shared/components/notification-centre/notification-centre.component';
 
 interface NavSection {
   label: string;
@@ -28,7 +29,7 @@ interface NavItem {
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, AvatarComponent, GuidedTourComponent],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive, AvatarComponent, GuidedTourComponent, NotificationCentreComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="drawer lg:drawer-open h-screen">
@@ -50,6 +51,8 @@ interface NavItem {
           </div>
           <div class="flex-1"></div>
           <div class="flex items-center gap-3">
+            <!-- Notifications -->
+            <app-notification-centre></app-notification-centre>
             <!-- Theme Toggle -->
             <button class="btn btn-ghost btn-sm btn-square" (click)="toggleTheme()" aria-label="Toggle theme">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
