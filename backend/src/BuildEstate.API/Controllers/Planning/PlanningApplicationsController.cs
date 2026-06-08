@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Application.Features.Planning.Applications.Commands.ChangePlanningApplicationStatus;
 using BuildEstate.Application.Features.Planning.Applications.Commands.CreatePlanningApplication;
 using BuildEstate.Application.Features.Planning.Applications.Commands.UpdatePlanningApplication;
@@ -34,6 +35,7 @@ public class PlanningApplicationsController : ControllerBase
     /// </summary>
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,PlanningManager,AcquisitionManager,LegalOfficer")]
+    [HasPermission("Planning.View")]
     [ProducesResponseType(typeof(ApiResponse<List<PlanningApplicationListItemDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll(
         [FromQuery] GetPlanningApplicationsQuery query,
@@ -48,6 +50,7 @@ public class PlanningApplicationsController : ControllerBase
     /// </summary>
     [HttpGet("{id:guid}")]
     [Authorize(Roles = "SuperAdmin,PlanningManager,AcquisitionManager,LegalOfficer")]
+    [HasPermission("Planning.View")]
     [ProducesResponseType(typeof(ApiResponse<PlanningApplicationDetailDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
@@ -61,6 +64,7 @@ public class PlanningApplicationsController : ControllerBase
     /// </summary>
     [HttpPost]
     [Authorize(Roles = "SuperAdmin,PlanningManager")]
+    [HasPermission("Planning.Create")]
     [ProducesResponseType(typeof(ApiResponse<CreatePlanningApplicationDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create(
@@ -79,6 +83,7 @@ public class PlanningApplicationsController : ControllerBase
     /// </summary>
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "SuperAdmin,PlanningManager")]
+    [HasPermission("Planning.Edit")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -101,6 +106,7 @@ public class PlanningApplicationsController : ControllerBase
     /// </summary>
     [HttpPatch("{id:guid}/status")]
     [Authorize(Roles = "SuperAdmin,PlanningManager")]
+    [HasPermission("Planning.ChangeStatus")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

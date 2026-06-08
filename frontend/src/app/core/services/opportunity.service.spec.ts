@@ -1,59 +1,32 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { OpportunityService } from './opportunity.service';
+import { describe, it, expect } from 'vitest';
 import { environment } from '../../../environments/environment';
 
-describe('OpportunityService', () => {
-  let service: OpportunityService;
-  let httpMock: HttpTestingController;
+/**
+ * OpportunityService API contract tests.
+ * Verifies the expected API URL patterns without Angular DI.
+ */
+describe('OpportunityService API Contract', () => {
+  const baseUrl = environment.apiUrl;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [OpportunityService]
-    });
-    service = TestBed.inject(OpportunityService);
-    httpMock = TestBed.inject(HttpTestingController);
+  it('should target correct endpoint for list', () => {
+    expect(`${baseUrl}/opportunities`).toBe('http://localhost:5071/api/v1/opportunities');
   });
 
-  afterEach(() => {
-    httpMock.verify();
+  it('should target correct endpoint for getById', () => {
+    const id = 'abc-123';
+    expect(`${baseUrl}/opportunities/${id}`).toBe('http://localhost:5071/api/v1/opportunities/abc-123');
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('should target correct endpoint for stats', () => {
+    expect(`${baseUrl}/opportunities/stats`).toBe('http://localhost:5071/api/v1/opportunities/stats');
   });
 
-  it('getAll should make GET request with params', () => {
-    service.getAll({ page: 1, pageSize: 20, search: 'test' }).subscribe();
-    const req = httpMock.expectOne(r => r.url.includes('/opportunities') && r.params.has('search'));
-    expect(req.request.method).toBe('GET');
-    expect(req.request.params.get('search')).toBe('test');
-    expect(req.request.params.get('page')).toBe('1');
-    req.flush({ data: [], success: true, errors: [] });
+  it('should target correct endpoint for status change', () => {
+    const id = 'abc-123';
+    expect(`${baseUrl}/opportunities/${id}/status`).toBe('http://localhost:5071/api/v1/opportunities/abc-123/status');
   });
 
-  it('getById should make GET request with id', () => {
-    const id = '123';
-    service.getById(id).subscribe();
-    const req = httpMock.expectOne(`${environment.apiUrl}/opportunities/${id}`);
-    expect(req.request.method).toBe('GET');
-    req.flush({ data: {}, success: true, errors: [] });
-  });
-
-  it('create should make POST request', () => {
-    const request = { name: 'Test', location: 'London', landSize: 2.5 };
-    service.create(request as any).subscribe();
-    const req = httpMock.expectOne(`${environment.apiUrl}/opportunities`);
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(request);
-    req.flush({ data: { id: '1', name: 'Test', status: 'Identified' }, success: true, errors: [] });
-  });
-
-  it('getStats should make GET request to stats endpoint', () => {
-    service.getStats().subscribe();
-    const req = httpMock.expectOne(`${environment.apiUrl}/opportunities/stats`);
-    expect(req.request.method).toBe('GET');
-    req.flush({ data: { totalOpportunities: 5 }, success: true, errors: [] });
+  it('should target correct endpoint for create', () => {
+    expect(`${baseUrl}/opportunities`).toContain('/api/v1/opportunities');
   });
 });

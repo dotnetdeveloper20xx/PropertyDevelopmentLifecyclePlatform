@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Domain.Entities.Construction;
 using BuildEstate.Domain.Entities.Defects;
 using BuildEstate.Domain.Entities.Design;
@@ -31,6 +32,7 @@ public class FlatApiController : ControllerBase
     // ─── Construction Stages ───
     [HttpGet("api/v1/construction")]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SiteManager")]
+    [HasPermission("Construction.View")]
     public async Task<IActionResult> GetAllStages(CancellationToken ct)
     {
         var stages = await _db.ConstructionStages.AsNoTracking().OrderByDescending(s => s.CreatedAt).Take(200)
@@ -44,6 +46,7 @@ public class FlatApiController : ControllerBase
 
     [HttpPut("api/v1/construction/{id:guid}")]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SiteManager")]
+    [HasPermission("Construction.Edit")]
     public async Task<IActionResult> UpdateStage(Guid id, [FromBody] UpdateStageRequest req, CancellationToken ct)
     {
         var entity = await _db.ConstructionStages.FindAsync(new object[] { id }, ct);
@@ -63,6 +66,7 @@ public class FlatApiController : ControllerBase
     // ─── Design Packages ───
     [HttpGet("api/v1/design")]
     [Authorize(Roles = "SuperAdmin,ProjectManager")]
+    [HasPermission("Design.View")]
     public async Task<IActionResult> GetAllDesign(CancellationToken ct)
     {
         var items = await _db.DesignPackages.AsNoTracking().OrderByDescending(d => d.CreatedAt).Take(200).ToListAsync(ct);
@@ -71,6 +75,7 @@ public class FlatApiController : ControllerBase
 
     [HttpPost("api/v1/design")]
     [Authorize(Roles = "SuperAdmin,ProjectManager")]
+    [HasPermission("Design.Create")]
     public async Task<IActionResult> CreateDesign([FromBody] CreateDesignFlatRequest req, CancellationToken ct)
     {
         var entity = new DesignPackage
@@ -88,6 +93,7 @@ public class FlatApiController : ControllerBase
 
     [HttpPut("api/v1/design/{id:guid}")]
     [Authorize(Roles = "SuperAdmin,ProjectManager")]
+    [HasPermission("Design.View")]
     public async Task<IActionResult> UpdateDesign(Guid id, [FromBody] UpdateDesignRequest req, CancellationToken ct)
     {
         var entity = await _db.DesignPackages.FindAsync(new object[] { id }, ct);
@@ -104,6 +110,7 @@ public class FlatApiController : ControllerBase
     // ─── Feasibility ───
     [HttpGet("api/v1/feasibility")]
     [Authorize(Roles = "SuperAdmin,ValuationAnalyst,FinanceDirector,AcquisitionManager")]
+    [HasPermission("Feasibility.View")]
     public async Task<IActionResult> GetAllFeasibility(CancellationToken ct)
     {
         var items = await _db.FeasibilityAssessments.AsNoTracking().OrderByDescending(f => f.CreatedAt).Take(200)
@@ -120,6 +127,7 @@ public class FlatApiController : ControllerBase
 
     [HttpPost("api/v1/feasibility")]
     [Authorize(Roles = "SuperAdmin,ValuationAnalyst,FinanceDirector,AcquisitionManager")]
+    [HasPermission("Feasibility.Create")]
     public async Task<IActionResult> CreateFeasibility([FromBody] CreateFeasibilityFlatRequest req, CancellationToken ct)
     {
         var entity = new FeasibilityAssessment
@@ -141,6 +149,7 @@ public class FlatApiController : ControllerBase
 
     [HttpPut("api/v1/feasibility/{id:guid}")]
     [Authorize(Roles = "SuperAdmin,ValuationAnalyst,FinanceDirector")]
+    [HasPermission("Feasibility.View")]
     public async Task<IActionResult> UpdateFeasibility(Guid id, [FromBody] CreateFeasibilityFlatRequest req, CancellationToken ct)
     {
         var entity = await _db.FeasibilityAssessments.FindAsync(new object[] { id }, ct);
@@ -163,6 +172,7 @@ public class FlatApiController : ControllerBase
     // ─── Compliance Checks (flat) ───
     [HttpGet("api/v1/legal/compliance")]
     [Authorize(Roles = "SuperAdmin,LegalOfficer,AcquisitionManager")]
+    [HasPermission("Compliance.View")]
     public async Task<IActionResult> GetAllCompliance(CancellationToken ct)
     {
         var items = await _db.ComplianceChecks.AsNoTracking().OrderByDescending(c => c.CreatedAt).Take(200)
@@ -177,6 +187,7 @@ public class FlatApiController : ControllerBase
 
     [HttpPost("api/v1/legal/compliance")]
     [Authorize(Roles = "SuperAdmin,LegalOfficer")]
+    [HasPermission("Compliance.Create")]
     public async Task<IActionResult> CreateCompliance([FromBody] CreateComplianceFlatRequest req, CancellationToken ct)
     {
         var entity = new ComplianceCheck
@@ -194,6 +205,7 @@ public class FlatApiController : ControllerBase
 
     [HttpPut("api/v1/legal/compliance/{id:guid}")]
     [Authorize(Roles = "SuperAdmin,LegalOfficer")]
+    [HasPermission("Compliance.Edit")]
     public async Task<IActionResult> UpdateCompliance(Guid id, [FromBody] UpdateComplianceRequest req, CancellationToken ct)
     {
         var entity = await _db.ComplianceChecks.FindAsync(new object[] { id }, ct);
@@ -209,6 +221,7 @@ public class FlatApiController : ControllerBase
     // ─── Due Diligence (flat) ───
     [HttpGet("api/v1/due-diligence")]
     [Authorize(Roles = "SuperAdmin,LegalOfficer,AcquisitionManager")]
+    [HasPermission("DueDiligence.View")]
     public async Task<IActionResult> GetAllDueDiligence(CancellationToken ct)
     {
         var items = await _db.DueDiligences.AsNoTracking().OrderByDescending(d => d.CreatedAt).Take(200)
@@ -221,6 +234,7 @@ public class FlatApiController : ControllerBase
 
     [HttpPost("api/v1/due-diligence")]
     [Authorize(Roles = "SuperAdmin,LegalOfficer,AcquisitionManager")]
+    [HasPermission("DueDiligence.Create")]
     public async Task<IActionResult> CreateDueDiligence([FromBody] CreateDueDiligenceFlatRequest req, CancellationToken ct)
     {
         var entity = new Domain.Entities.LandAcquisition.DueDiligence
@@ -238,6 +252,7 @@ public class FlatApiController : ControllerBase
     // ─── Defects (PUT only - GET already exists in DefectsController) ───
     [HttpPut("api/v1/defects/{id:guid}")]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SiteManager,PropertyManager")]
+    [HasPermission("Defects.Edit")]
     public async Task<IActionResult> UpdateDefect(Guid id, [FromBody] UpdateDefectRequest req, CancellationToken ct)
     {
         var entity = await _db.Defects.FindAsync(new object[] { id }, ct);
@@ -255,6 +270,7 @@ public class FlatApiController : ControllerBase
     // ─── Procurement ───
     [HttpGet("api/v1/procurement")]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SiteManager")]
+    [HasPermission("Procurement.View")]
     public async Task<IActionResult> GetAllProcurement(CancellationToken ct)
     {
         var items = await _db.PurchaseOrders.AsNoTracking().OrderByDescending(o => o.CreatedAt).Take(200)
@@ -269,6 +285,7 @@ public class FlatApiController : ControllerBase
 
     [HttpPut("api/v1/procurement/{id:guid}")]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SiteManager")]
+    [HasPermission("Procurement.View")]
     public async Task<IActionResult> UpdateProcurement(Guid id, [FromBody] UpdateProcurementRequest req, CancellationToken ct)
     {
         var entity = await _db.PurchaseOrders.FindAsync(new object[] { id }, ct);
@@ -287,6 +304,7 @@ public class FlatApiController : ControllerBase
     // ─── Finance ───
     [HttpGet("api/v1/finance")]
     [Authorize(Roles = "SuperAdmin,ProjectManager,FinanceDirector")]
+    [HasPermission("Finance.View")]
     public async Task<IActionResult> GetAllFinance(CancellationToken ct)
     {
         var items = await _db.FinancialTransactions.AsNoTracking().OrderByDescending(t => t.CreatedAt).Take(200)
@@ -301,6 +319,7 @@ public class FlatApiController : ControllerBase
 
     [HttpPut("api/v1/finance/{id:guid}")]
     [Authorize(Roles = "SuperAdmin,FinanceDirector")]
+    [HasPermission("Finance.Create")]
     public async Task<IActionResult> UpdateFinance(Guid id, [FromBody] UpdateFinanceRequest req, CancellationToken ct)
     {
         var entity = await _db.FinancialTransactions.FindAsync(new object[] { id }, ct);
@@ -319,6 +338,7 @@ public class FlatApiController : ControllerBase
     // ─── Units ───
     [HttpGet("api/v1/units")]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SalesManager,PropertyManager")]
+    [HasPermission("Units.View")]
     public async Task<IActionResult> GetAllUnits(CancellationToken ct)
     {
         var raw = await _db.PropertyUnits.AsNoTracking().OrderByDescending(u => u.CreatedAt).Take(200).ToListAsync(ct);
@@ -334,6 +354,7 @@ public class FlatApiController : ControllerBase
 
     [HttpPut("api/v1/units/{id:guid}")]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SalesManager")]
+    [HasPermission("Units.Edit")]
     public async Task<IActionResult> UpdateUnit(Guid id, [FromBody] UpdateUnitRequest req, CancellationToken ct)
     {
         var entity = await _db.PropertyUnits.FindAsync(new object[] { id }, ct);

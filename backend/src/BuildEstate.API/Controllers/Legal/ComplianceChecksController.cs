@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Application.Features.Legal.ComplianceChecks.Commands.ChangeComplianceStatus;
 using BuildEstate.Application.Features.Legal.ComplianceChecks.Commands.CreateComplianceCheck;
 using BuildEstate.Application.Features.Legal.ComplianceChecks.DTOs;
@@ -27,6 +28,7 @@ public class ComplianceChecksController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,LegalOfficer,AcquisitionManager")]
+    [HasPermission("Compliance.View")]
     [ProducesResponseType(typeof(ApiResponse<List<ComplianceCheckDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll(Guid opportunityId, CancellationToken cancellationToken)
     {
@@ -37,6 +39,7 @@ public class ComplianceChecksController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "SuperAdmin,LegalOfficer")]
+    [HasPermission("Compliance.Create")]
     [ProducesResponseType(typeof(ApiResponse<ComplianceCheckDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create(
@@ -51,6 +54,7 @@ public class ComplianceChecksController : ControllerBase
 
     [HttpPatch("{id:guid}/status")]
     [Authorize(Roles = "SuperAdmin,LegalOfficer")]
+    [HasPermission("Compliance.Edit")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ChangeStatus(

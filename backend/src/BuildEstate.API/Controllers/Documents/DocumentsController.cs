@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Application.Features.Documents.Commands.CreateDocument;
 using BuildEstate.Application.Features.Documents.DTOs;
 using BuildEstate.Application.Features.Documents.Queries.GetDocuments;
@@ -23,6 +24,7 @@ public class DocumentsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,ProjectManager,LegalOfficer,Admin")]
+    [HasPermission("Documents.View")]
     [ProducesResponseType(typeof(ApiResponse<List<KnowledgeDocumentDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] GetDocumentsQuery query, CancellationToken ct)
     {
@@ -31,6 +33,7 @@ public class DocumentsController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "SuperAdmin,ProjectManager,LegalOfficer,Admin")]
+    [HasPermission("Documents.Create")]
     [ProducesResponseType(typeof(ApiResponse<KnowledgeDocumentDto>), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] CreateDocumentCommand command, CancellationToken ct)
     {

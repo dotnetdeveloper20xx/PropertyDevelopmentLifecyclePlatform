@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Application.Features.Reports.Commands.CreateReport;
 using BuildEstate.Application.Features.Reports.DTOs;
 using BuildEstate.Application.Features.Reports.Queries.GetReports;
@@ -23,6 +24,7 @@ public class ReportsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,FinanceDirector,ProjectManager")]
+    [HasPermission("Reports.View")]
     [ProducesResponseType(typeof(ApiResponse<List<SavedReportDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] GetReportsQuery query, CancellationToken ct)
     {
@@ -31,6 +33,7 @@ public class ReportsController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "SuperAdmin,FinanceDirector,ProjectManager")]
+    [HasPermission("Reports.Create")]
     [ProducesResponseType(typeof(ApiResponse<SavedReportDto>), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] CreateReportCommand command, CancellationToken ct)
     {

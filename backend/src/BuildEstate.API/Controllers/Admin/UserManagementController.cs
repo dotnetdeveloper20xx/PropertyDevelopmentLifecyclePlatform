@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -32,6 +33,7 @@ public class UserManagementController : ControllerBase
 
     /// <summary>Get all users with their roles.</summary>
     [HttpGet]
+    [HasPermission("Admin.Users")]
     public async Task<IActionResult> GetAll()
     {
         var users = await _userManager.Users.ToListAsync();
@@ -60,6 +62,7 @@ public class UserManagementController : ControllerBase
 
     /// <summary>Get a single user by ID.</summary>
     [HttpGet("{id}")]
+    [HasPermission("Admin.Users")]
     public async Task<IActionResult> GetById(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
@@ -81,6 +84,7 @@ public class UserManagementController : ControllerBase
 
     /// <summary>Create a new user with password and roles.</summary>
     [HttpPost]
+    [HasPermission("Admin.Users")]
     public async Task<IActionResult> Create([FromBody] CreateUserRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Email))
@@ -126,6 +130,7 @@ public class UserManagementController : ControllerBase
 
     /// <summary>Update user details (name, active status).</summary>
     [HttpPut("{id}")]
+    [HasPermission("Admin.Users")]
     public async Task<IActionResult> Update(string id, [FromBody] UpdateUserRequest request)
     {
         var user = await _userManager.FindByIdAsync(id);
@@ -146,6 +151,7 @@ public class UserManagementController : ControllerBase
 
     /// <summary>Assign roles to a user (replaces existing roles).</summary>
     [HttpPut("{id}/roles")]
+    [HasPermission("Admin.Users")]
     public async Task<IActionResult> AssignRoles(string id, [FromBody] AssignRolesRequest request)
     {
         var user = await _userManager.FindByIdAsync(id);
@@ -169,6 +175,7 @@ public class UserManagementController : ControllerBase
 
     /// <summary>Deactivate (soft-disable) a user.</summary>
     [HttpPatch("{id}/deactivate")]
+    [HasPermission("Admin.Users")]
     public async Task<IActionResult> Deactivate(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
@@ -183,6 +190,7 @@ public class UserManagementController : ControllerBase
 
     /// <summary>Reactivate a user.</summary>
     [HttpPatch("{id}/activate")]
+    [HasPermission("Admin.Users")]
     public async Task<IActionResult> Activate(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
@@ -197,6 +205,7 @@ public class UserManagementController : ControllerBase
 
     /// <summary>Get all available roles.</summary>
     [HttpGet("~/api/v1/admin/roles")]
+    [HasPermission("Admin.Users")]
     public async Task<IActionResult> GetRoles()
     {
         var roles = await _roleManager.Roles.Select(r => new { r.Name, r.Description }).ToListAsync();

@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Application.Features.Defects.Commands.CreateDefect;
 using BuildEstate.Application.Features.Defects.DTOs;
 using BuildEstate.Application.Features.Defects.Queries.GetDefects;
@@ -23,6 +24,7 @@ public class DefectsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SiteManager,PropertyManager")]
+    [HasPermission("Defects.View")]
     [ProducesResponseType(typeof(ApiResponse<List<DefectDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] GetDefectsQuery query, CancellationToken ct)
     {
@@ -31,6 +33,7 @@ public class DefectsController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SiteManager,PropertyManager")]
+    [HasPermission("Defects.Create")]
     [ProducesResponseType(typeof(ApiResponse<DefectDto>), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] CreateDefectCommand command, CancellationToken ct)
     {

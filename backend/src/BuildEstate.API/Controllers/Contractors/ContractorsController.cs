@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Application.Features.Contractors.Commands.CreateContractor;
 using BuildEstate.Application.Features.Contractors.Commands.UpdateContractor;
 using BuildEstate.Application.Features.Contractors.DTOs;
@@ -20,6 +21,7 @@ public class ContractorsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SiteManager")]
+    [HasPermission("Contractors.View")]
     [ProducesResponseType(typeof(ApiResponse<List<ContractorDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] GetContractorsQuery query, CancellationToken ct)
     {
@@ -28,6 +30,7 @@ public class ContractorsController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "SuperAdmin,ProjectManager")]
+    [HasPermission("Contractors.Create")]
     [ProducesResponseType(typeof(ApiResponse<ContractorDto>), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] CreateContractorCommand command, CancellationToken ct)
     {
@@ -37,6 +40,7 @@ public class ContractorsController : ControllerBase
 
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "SuperAdmin,ProjectManager")]
+    [HasPermission("Contractors.Edit")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateContractorCommand command, CancellationToken ct)
     {

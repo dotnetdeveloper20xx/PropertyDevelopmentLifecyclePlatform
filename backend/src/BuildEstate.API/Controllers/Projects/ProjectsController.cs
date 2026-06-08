@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Application.Features.Projects.Commands.ChangeProjectStatus;
 using BuildEstate.Application.Features.Projects.Commands.CreateMilestone;
 using BuildEstate.Application.Features.Projects.Commands.CreateProject;
@@ -28,6 +29,7 @@ public class ProjectsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,ProjectManager,AcquisitionManager,FinanceDirector")]
+    [HasPermission("Projects.View")]
     [ProducesResponseType(typeof(ApiResponse<List<ProjectListItemDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] GetProjectsQuery query, CancellationToken ct)
     {
@@ -36,6 +38,7 @@ public class ProjectsController : ControllerBase
 
     [HttpGet("{id:guid}")]
     [Authorize(Roles = "SuperAdmin,ProjectManager,AcquisitionManager,FinanceDirector")]
+    [HasPermission("Projects.View")]
     [ProducesResponseType(typeof(ApiResponse<ProjectDetailDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetById(Guid id, CancellationToken ct)
     {
@@ -44,6 +47,7 @@ public class ProjectsController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "SuperAdmin,ProjectManager")]
+    [HasPermission("Projects.Create")]
     [ProducesResponseType(typeof(ApiResponse<CreateProjectDto>), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] CreateProjectCommand command, CancellationToken ct)
     {
@@ -54,6 +58,7 @@ public class ProjectsController : ControllerBase
 
     [HttpPatch("{id:guid}/status")]
     [Authorize(Roles = "SuperAdmin,ProjectManager")]
+    [HasPermission("Projects.ChangeStatus")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> ChangeStatus(Guid id, [FromBody] ProjectStatusRequest request, CancellationToken ct)
     {
@@ -63,6 +68,7 @@ public class ProjectsController : ControllerBase
 
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "SuperAdmin,ProjectManager")]
+    [HasPermission("Projects.Edit")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProjectRequest request, CancellationToken ct)
     {
@@ -86,6 +92,7 @@ public class ProjectsController : ControllerBase
     // Milestones
     [HttpGet("{projectId:guid}/milestones")]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SiteManager")]
+    [HasPermission("Projects.View")]
     [ProducesResponseType(typeof(ApiResponse<List<MilestoneDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetMilestones(Guid projectId, CancellationToken ct)
     {
@@ -94,6 +101,7 @@ public class ProjectsController : ControllerBase
 
     [HttpPost("{projectId:guid}/milestones")]
     [Authorize(Roles = "SuperAdmin,ProjectManager")]
+    [HasPermission("Projects.Edit")]
     [ProducesResponseType(typeof(ApiResponse<MilestoneDto>), StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateMilestone(Guid projectId, [FromBody] CreateMilestoneCommand command, CancellationToken ct)
     {
@@ -104,6 +112,7 @@ public class ProjectsController : ControllerBase
     // Tasks
     [HttpGet("{projectId:guid}/tasks")]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SiteManager")]
+    [HasPermission("Projects.View")]
     [ProducesResponseType(typeof(ApiResponse<List<ProjectTaskDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetTasks(Guid projectId, CancellationToken ct)
     {
@@ -112,6 +121,7 @@ public class ProjectsController : ControllerBase
 
     [HttpPost("{projectId:guid}/tasks")]
     [Authorize(Roles = "SuperAdmin,ProjectManager")]
+    [HasPermission("Projects.Edit")]
     [ProducesResponseType(typeof(ApiResponse<ProjectTaskDto>), StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateTask(Guid projectId, [FromBody] CreateProjectTaskCommand command, CancellationToken ct)
     {
@@ -122,6 +132,7 @@ public class ProjectsController : ControllerBase
     // Risks
     [HttpGet("{projectId:guid}/risks")]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SiteManager")]
+    [HasPermission("Projects.View")]
     [ProducesResponseType(typeof(ApiResponse<List<ProjectRiskDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetRisks(Guid projectId, CancellationToken ct)
     {
@@ -130,6 +141,7 @@ public class ProjectsController : ControllerBase
 
     [HttpPost("{projectId:guid}/risks")]
     [Authorize(Roles = "SuperAdmin,ProjectManager")]
+    [HasPermission("Projects.Edit")]
     [ProducesResponseType(typeof(ApiResponse<ProjectRiskDto>), StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateRisk(Guid projectId, [FromBody] CreateProjectRiskCommand command, CancellationToken ct)
     {

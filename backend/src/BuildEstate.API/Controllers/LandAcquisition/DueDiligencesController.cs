@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Application.Features.LandAcquisition.DueDiligences.Commands.CreateDueDiligence;
 using BuildEstate.Application.Features.LandAcquisition.DueDiligences.Commands.UpdateDueDiligence;
 using BuildEstate.Application.Features.LandAcquisition.DueDiligences.DTOs;
@@ -30,6 +31,7 @@ public class DueDiligencesController : ControllerBase
     /// </summary>
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,AcquisitionManager,LegalOfficer")]
+    [HasPermission("DueDiligence.View")]
     [ProducesResponseType(typeof(ApiResponse<List<DueDiligenceListItemDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll(Guid opportunityId, CancellationToken cancellationToken)
     {
@@ -43,6 +45,7 @@ public class DueDiligencesController : ControllerBase
     /// </summary>
     [HttpPost]
     [Authorize(Roles = "SuperAdmin,LegalOfficer")]
+    [HasPermission("DueDiligence.Create")]
     [ProducesResponseType(typeof(ApiResponse<DueDiligenceListItemDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -62,6 +65,7 @@ public class DueDiligencesController : ControllerBase
     /// </summary>
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "SuperAdmin,LegalOfficer")]
+    [HasPermission("DueDiligence.Edit")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(

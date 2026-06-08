@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Infrastructure.Identity;
 using BuildEstate.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +29,7 @@ public class PermissionsController : ControllerBase
 
     /// <summary>Get all permissions grouped by module.</summary>
     [HttpGet]
+    [HasPermission("Admin.Roles")]
     public async Task<IActionResult> GetAllPermissions()
     {
         var permissions = await _context.Permissions
@@ -40,6 +42,7 @@ public class PermissionsController : ControllerBase
 
     /// <summary>Get the full role-permission matrix.</summary>
     [HttpGet("matrix")]
+    [HasPermission("Admin.Roles")]
     public async Task<IActionResult> GetMatrix()
     {
         var roles = await _roleManager.Roles
@@ -69,6 +72,7 @@ public class PermissionsController : ControllerBase
 
     /// <summary>Assign or revoke a permission for a role.</summary>
     [HttpPost("assign")]
+    [HasPermission("Admin.Roles")]
     public async Task<IActionResult> AssignPermission([FromBody] AssignPermissionRequest request)
     {
         var existing = await _context.RolePermissions

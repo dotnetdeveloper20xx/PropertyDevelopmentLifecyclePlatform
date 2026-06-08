@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.API.Controllers.LandAcquisition.Requests;
 using BuildEstate.Application.Features.LandAcquisition.Opportunities.Commands.ChangeOpportunityStatus;
 using BuildEstate.Application.Features.LandAcquisition.Opportunities.Commands.CreateOpportunity;
@@ -36,6 +37,7 @@ public class OpportunitiesController : ControllerBase
     /// </summary>
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,AcquisitionManager,FinanceDirector")]
+    [HasPermission("Opportunities.View")]
     [ProducesResponseType(typeof(ApiResponse<List<OpportunityListItemDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll(
         [FromQuery] GetOpportunitiesQuery query,
@@ -50,6 +52,7 @@ public class OpportunitiesController : ControllerBase
     /// </summary>
     [HttpGet("{id:guid}")]
     [Authorize(Roles = "SuperAdmin,AcquisitionManager,FinanceDirector,LegalOfficer")]
+    [HasPermission("Opportunities.View")]
     [ProducesResponseType(typeof(ApiResponse<OpportunityDetailDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
@@ -63,6 +66,7 @@ public class OpportunitiesController : ControllerBase
     /// </summary>
     [HttpPost]
     [Authorize(Roles = "SuperAdmin,AcquisitionManager")]
+    [HasPermission("Opportunities.Create")]
     [ProducesResponseType(typeof(ApiResponse<CreateOpportunityDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create(
@@ -81,6 +85,7 @@ public class OpportunitiesController : ControllerBase
     /// </summary>
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "SuperAdmin,AcquisitionManager")]
+    [HasPermission("Opportunities.Edit")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -103,6 +108,7 @@ public class OpportunitiesController : ControllerBase
     /// </summary>
     [HttpDelete("{id:guid}")]
     [Authorize(Roles = "SuperAdmin")]
+    [HasPermission("Opportunities.Delete")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
@@ -116,6 +122,7 @@ public class OpportunitiesController : ControllerBase
     /// </summary>
     [HttpPatch("{id:guid}/status")]
     [Authorize(Roles = "SuperAdmin,AcquisitionManager")]
+    [HasPermission("Opportunities.ChangeStatus")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -135,6 +142,7 @@ public class OpportunitiesController : ControllerBase
     /// </summary>
     [HttpGet("stats")]
     [Authorize(Roles = "SuperAdmin,AcquisitionManager,FinanceDirector")]
+    [HasPermission("Opportunities.View")]
     [ProducesResponseType(typeof(ApiResponse<OpportunityStatsDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetStats(CancellationToken cancellationToken)
     {

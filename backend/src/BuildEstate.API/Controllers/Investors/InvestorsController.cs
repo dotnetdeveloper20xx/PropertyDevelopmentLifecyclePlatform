@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Application.Features.Investors.Commands.CreateInvestor;
 using BuildEstate.Application.Features.Investors.Commands.UpdateInvestor;
 using BuildEstate.Application.Features.Investors.DTOs;
@@ -20,6 +21,7 @@ public class InvestorsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,FinanceDirector")]
+    [HasPermission("Investors.View")]
     [ProducesResponseType(typeof(ApiResponse<List<InvestorDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] GetInvestorsQuery query, CancellationToken ct)
     {
@@ -28,6 +30,7 @@ public class InvestorsController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "SuperAdmin,FinanceDirector")]
+    [HasPermission("Investors.Create")]
     [ProducesResponseType(typeof(ApiResponse<InvestorDto>), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] CreateInvestorCommand command, CancellationToken ct)
     {
@@ -37,6 +40,7 @@ public class InvestorsController : ControllerBase
 
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "SuperAdmin,FinanceDirector")]
+    [HasPermission("Investors.Edit")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateInvestorCommand command, CancellationToken ct)
     {

@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Application.Features.Legal.Contracts.Commands.ChangeContractStatus;
 using BuildEstate.Application.Features.Legal.Contracts.Commands.CreateContract;
 using BuildEstate.Application.Features.Legal.Contracts.DTOs;
@@ -29,6 +30,7 @@ public class ContractsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,LegalOfficer,AcquisitionManager,FinanceDirector")]
+    [HasPermission("Contracts.View")]
     [ProducesResponseType(typeof(ApiResponse<List<ContractListItemDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll(
         [FromQuery] GetContractsQuery query, CancellationToken cancellationToken)
@@ -39,6 +41,7 @@ public class ContractsController : ControllerBase
 
     [HttpGet("{id:guid}")]
     [Authorize(Roles = "SuperAdmin,LegalOfficer,AcquisitionManager,FinanceDirector")]
+    [HasPermission("Contracts.View")]
     [ProducesResponseType(typeof(ApiResponse<ContractDetailDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
@@ -49,6 +52,7 @@ public class ContractsController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "SuperAdmin,LegalOfficer")]
+    [HasPermission("Contracts.Create")]
     [ProducesResponseType(typeof(ApiResponse<CreateContractDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create(
@@ -62,6 +66,7 @@ public class ContractsController : ControllerBase
 
     [HttpPatch("{id:guid}/status")]
     [Authorize(Roles = "SuperAdmin,LegalOfficer")]
+    [HasPermission("Contracts.ChangeStatus")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -74,6 +79,7 @@ public class ContractsController : ControllerBase
 
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "SuperAdmin,LegalOfficer")]
+    [HasPermission("Contracts.Edit")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateContractRequest request, CancellationToken cancellationToken)
     {

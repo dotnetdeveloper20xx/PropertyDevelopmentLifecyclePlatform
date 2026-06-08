@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Application.Features.Rentals.Commands.CreateTenancy;
 using BuildEstate.Application.Features.Rentals.Commands.UpdateTenancy;
 using BuildEstate.Application.Features.Rentals.DTOs;
@@ -20,6 +21,7 @@ public class RentalsController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,PropertyManager")]
+    [HasPermission("Rentals.View")]
     [ProducesResponseType(typeof(ApiResponse<List<TenancyDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] GetTenanciesQuery query, CancellationToken ct)
     {
@@ -28,6 +30,7 @@ public class RentalsController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "SuperAdmin,PropertyManager")]
+    [HasPermission("Rentals.Create")]
     [ProducesResponseType(typeof(ApiResponse<TenancyDto>), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] CreateTenancyCommand command, CancellationToken ct)
     {
@@ -37,6 +40,7 @@ public class RentalsController : ControllerBase
 
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "SuperAdmin,PropertyManager")]
+    [HasPermission("Rentals.Edit")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTenancyCommand command, CancellationToken ct)
     {

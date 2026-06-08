@@ -1,3 +1,4 @@
+using BuildEstate.API.Authorization;
 using BuildEstate.Application.Features.Sales.Commands.CreateSalesLead;
 using BuildEstate.Application.Features.Sales.Commands.UpdateSalesLead;
 using BuildEstate.Application.Features.Sales.DTOs;
@@ -20,6 +21,7 @@ public class SalesController : ControllerBase
 
     [HttpGet]
     [Authorize(Roles = "SuperAdmin,SalesManager")]
+    [HasPermission("Sales.View")]
     [ProducesResponseType(typeof(ApiResponse<List<SalesLeadDto>>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll([FromQuery] GetSalesLeadsQuery query, CancellationToken ct)
     {
@@ -28,6 +30,7 @@ public class SalesController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "SuperAdmin,SalesManager")]
+    [HasPermission("Sales.Create")]
     [ProducesResponseType(typeof(ApiResponse<SalesLeadDto>), StatusCodes.Status201Created)]
     public async Task<IActionResult> Create([FromBody] CreateSalesLeadCommand command, CancellationToken ct)
     {
@@ -37,6 +40,7 @@ public class SalesController : ControllerBase
 
     [HttpPut("{id:guid}")]
     [Authorize(Roles = "SuperAdmin,SalesManager")]
+    [HasPermission("Sales.Edit")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Update(Guid id, [FromBody] UpdateSalesLeadCommand command, CancellationToken ct)
     {
