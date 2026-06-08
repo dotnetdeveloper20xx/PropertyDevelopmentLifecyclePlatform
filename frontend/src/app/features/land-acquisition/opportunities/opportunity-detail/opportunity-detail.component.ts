@@ -40,6 +40,9 @@ import { OpportunityDetail } from '../../../../core/models/opportunity.model';
           @if (opportunity.status !== 'Withdrawn' && opportunity.status !== 'Acquired') {
             <button class="btn btn-warning btn-xs" (click)="confirmWithdraw()">Withdraw</button>
           }
+          @if (opportunity.status === 'Acquired') {
+            <a [routerLink]="['/projects/new']" [queryParams]="{opportunityId: opportunityId}" class="btn btn-success btn-xs">+ Create Project</a>
+          }
           <button class="btn btn-error btn-xs btn-outline" (click)="confirmDelete()">Delete</button>
         </div>
       </app-page-header>

@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
@@ -143,12 +143,12 @@ import * as ProjectsSelectors from '../store/projects.selectors';
     </div>
   `
 })
-export class ProjectFormComponent {
+export class ProjectFormComponent implements OnInit {
   form: FormGroup;
   loading$: Observable<boolean>;
   error$: Observable<string | null>;
 
-  constructor(private fb: FormBuilder, private store: Store) {
+  constructor(private fb: FormBuilder, private store: Store, private route: ActivatedRoute) {
     this.form = this.fb.group({
       opportunityId: ['', Validators.required],
       name: ['', [Validators.required, Validators.maxLength(200)]],
@@ -164,6 +164,13 @@ export class ProjectFormComponent {
     });
     this.loading$ = this.store.select(ProjectsSelectors.selectProjectsLoading);
     this.error$ = this.store.select(ProjectsSelectors.selectProjectsError);
+  }
+
+  ngOnInit(): void {
+    const opportunityId = this.route.snapshot.queryParamMap.get('opportunityId');
+    if (opportunityId) {
+      this.form.patchValue({ opportunityId });
+    }
   }
 
   formSteps(): FormStep[] {
