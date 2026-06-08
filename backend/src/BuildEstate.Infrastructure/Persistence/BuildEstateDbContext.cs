@@ -1,6 +1,7 @@
 using BuildEstate.Domain.Common;
 using BuildEstate.Domain.Entities.Construction;
 using BuildEstate.Domain.Entities.Contractors;
+using BuildEstate.Domain.Entities.Documents;
 using BuildEstate.Domain.Entities.Finance;
 using BuildEstate.Domain.Entities.Identity;
 using BuildEstate.Domain.Entities.LandAcquisition;
@@ -9,6 +10,7 @@ using BuildEstate.Domain.Entities.Planning;
 using BuildEstate.Domain.Entities.Procurement;
 using BuildEstate.Domain.Entities.Projects;
 using BuildEstate.Domain.Entities.Rentals;
+using BuildEstate.Domain.Entities.Reports;
 using BuildEstate.Domain.Entities.Sales;
 using BuildEstate.Domain.Entities.Units;
 using BuildEstate.Infrastructure.Identity;
@@ -81,6 +83,12 @@ public class BuildEstateDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     // Rentals
     public DbSet<Tenancy> Tenancies => Set<Tenancy>();
+
+    // Documents & Knowledge
+    public DbSet<KnowledgeDocument> KnowledgeDocuments => Set<KnowledgeDocument>();
+
+    // Reports
+    public DbSet<SavedReport> SavedReports => Set<SavedReport>();
 
     // Audit
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
