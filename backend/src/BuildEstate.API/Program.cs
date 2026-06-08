@@ -7,6 +7,7 @@ using BuildEstate.Application.Interfaces;
 using BuildEstate.Infrastructure;
 using BuildEstate.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -83,6 +84,10 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
+
+// Permission-based authorization
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, BuildEstate.API.Authorization.PermissionPolicyProvider>();
+builder.Services.AddScoped<IAuthorizationHandler, BuildEstate.API.Authorization.PermissionAuthorizationHandler>();
 
 // Controllers
 builder.Services.AddControllers()

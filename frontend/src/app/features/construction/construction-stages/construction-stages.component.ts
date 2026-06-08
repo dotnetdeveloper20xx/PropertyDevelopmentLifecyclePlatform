@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
@@ -19,7 +19,7 @@ import * as ConstructionSelectors from '../store/construction.selectors';
   selector: 'app-construction-stages',
   standalone: true,
   imports: [
-    CommonModule, FormsModule, ReactiveFormsModule,
+    CommonModule, FormsModule, ReactiveFormsModule, RouterLink,
     PageHeaderComponent, PageDescriptionComponent, BreadcrumbComponent,
     LoadingStateComponent, EmptyStateComponent, StatusBadgeComponent
   ],
@@ -88,6 +88,7 @@ import * as ConstructionSelectors from '../store/construction.selectors';
                 <th>Planned End</th>
                 <th>Inspections</th>
                 <th>Snags</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -120,6 +121,10 @@ import * as ConstructionSelectors from '../store/construction.selectors';
                     } @else {
                       <span class="text-base-content/30">—</span>
                     }
+                  </td>
+                  <td>
+                    <a [routerLink]="['/construction', stage.id]" class="btn btn-ghost btn-xs">View</a>
+                    <a [routerLink]="['/construction', stage.id, 'edit']" class="btn btn-ghost btn-xs">Edit</a>
                   </td>
                 </tr>
               }
