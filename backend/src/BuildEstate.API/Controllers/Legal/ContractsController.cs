@@ -71,6 +71,31 @@ public class ContractsController : ControllerBase
         await _mediator.Send(new ChangeContractStatusCommand(id, request.NewStatus), cancellationToken);
         return NoContent();
     }
+
+    [HttpPut("{id:guid}")]
+    [Authorize(Roles = "SuperAdmin,LegalOfficer")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateContractRequest request, CancellationToken cancellationToken)
+    {
+        var db = HttpContext.RequestServices.GetRequiredService<BuildEstate.Infrastructure.Persistence.BuildEstateDbContext>();
+        var entity = await db.Contracts.FindAsync(new object[] { id }, cancellationToken);
+        if (entity == null) return NotFound();
+        entity.Title = request.Title ?? entity.Title;
+        entity.ContractReference = request.ContractReference ?? entity.ContractReference;
+        entity.CounterpartyName = request.CounterpartyName ?? entity.CounterpartyName;
+        entity.CounterpartyContact = request.CounterpartyContact;
+        entity.ContractValue = request.ContractValue ?? entity.ContractValue;
+        entity.Solicitor = request.Solicitor;
+        entity.SolicitorFirm = request.SolicitorFirm;
+        entity.SolicitorEmail = request.SolicitorEmail;
+        entity.KeyTerms = request.KeyTerms;
+        entity.Notes = request.Notes;
+        entity.StartDate = request.StartDate ?? entity.StartDate;
+        entity.EndDate = request.EndDate ?? entity.EndDate;
+        await db.SaveChangesAsync(cancellationToken);
+        return NoContent();
+    }
 }
 
 public record ContractStatusRequest(ContractStatus NewStatus);
+public record UpdateContractRequest(string? Title, string? ContractReference, string? CounterpartyName, string? CounterpartyContact, decimal? ContractValue, string? Solicitor, string? SolicitorFirm, string? SolicitorEmail, string? KeyTerms, string? Notes, DateTime? StartDate, DateTime? EndDate);

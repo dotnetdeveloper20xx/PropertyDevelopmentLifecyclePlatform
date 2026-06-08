@@ -61,6 +61,28 @@ public class ProjectsController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("{id:guid}")]
+    [Authorize(Roles = "SuperAdmin,ProjectManager")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProjectRequest request, CancellationToken ct)
+    {
+        var db = HttpContext.RequestServices.GetRequiredService<BuildEstate.Infrastructure.Persistence.BuildEstateDbContext>();
+        var entity = await db.Projects.FindAsync(new object[] { id }, ct);
+        if (entity == null) return NotFound();
+        entity.Name = request.Name ?? entity.Name;
+        entity.Description = request.Description;
+        entity.ProjectReference = request.ProjectReference ?? entity.ProjectReference;
+        entity.ProjectManager = request.ProjectManager;
+        entity.SiteAddress = request.SiteAddress;
+        entity.StartDate = request.StartDate ?? entity.StartDate;
+        entity.TargetEndDate = request.TargetEndDate ?? entity.TargetEndDate;
+        entity.Budget = request.Budget ?? entity.Budget;
+        entity.TotalUnits = request.TotalUnits ?? entity.TotalUnits;
+        entity.Notes = request.Notes;
+        await db.SaveChangesAsync(ct);
+        return NoContent();
+    }
+
     // Milestones
     [HttpGet("{projectId:guid}/milestones")]
     [Authorize(Roles = "SuperAdmin,ProjectManager,SiteManager")]
@@ -117,3 +139,4 @@ public class ProjectsController : ControllerBase
 }
 
 public record ProjectStatusRequest(ProjectStatus NewStatus);
+public record UpdateProjectRequest(string? Name, string? Description, string? ProjectReference, string? ProjectManager, string? SiteAddress, DateTime? StartDate, DateTime? TargetEndDate, decimal? Budget, int? TotalUnits, string? Notes);

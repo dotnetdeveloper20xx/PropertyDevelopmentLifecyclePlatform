@@ -35,6 +35,8 @@ public class BuildEstateDbContext : IdentityDbContext<ApplicationUser, Applicati
 
     // Identity
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
 
     // Land Acquisition
     public DbSet<LandOpportunity> LandOpportunities => Set<LandOpportunity>();

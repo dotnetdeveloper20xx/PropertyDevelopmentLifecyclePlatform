@@ -72,6 +72,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/legal/contracts/contract-detail/contract-detail.component').then(m => m.ContractDetailComponent)
       },
       {
+        path: 'legal/contracts/:id/edit',
+        loadComponent: () => import('./features/legal/contracts/contract-edit/contract-edit.component').then(m => m.ContractEditComponent)
+      },
+      {
         path: 'legal/tasks',
         loadComponent: () => import('./features/legal/tasks/legal-tasks.component').then(m => m.LegalTasksComponent)
       },
@@ -79,10 +83,30 @@ export const routes: Routes = [
         path: 'legal/compliance',
         loadComponent: () => import('./features/legal/compliance-list/compliance-list.component').then(m => m.ComplianceListComponent)
       },
+      {
+        path: 'legal/compliance/new',
+        loadComponent: () => import('./features/legal/compliance-form/compliance-form.component').then(m => m.ComplianceFormComponent)
+      },
+      {
+        path: 'legal/compliance/:id',
+        loadComponent: () => import('./features/legal/compliance-detail/compliance-detail.component').then(m => m.ComplianceDetailComponent)
+      },
+      {
+        path: 'legal/compliance/:id/edit',
+        loadComponent: () => import('./features/legal/compliance-edit/compliance-edit.component').then(m => m.ComplianceEditComponent)
+      },
       // Land Acquisition (expanded)
       {
         path: 'due-diligence',
         loadComponent: () => import('./features/land-acquisition/due-diligence-list/due-diligence-list.component').then(m => m.DueDiligenceListComponent)
+      },
+      {
+        path: 'due-diligence/new',
+        loadComponent: () => import('./features/land-acquisition/due-diligence-form/due-diligence-form.component').then(m => m.DueDiligenceFormComponent)
+      },
+      {
+        path: 'due-diligence/:id',
+        loadComponent: () => import('./features/land-acquisition/due-diligence-detail/due-diligence-detail.component').then(m => m.DueDiligenceDetailComponent)
       },
       {
         path: 'acquisition/dashboard',
@@ -101,6 +125,10 @@ export const routes: Routes = [
         path: 'projects/:id',
         loadComponent: () => import('./features/projects/project-detail/project-detail.component').then(m => m.ProjectDetailComponent)
       },
+      {
+        path: 'projects/:id/edit',
+        loadComponent: () => import('./features/projects/project-edit/project-edit.component').then(m => m.ProjectEditComponent)
+      },
       // Design & Construction
       {
         path: 'construction',
@@ -118,6 +146,14 @@ export const routes: Routes = [
         path: 'construction/inspections',
         loadComponent: () => import('./features/construction/construction-inspections/construction-inspections.component').then(m => m.ConstructionInspectionsComponent)
       },
+      {
+        path: 'construction/:id',
+        loadComponent: () => import('./features/construction/construction-detail/construction-detail.component').then(m => m.ConstructionDetailComponent)
+      },
+      {
+        path: 'construction/:id/edit',
+        loadComponent: () => import('./features/construction/construction-edit/construction-edit.component').then(m => m.ConstructionEditComponent)
+      },
       // Procurement & Materials
       {
         path: 'procurement',
@@ -126,6 +162,14 @@ export const routes: Routes = [
       {
         path: 'procurement/new',
         loadComponent: () => import('./features/procurement/create-order-form/create-order-form.component').then(m => m.CreateOrderFormComponent)
+      },
+      {
+        path: 'procurement/:id',
+        loadComponent: () => import('./features/procurement/procurement-detail/procurement-detail.component').then(m => m.ProcurementDetailComponent)
+      },
+      {
+        path: 'procurement/:id/edit',
+        loadComponent: () => import('./features/procurement/procurement-edit/procurement-edit.component').then(m => m.ProcurementEditComponent)
       },
       // Contractors & Suppliers
       {
@@ -140,6 +184,10 @@ export const routes: Routes = [
         path: 'contractors/:id',
         loadComponent: () => import('./features/contractors/contractor-detail/contractor-detail.component').then(m => m.ContractorDetailComponent)
       },
+      {
+        path: 'contractors/:id/edit',
+        loadComponent: () => import('./features/contractors/contractor-edit/contractor-edit.component').then(m => m.ContractorEditComponent)
+      },
       // Finance & Budget Control
       {
         path: 'finance',
@@ -148,6 +196,14 @@ export const routes: Routes = [
       {
         path: 'finance/new',
         loadComponent: () => import('./features/finance/create-transaction-form/create-transaction-form.component').then(m => m.CreateTransactionFormComponent)
+      },
+      {
+        path: 'finance/:id',
+        loadComponent: () => import('./features/finance/finance-detail/finance-detail.component').then(m => m.FinanceDetailComponent)
+      },
+      {
+        path: 'finance/:id/edit',
+        loadComponent: () => import('./features/finance/finance-edit/finance-edit.component').then(m => m.FinanceEditComponent)
       },
       // Investors & Funding
       {
@@ -162,6 +218,10 @@ export const routes: Routes = [
         path: 'investors/:id',
         loadComponent: () => import('./features/investors/investor-detail/investor-detail.component').then(m => m.InvestorDetailComponent)
       },
+      {
+        path: 'investors/:id/edit',
+        loadComponent: () => import('./features/investors/investor-edit/investor-edit.component').then(m => m.InvestorEditComponent)
+      },
       // Property Units
       {
         path: 'units',
@@ -170,6 +230,14 @@ export const routes: Routes = [
       {
         path: 'units/new',
         loadComponent: () => import('./features/units/create-unit-form/create-unit-form.component').then(m => m.CreateUnitFormComponent)
+      },
+      {
+        path: 'units/:id',
+        loadComponent: () => import('./features/units/unit-detail/unit-detail.component').then(m => m.UnitDetailComponent)
+      },
+      {
+        path: 'units/:id/edit',
+        loadComponent: () => import('./features/units/unit-edit/unit-edit.component').then(m => m.UnitEditComponent)
       },
       // Sales & Marketing
       {
@@ -184,6 +252,10 @@ export const routes: Routes = [
         path: 'sales/:id',
         loadComponent: () => import('./features/sales/sales-detail/sales-detail.component').then(m => m.SalesDetailComponent)
       },
+      {
+        path: 'sales/:id/edit',
+        loadComponent: () => import('./features/sales/sales-edit/sales-edit.component').then(m => m.SalesEditComponent)
+      },
       // Rental Management
       {
         path: 'rentals',
@@ -197,10 +269,18 @@ export const routes: Routes = [
         path: 'rentals/:id',
         loadComponent: () => import('./features/rentals/tenancy-detail/tenancy-detail.component').then(m => m.TenancyDetailComponent)
       },
+      {
+        path: 'rentals/:id/edit',
+        loadComponent: () => import('./features/rentals/tenancy-edit/tenancy-edit.component').then(m => m.TenancyEditComponent)
+      },
       // Documents & Knowledge
       {
         path: 'documents',
         loadComponent: () => import('./features/documents/document-list/document-list.component').then(m => m.DocumentListComponent)
+      },
+      {
+        path: 'documents/new',
+        loadComponent: () => import('./features/documents/document-form/document-form.component').then(m => m.DocumentFormComponent)
       },
       {
         path: 'documents/:id',
@@ -210,6 +290,10 @@ export const routes: Routes = [
       {
         path: 'reports',
         loadComponent: () => import('./features/reports/report-list/report-list.component').then(m => m.ReportListComponent)
+      },
+      {
+        path: 'reports/new',
+        loadComponent: () => import('./features/reports/report-form/report-form.component').then(m => m.ReportFormComponent)
       },
       {
         path: 'reports/:id',
@@ -225,20 +309,60 @@ export const routes: Routes = [
         path: 'feasibility',
         loadComponent: () => import('./features/feasibility/feasibility-list/feasibility-list.component').then(m => m.FeasibilityListComponent)
       },
+      {
+        path: 'feasibility/new',
+        loadComponent: () => import('./features/feasibility/feasibility-form/feasibility-form.component').then(m => m.FeasibilityFormComponent)
+      },
+      {
+        path: 'feasibility/:id',
+        loadComponent: () => import('./features/feasibility/feasibility-detail/feasibility-detail.component').then(m => m.FeasibilityDetailComponent)
+      },
+      {
+        path: 'feasibility/:id/edit',
+        loadComponent: () => import('./features/feasibility/feasibility-edit/feasibility-edit.component').then(m => m.FeasibilityEditComponent)
+      },
       // Design & Professional Services
       {
         path: 'design',
         loadComponent: () => import('./features/design/design-list/design-list.component').then(m => m.DesignListComponent)
+      },
+      {
+        path: 'design/new',
+        loadComponent: () => import('./features/design/design-form/design-form.component').then(m => m.DesignFormComponent)
+      },
+      {
+        path: 'design/:id',
+        loadComponent: () => import('./features/design/design-detail/design-detail.component').then(m => m.DesignDetailComponent)
+      },
+      {
+        path: 'design/:id/edit',
+        loadComponent: () => import('./features/design/design-edit/design-edit.component').then(m => m.DesignEditComponent)
       },
       // Defects & Warranty
       {
         path: 'defects',
         loadComponent: () => import('./features/defects/defect-list/defect-list.component').then(m => m.DefectListComponent)
       },
+      {
+        path: 'defects/new',
+        loadComponent: () => import('./features/defects/defect-form/defect-form.component').then(m => m.DefectFormComponent)
+      },
+      {
+        path: 'defects/:id',
+        loadComponent: () => import('./features/defects/defect-detail/defect-detail.component').then(m => m.DefectDetailComponent)
+      },
+      {
+        path: 'defects/:id/edit',
+        loadComponent: () => import('./features/defects/defect-edit/defect-edit.component').then(m => m.DefectEditComponent)
+      },
       // Administration
       {
         path: 'admin/users',
         loadComponent: () => import('./features/admin/user-management/user-management.component').then(m => m.UserManagementComponent)
+      },
+      {
+        path: 'admin/permissions',
+        loadComponent: () => import('./features/admin/permission-matrix/permission-matrix.component').then(m => m.PermissionMatrixComponent)
       },
       {
         path: 'admin/audit',
