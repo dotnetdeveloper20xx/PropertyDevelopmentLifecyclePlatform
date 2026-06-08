@@ -170,8 +170,7 @@ export const routes: Routes = [
       },
       {
         path: 'admin/settings',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'admin-settings' }
+        loadComponent: () => import('./features/admin/settings/settings.component').then(m => m.SettingsComponent)
       },
       // Help Centre
       {
