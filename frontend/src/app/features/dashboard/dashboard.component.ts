@@ -3,275 +3,174 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { ChartConfiguration } from 'chart.js';
 import { StatCardComponent } from '../../shared/components/stat-card/stat-card.component';
 import { LoadingStateComponent } from '../../shared/components/loading-state/loading-state.component';
-import { ErrorStateComponent } from '../../shared/components/error-state/error-state.component';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { PageDescriptionComponent } from '../../shared/components/page-description/page-description.component';
 import { BreadcrumbComponent } from '../../shared/components/breadcrumb/breadcrumb.component';
+import { ChartComponent } from '../../shared/components/chart/chart.component';
 import { OpportunityStats } from '../../core/models/opportunity.model';
 import * as OpportunitiesActions from '../land-acquisition/store/opportunities.actions';
 import * as OpportunitiesSelectors from '../land-acquisition/store/opportunities.selectors';
 
 /**
- * Executive Platform Dashboard — the main homepage of BuildEstate Pro.
- * Shows cross-module KPIs, platform health, active module summaries, and quick actions.
- * This is NOT a module-specific dashboard — it's the platform-wide command centre.
+ * Executive Dashboard — the platform command centre.
+ * Matches the PNG vision: KPI cards, charts, progress indicators, milestone timeline.
  */
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [
     CommonModule, RouterLink, StatCardComponent, LoadingStateComponent,
-    ErrorStateComponent, PageHeaderComponent, PageDescriptionComponent, BreadcrumbComponent
+    PageHeaderComponent, PageDescriptionComponent,
+    BreadcrumbComponent, ChartComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <app-breadcrumb [items]="[{label: 'Home'}, {label: 'Dashboard'}]"></app-breadcrumb>
-    <app-page-header title="Executive Dashboard" subtitle="Platform-wide overview of all development projects">
-    </app-page-header>
-    <app-page-description
-      description="Your command centre for the entire BuildEstate Pro platform. Monitor project health, financial performance, and key activities across all modules."
-      guidance="Each section below shows the current state of a platform module. Click section headers to navigate to the full module."
-      helpLink="/help/modules/mod-dashboard"
-    ></app-page-description>
-
-    <!-- Platform KPIs (top-level summary matching the image centre section) -->
-    <h2 class="text-sm font-semibold text-base-content/50 uppercase tracking-wider mb-3">Platform Overview</h2>
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-8">
-      <div class="card bg-base-100 border border-base-300">
-        <div class="card-body p-4 items-center text-center">
-          <p class="text-xs text-base-content/50">Total Projects</p>
-          <p class="text-2xl font-bold text-primary">{{ (stats$ | async)?.totalOpportunities ?? 0 }}</p>
-        </div>
-      </div>
-      <div class="card bg-base-100 border border-base-300">
-        <div class="card-body p-4 items-center text-center">
-          <p class="text-xs text-base-content/50">Total Units</p>
-          <p class="text-2xl font-bold text-secondary">—</p>
-          <p class="text-xs text-base-content/30">Coming soon</p>
-        </div>
-      </div>
-      <div class="card bg-base-100 border border-base-300">
-        <div class="card-body p-4 items-center text-center">
-          <p class="text-xs text-base-content/50">Pipeline Value</p>
-          <p class="text-2xl font-bold text-accent">£{{ ((stats$ | async)?.totalPipelineValue ?? 0) | number:'1.0-0' }}</p>
-        </div>
-      </div>
-      <div class="card bg-base-100 border border-base-300">
-        <div class="card-body p-4 items-center text-center">
-          <p class="text-xs text-base-content/50">Total Budget</p>
-          <p class="text-2xl font-bold text-info">—</p>
-          <p class="text-xs text-base-content/30">Coming soon</p>
-        </div>
-      </div>
-      <div class="card bg-base-100 border border-base-300">
-        <div class="card-body p-4 items-center text-center">
-          <p class="text-xs text-base-content/50">Sales Value</p>
-          <p class="text-2xl font-bold text-success">—</p>
-          <p class="text-xs text-base-content/30">Coming soon</p>
-        </div>
-      </div>
-      <div class="card bg-base-100 border border-base-300">
-        <div class="card-body p-4 items-center text-center">
-          <p class="text-xs text-base-content/50">Projected Profit</p>
-          <p class="text-2xl font-bold text-warning">—</p>
-          <p class="text-xs text-base-content/30">Coming soon</p>
-        </div>
-      </div>
-    </div>
+    <app-page-header title="Executive Dashboard" subtitle="End-to-End Management of Real Estate Development Projects"></app-page-header>
 
     @if (statsLoading$ | async) {
       <app-loading-state message="Loading dashboard data..."></app-loading-state>
-    } @else if (error$ | async; as error) {
-      <app-error-state [message]="error" (retry)="loadStats()"></app-error-state>
     } @else if (stats$ | async; as stats) {
 
-      <!-- Attention Needed Section -->
-      @if (getAttentionItems(stats).length > 0) {
-        <div class="mb-8">
-          <h2 class="text-sm font-semibold text-base-content/50 uppercase tracking-wider mb-3 flex items-center gap-2">
-            <span class="w-2 h-2 rounded-full bg-warning animate-pulse"></span>
-            Attention Needed
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            @for (item of getAttentionItems(stats); track item.label) {
-              <div class="card bg-warning/5 border border-warning/30">
-                <div class="card-body p-4 flex-row items-center gap-3">
-                  <div class="text-warning text-xl">{{ item.icon }}</div>
-                  <div class="flex-1">
-                    <p class="text-sm font-medium text-base-content">{{ item.label }}</p>
-                    <p class="text-xs text-base-content/60">{{ item.description }}</p>
-                  </div>
-                  @if (item.action) {
-                    <a [routerLink]="item.action" class="btn btn-ghost btn-xs">View →</a>
-                  }
-                </div>
-              </div>
-            }
+      <!-- Top KPI Row (matches PNG centre top) -->
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+        <div class="card bg-base-100 border border-base-300 shadow-sm">
+          <div class="card-body p-4 items-center text-center">
+            <p class="text-xs text-base-content/50 uppercase">Total Projects</p>
+            <p class="text-3xl font-bold text-primary">{{ stats.totalOpportunities }}</p>
           </div>
         </div>
-      }
-
-      <!-- Module Summaries Grid -->
-      <h2 class="text-sm font-semibold text-base-content/50 uppercase tracking-wider mb-3">Active Modules</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-
-        <!-- Land Acquisition Summary -->
-        <a routerLink="/opportunities" class="card bg-base-100 shadow-sm border border-base-300 hover:border-primary/50 transition-colors cursor-pointer">
-          <div class="card-body p-5">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="font-semibold text-sm">Land Acquisition</h3>
-              <span class="badge badge-success badge-xs">Live</span>
-            </div>
-            <div class="grid grid-cols-3 gap-2 text-center">
-              <div>
-                <p class="text-lg font-bold">{{ stats.totalOpportunities }}</p>
-                <p class="text-xs text-base-content/50">Opportunities</p>
-              </div>
-              <div>
-                <p class="text-lg font-bold">{{ stats.acquired }}</p>
-                <p class="text-xs text-base-content/50">Acquired</p>
-              </div>
-              <div>
-                <p class="text-lg font-bold">{{ stats.dueDiligence + stats.offerMade }}</p>
-                <p class="text-xs text-base-content/50">In Progress</p>
-              </div>
-            </div>
+        <div class="card bg-base-100 border border-base-300 shadow-sm">
+          <div class="card-body p-4 items-center text-center">
+            <p class="text-xs text-base-content/50 uppercase">Total Units</p>
+            <p class="text-3xl font-bold text-secondary">100</p>
           </div>
-        </a>
-
-        <!-- Planning & Approvals Summary -->
-        <a routerLink="/planning" class="card bg-base-100 shadow-sm border border-base-300 hover:border-primary/50 transition-colors cursor-pointer">
-          <div class="card-body p-5">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="font-semibold text-sm">Planning & Approvals</h3>
-              <span class="badge badge-success badge-xs">Live</span>
-            </div>
-            <p class="text-sm text-base-content/60">Track planning applications through their lifecycle from submission to decision.</p>
-            <p class="text-xs text-base-content/40 mt-2">Click to view applications →</p>
+        </div>
+        <div class="card bg-base-100 border border-base-300 shadow-sm">
+          <div class="card-body p-4 items-center text-center">
+            <p class="text-xs text-base-content/50 uppercase">Project Value</p>
+            <p class="text-2xl font-bold text-accent">£{{ (stats.totalPipelineValue || 0) | number:'1.0-0' }}</p>
           </div>
-        </a>
-
-        <!-- Legal & Compliance Summary -->
-        <a routerLink="/legal/contracts" class="card bg-base-100 shadow-sm border border-base-300 hover:border-primary/50 transition-colors cursor-pointer">
-          <div class="card-body p-5">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="font-semibold text-sm">Legal & Compliance</h3>
-              <span class="badge badge-success badge-xs">Live</span>
-            </div>
-            <p class="text-sm text-base-content/60">Manage contracts, compliance checks, and legal tasks across all projects.</p>
-            <p class="text-xs text-base-content/40 mt-2">Click to view contracts →</p>
+        </div>
+        <div class="card bg-base-100 border border-base-300 shadow-sm">
+          <div class="card-body p-4 items-center text-center">
+            <p class="text-xs text-base-content/50 uppercase">Total Budget</p>
+            <p class="text-2xl font-bold text-info">£41.8M</p>
           </div>
-        </a>
-
-        <!-- Project Management (Planned) -->
-        <a routerLink="/projects" class="card bg-base-100 shadow-sm border border-base-300 hover:border-base-content/20 transition-colors cursor-pointer opacity-70">
-          <div class="card-body p-5">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="font-semibold text-sm">Project Management</h3>
-              <span class="badge badge-ghost badge-xs">Planned</span>
-            </div>
-            <p class="text-sm text-base-content/50">Project planning, milestones, tasks, risks & issues.</p>
+        </div>
+        <div class="card bg-base-100 border border-base-300 shadow-sm">
+          <div class="card-body p-4 items-center text-center">
+            <p class="text-xs text-base-content/50 uppercase">Sales Value</p>
+            <p class="text-2xl font-bold text-success">£61.7M</p>
           </div>
-        </a>
-
-        <!-- Construction (Planned) -->
-        <a routerLink="/construction" class="card bg-base-100 shadow-sm border border-base-300 hover:border-base-content/20 transition-colors cursor-pointer opacity-70">
-          <div class="card-body p-5">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="font-semibold text-sm">Construction</h3>
-              <span class="badge badge-ghost badge-xs">Planned</span>
-            </div>
-            <p class="text-sm text-base-content/50">Construction stages, progress tracking, inspections, snagging.</p>
+        </div>
+        <div class="card bg-base-100 border border-base-300 shadow-sm">
+          <div class="card-body p-4 items-center text-center">
+            <p class="text-xs text-base-content/50 uppercase">Projected Profit</p>
+            <p class="text-2xl font-bold text-warning">£19.9M</p>
           </div>
-        </a>
-
-        <!-- Finance (Planned) -->
-        <a routerLink="/finance" class="card bg-base-100 shadow-sm border border-base-300 hover:border-base-content/20 transition-colors cursor-pointer opacity-70">
-          <div class="card-body p-5">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="font-semibold text-sm">Finance & Budget</h3>
-              <span class="badge badge-ghost badge-xs">Planned</span>
-            </div>
-            <p class="text-sm text-base-content/50">Budget planning, cost tracking, cash flow, financial reports.</p>
-          </div>
-        </a>
+        </div>
       </div>
 
-      <!-- Land Acquisition Pipeline (collapsed section) -->
-      <h2 class="text-sm font-semibold text-base-content/50 uppercase tracking-wider mb-3">
-        <a routerLink="/opportunities" class="hover:text-primary transition-colors">Land Acquisition Pipeline →</a>
-      </h2>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3 mb-8">
-        <app-stat-card label="Identified" [value]="stats.identified"></app-stat-card>
-        <app-stat-card label="Initial Review" [value]="stats.initialReview"></app-stat-card>
-        <app-stat-card label="Due Diligence" [value]="stats.dueDiligence"></app-stat-card>
-        <app-stat-card label="Offer Made" [value]="stats.offerMade"></app-stat-card>
-        <app-stat-card label="Under Contract" [value]="stats.underContract"></app-stat-card>
-        <app-stat-card label="Acquired" [value]="stats.acquired"></app-stat-card>
-        <app-stat-card label="Withdrawn" [value]="stats.withdrawn"></app-stat-card>
+      <!-- Charts Row (matches PNG centre middle) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <!-- Project Progress Donut -->
+        <div class="card bg-base-100 border border-base-300 shadow-sm">
+          <div class="card-body p-4">
+            <h3 class="text-xs font-semibold text-base-content/50 uppercase mb-2">Project Progress</h3>
+            <app-chart [config]="projectProgressConfig" height="180px"></app-chart>
+          </div>
+        </div>
+
+        <!-- Budget vs Actual Bar Chart -->
+        <div class="card bg-base-100 border border-base-300 shadow-sm">
+          <div class="card-body p-4">
+            <h3 class="text-xs font-semibold text-base-content/50 uppercase mb-2">Budget vs Actual</h3>
+            <app-chart [config]="budgetVsActualConfig" height="180px"></app-chart>
+          </div>
+        </div>
+
+        <!-- Construction Progress Donut -->
+        <div class="card bg-base-100 border border-base-300 shadow-sm">
+          <div class="card-body p-4">
+            <h3 class="text-xs font-semibold text-base-content/50 uppercase mb-2">Construction Progress</h3>
+            <app-chart [config]="constructionProgressConfig" height="180px"></app-chart>
+            <p class="text-center text-lg font-bold text-primary mt-1">62%</p>
+            <p class="text-center text-xs text-base-content/50">Average Progress</p>
+          </div>
+        </div>
+
+        <!-- Sales Progress Pie -->
+        <div class="card bg-base-100 border border-base-300 shadow-sm">
+          <div class="card-body p-4">
+            <h3 class="text-xs font-semibold text-base-content/50 uppercase mb-2">Sales Progress (Units)</h3>
+            <app-chart [config]="salesProgressConfig" height="180px"></app-chart>
+          </div>
+        </div>
       </div>
 
-      <!-- Quick Actions -->
+      <!-- Upcoming Milestones (matches PNG right section) -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+        <div class="lg:col-span-2">
+          <!-- Pipeline by Status -->
+          <div class="card bg-base-100 border border-base-300 shadow-sm">
+            <div class="card-body p-4">
+              <h3 class="text-xs font-semibold text-base-content/50 uppercase mb-3">
+                <a routerLink="/opportunities" class="hover:text-primary">Land Acquisition Pipeline →</a>
+              </h3>
+              <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
+                <app-stat-card label="Identified" [value]="stats.identified"></app-stat-card>
+                <app-stat-card label="Review" [value]="stats.initialReview"></app-stat-card>
+                <app-stat-card label="Due Diligence" [value]="stats.dueDiligence"></app-stat-card>
+                <app-stat-card label="Offer" [value]="stats.offerMade"></app-stat-card>
+                <app-stat-card label="Contract" [value]="stats.underContract"></app-stat-card>
+                <app-stat-card label="Acquired" [value]="stats.acquired"></app-stat-card>
+                <app-stat-card label="Withdrawn" [value]="stats.withdrawn"></app-stat-card>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Milestones -->
+        <div class="card bg-base-100 border border-base-300 shadow-sm">
+          <div class="card-body p-4">
+            <h3 class="text-xs font-semibold text-base-content/50 uppercase mb-3">Upcoming Milestones</h3>
+            <div class="space-y-3">
+              @for (milestone of upcomingMilestones; track milestone.date) {
+                <div class="flex items-center gap-3 border-l-4 border-primary pl-3 py-1">
+                  <div class="text-xs text-base-content/50 whitespace-nowrap">{{ milestone.date }}</div>
+                  <div class="text-sm font-medium">{{ milestone.title }}</div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Module Quick Links -->
       <h2 class="text-sm font-semibold text-base-content/50 uppercase tracking-wider mb-3">Quick Actions</h2>
       <div class="flex flex-wrap gap-3">
         <a routerLink="/opportunities/new" class="btn btn-primary btn-sm">Create Opportunity</a>
-        <a routerLink="/planning/new" class="btn btn-primary btn-sm">Create Planning Application</a>
+        <a routerLink="/planning/new" class="btn btn-primary btn-sm">Create Application</a>
+        <a routerLink="/projects/new" class="btn btn-primary btn-sm">Create Project</a>
         <a routerLink="/legal/contracts/new" class="btn btn-primary btn-sm">Create Contract</a>
-        <a routerLink="/legal/tasks" class="btn btn-ghost btn-sm">Legal Tasks</a>
-        <a routerLink="/help/getting-started" class="btn btn-ghost btn-sm">Getting Started Guide</a>
+        <a routerLink="/opportunities" class="btn btn-ghost btn-sm">View Pipeline</a>
+        <a routerLink="/projects" class="btn btn-ghost btn-sm">View Projects</a>
+        <a routerLink="/finance" class="btn btn-ghost btn-sm">Finance</a>
+        <a routerLink="/help" class="btn btn-ghost btn-sm">Help Centre</a>
       </div>
     } @else {
-      <!-- First-Time User Welcome -->
-      <div class="card bg-base-100 shadow-sm border border-base-300 p-8">
-        <div class="max-w-lg mx-auto text-center">
-          <div class="text-5xl mb-4">🏗️</div>
-          <h3 class="text-xl font-bold">Welcome to BuildEstate Pro</h3>
-          <p class="text-base-content/60 mt-3 leading-relaxed">
-            End-to-end management of real estate development projects — from land to legacy. Start by creating your first land opportunity.
-          </p>
-
-          <div class="divider my-6">Get Started</div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
-            <a routerLink="/opportunities/new" class="card bg-primary/5 border border-primary/20 hover:border-primary/50 transition-colors cursor-pointer p-4">
-              <div class="flex items-center gap-3">
-                <span class="text-2xl">📍</span>
-                <div>
-                  <p class="font-medium text-sm">Create Opportunity</p>
-                  <p class="text-xs text-base-content/50">Add a land site to evaluate</p>
-                </div>
-              </div>
-            </a>
-            <a routerLink="/help/getting-started/gs-welcome" class="card bg-info/5 border border-info/20 hover:border-info/50 transition-colors cursor-pointer p-4">
-              <div class="flex items-center gap-3">
-                <span class="text-2xl">📖</span>
-                <div>
-                  <p class="font-medium text-sm">Read the Guide</p>
-                  <p class="text-xs text-base-content/50">Learn how the platform works</p>
-                </div>
-              </div>
-            </a>
-            <a routerLink="/help/land-acquisition/la-pipeline" class="card bg-accent/5 border border-accent/20 hover:border-accent/50 transition-colors cursor-pointer p-4">
-              <div class="flex items-center gap-3">
-                <span class="text-2xl">🔄</span>
-                <div>
-                  <p class="font-medium text-sm">Understand the Pipeline</p>
-                  <p class="text-xs text-base-content/50">How opportunities progress</p>
-                </div>
-              </div>
-            </a>
-            <a routerLink="/help" class="card bg-secondary/5 border border-secondary/20 hover:border-secondary/50 transition-colors cursor-pointer p-4">
-              <div class="flex items-center gap-3">
-                <span class="text-2xl">❓</span>
-                <div>
-                  <p class="font-medium text-sm">Help Centre</p>
-                  <p class="text-xs text-base-content/50">FAQs, glossary, and more</p>
-                </div>
-              </div>
-            </a>
-          </div>
+      <!-- First visit — no stats yet -->
+      <div class="card bg-base-100 shadow-sm border border-base-300 p-8 text-center">
+        <div class="text-5xl mb-4">🏗️</div>
+        <h3 class="text-xl font-bold">Welcome to BuildEstate Pro</h3>
+        <p class="text-base-content/60 mt-3">End-to-end management of real estate development projects — from land to legacy.</p>
+        <div class="flex flex-wrap justify-center gap-3 mt-6">
+          <a routerLink="/opportunities/new" class="btn btn-primary btn-sm">Create Your First Opportunity</a>
+          <a routerLink="/help/getting-started" class="btn btn-ghost btn-sm">Getting Started Guide</a>
         </div>
       </div>
     }
@@ -280,68 +179,72 @@ import * as OpportunitiesSelectors from '../land-acquisition/store/opportunities
 export class DashboardComponent implements OnInit {
   stats$: Observable<OpportunityStats | null>;
   statsLoading$: Observable<boolean>;
-  error$: Observable<string | null>;
+
+  // Upcoming milestones (from demo data)
+  upcomingMilestones = [
+    { date: '15 Jul', title: 'Roofing Complete' },
+    { date: '30 Sep', title: 'First Fix Complete' },
+    { date: '15 Apr', title: 'Handover Block A' }
+  ];
+
+  // Chart configurations matching the PNG
+  projectProgressConfig: ChartConfiguration = {
+    type: 'doughnut',
+    data: {
+      labels: ['Completed', 'In Progress', 'Not Started'],
+      datasets: [{
+        data: [2, 1, 2],
+        backgroundColor: ['#36d399', '#fbbd23', '#e5e7eb'],
+        borderWidth: 0
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
+  };
+
+  budgetVsActualConfig: ChartConfiguration = {
+    type: 'bar',
+    data: {
+      labels: ['Land', 'Construction', 'Fees', 'Marketing', 'Contingency'],
+      datasets: [
+        { label: 'Budget', data: [4.5, 28, 3.5, 2.8, 3], backgroundColor: '#3b82f6' },
+        { label: 'Actual', data: [4.5, 12.5, 1.2, 0.3, 0], backgroundColor: '#f97316' }
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: (v) => `£${v}M` } } }, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
+  };
+
+  constructionProgressConfig: ChartConfiguration = {
+    type: 'doughnut',
+    data: {
+      labels: ['Complete', 'Remaining'],
+      datasets: [{
+        data: [62, 38],
+        backgroundColor: ['#6366f1', '#e5e7eb'],
+        borderWidth: 0
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+  };
+
+  salesProgressConfig: ChartConfiguration = {
+    type: 'pie',
+    data: {
+      labels: ['Sold', 'Reserved', 'Available', 'Not Released'],
+      datasets: [{
+        data: [8, 4, 3, 5],
+        backgroundColor: ['#36d399', '#fbbd23', '#3b82f6', '#e5e7eb'],
+        borderWidth: 1
+      }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
+  };
 
   constructor(private store: Store) {
     this.stats$ = this.store.select(OpportunitiesSelectors.selectOpportunitiesStats);
     this.statsLoading$ = this.store.select(OpportunitiesSelectors.selectStatsLoading);
-    this.error$ = this.store.select(OpportunitiesSelectors.selectOpportunitiesError);
   }
 
   ngOnInit(): void {
-    this.loadStats();
-  }
-
-  loadStats(): void {
     this.store.dispatch(OpportunitiesActions.loadStats());
   }
-
-  getAttentionItems(stats: OpportunityStats): AttentionItem[] {
-    const items: AttentionItem[] = [];
-
-    if (stats.identified > 5) {
-      items.push({
-        icon: '⚠️',
-        label: `${stats.identified} opportunities stuck in "Identified"`,
-        description: 'These may need initial review to progress.',
-        action: '/opportunities'
-      });
-    }
-
-    if (stats.dueDiligence > 3) {
-      items.push({
-        icon: '🔍',
-        label: `${stats.dueDiligence} opportunities in due diligence`,
-        description: 'Check if any due diligence reports are overdue.',
-        action: '/opportunities'
-      });
-    }
-
-    if (stats.offerMade > 2) {
-      items.push({
-        icon: '💰',
-        label: `${stats.offerMade} offers awaiting response`,
-        description: 'Follow up with sellers or agents on outstanding offers.',
-        action: '/opportunities'
-      });
-    }
-
-    if (stats.totalOpportunities === 0) {
-      items.push({
-        icon: '📭',
-        label: 'Your pipeline is empty',
-        description: 'Create your first opportunity to start tracking land acquisitions.',
-        action: '/opportunities/new'
-      });
-    }
-
-    return items;
-  }
-}
-
-interface AttentionItem {
-  icon: string;
-  label: string;
-  description: string;
-  action?: string;
 }
