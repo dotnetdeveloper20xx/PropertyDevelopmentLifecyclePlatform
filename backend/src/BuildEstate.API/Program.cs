@@ -147,6 +147,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     await DatabaseSeeder.SeedAsync(app.Services);
+    await DemoDataSeeder.SeedDemoDataAsync(app.Services);
 }
 
 // Middleware pipeline (order matters)
