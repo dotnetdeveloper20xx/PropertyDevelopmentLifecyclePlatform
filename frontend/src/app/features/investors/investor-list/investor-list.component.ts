@@ -12,6 +12,7 @@ import { StatusBadgeComponent } from '../../../shared/components/status-badge/st
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
 import { SearchBoxComponent } from '../../../shared/components/search-box/search-box.component';
 import { InvestorItem, InvestorType, InvestorStatus, CreateInvestorRequest } from '../../../core/models/investor.model';
+import { exportToCsv } from '../../../shared/utils/csv-export';
 import * as InvestorsActions from '../store/investors.actions';
 import * as InvestorsSelectors from '../store/investors.selectors';
 
@@ -57,6 +58,7 @@ import * as InvestorsSelectors from '../store/investors.selectors';
         <option value="Inactive">Inactive</option>
         <option value="Exited">Exited</option>
       </select>
+      <button class="btn btn-ghost btn-xs" (click)="exportCsv()" aria-label="Export to CSV">📥 Export CSV</button>
       <div class="text-xs text-base-content/50">
         {{ totalCount$ | async }} total
       </div>
@@ -288,6 +290,23 @@ export class InvestorListComponent implements OnInit {
     this.store.dispatch(InvestorsActions.createInvestor({ request }));
     this.investorForm.reset();
     this.showForm = false;
+  }
+
+  exportCsv(): void {
+    this.investors$.subscribe(investors => {
+      const headers = ['Name', 'Type', 'Company', 'Total Invested', 'Currency', 'Projects', 'Email', 'Status'];
+      const rows = investors.map(i => [
+        i.name,
+        i.type,
+        i.company ?? '',
+        i.totalInvested.toString(),
+        i.currency,
+        i.projectCount.toString(),
+        i.email ?? '',
+        i.status
+      ]);
+      exportToCsv('investors', headers, rows);
+    }).unsubscribe();
   }
 
   formatType(type: InvestorType): string {

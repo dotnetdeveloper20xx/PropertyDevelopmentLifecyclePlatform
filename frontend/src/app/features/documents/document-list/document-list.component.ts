@@ -11,6 +11,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
 import { DocumentItem, CreateDocumentRequest, DocumentCategory } from '../../../core/models/document.model';
+import { exportToCsv } from '../../../shared/utils/csv-export';
 import * as DocumentsActions from '../store/documents.actions';
 import * as DocumentsSelectors from '../store/documents.selectors';
 
@@ -52,6 +53,7 @@ import * as DocumentsSelectors from '../store/documents.selectors';
         </select>
       </label>
       <button class="btn btn-sm btn-outline" (click)="onSearch()">Search</button>
+      <button class="btn btn-ghost btn-xs" (click)="exportCsv()" aria-label="Export to CSV">📥 Export CSV</button>
     </div>
 
     <!-- Inline Add Form -->
@@ -235,6 +237,21 @@ export class DocumentListComponent implements OnInit {
   onSearch(): void {
     this.currentPage = 1;
     this.loadDocuments();
+  }
+
+  exportCsv(): void {
+    this.documents$.subscribe(documents => {
+      const headers = ['Title', 'Category', 'File Name', 'Version', 'Uploaded By', 'Uploaded At'];
+      const rows = documents.map(d => [
+        d.title,
+        d.category,
+        d.fileName,
+        d.version.toString(),
+        d.uploadedBy ?? '',
+        d.uploadedAt ?? ''
+      ]);
+      exportToCsv('documents', headers, rows);
+    }).unsubscribe();
   }
 
   changePage(page: number): void {

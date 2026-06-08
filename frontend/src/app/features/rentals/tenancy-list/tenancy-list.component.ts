@@ -12,6 +12,7 @@ import { StatusBadgeComponent } from '../../../shared/components/status-badge/st
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
 import { SearchBoxComponent } from '../../../shared/components/search-box/search-box.component';
 import { TenancyItem, TenancyStatus, RentFrequency, CreateTenancyRequest } from '../../../core/models/rental.model';
+import { exportToCsv } from '../../../shared/utils/csv-export';
 import * as RentalsActions from '../store/rentals.actions';
 import * as RentalsSelectors from '../store/rentals.selectors';
 
@@ -50,6 +51,7 @@ import * as RentalsSelectors from '../store/rentals.selectors';
         <option value="Terminated">Terminated</option>
         <option value="Renewed">Renewed</option>
       </select>
+      <button class="btn btn-ghost btn-xs" (click)="exportCsv()" aria-label="Export to CSV">📥 Export CSV</button>
       <div class="text-xs text-base-content/50">
         {{ totalCount$ | async }} total
       </div>
@@ -306,6 +308,25 @@ export class TenancyListComponent implements OnInit {
     this.store.dispatch(RentalsActions.createTenancy({ request }));
     this.tenancyForm.reset();
     this.showForm = false;
+  }
+
+  exportCsv(): void {
+    this.tenancies$.subscribe(tenancies => {
+      const headers = ['Tenant', 'Unit', 'Rent Amount', 'Currency', 'Frequency', 'Start Date', 'End Date', 'Deposit', 'Email', 'Status'];
+      const rows = tenancies.map(t => [
+        t.tenantName,
+        t.unitReference ?? t.unitId,
+        t.rentAmount.toString(),
+        t.currency,
+        t.rentFrequency,
+        t.startDate ?? '',
+        t.endDate ?? '',
+        t.depositAmount?.toString() ?? '',
+        t.tenantEmail ?? '',
+        t.status
+      ]);
+      exportToCsv('tenancies', headers, rows);
+    }).unsubscribe();
   }
 
   totalPages(): number {

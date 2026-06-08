@@ -10,8 +10,8 @@ import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/bread
 import { LoadingStateComponent } from '../../../shared/components/loading-state/loading-state.component';
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
-import { SearchBoxComponent } from '../../../shared/components/search-box/search-box.component';
 import { ConstructionStageItem } from '../../../core/models/construction.model';
+import { exportToCsv } from '../../../shared/utils/csv-export';
 import * as ConstructionActions from '../store/construction.actions';
 import * as ConstructionSelectors from '../store/construction.selectors';
 
@@ -21,7 +21,7 @@ import * as ConstructionSelectors from '../store/construction.selectors';
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule,
     PageHeaderComponent, PageDescriptionComponent, BreadcrumbComponent,
-    LoadingStateComponent, EmptyStateComponent, StatusBadgeComponent, SearchBoxComponent
+    LoadingStateComponent, EmptyStateComponent, StatusBadgeComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -39,6 +39,11 @@ import * as ConstructionSelectors from '../store/construction.selectors';
       guidance="Enter a project ID below to load the construction stages for that project. You can then view stage progress, schedule inspections, and log snags."
       helpLink="/help/construction/stages-overview"
     ></app-page-description>
+
+    <!-- Toolbar -->
+    <div class="flex flex-wrap items-center gap-3 mb-4">
+      <button class="btn btn-ghost btn-xs" (click)="exportCsv()" aria-label="Export to CSV">📥 Export CSV</button>
+    </div>
 
     <!-- Project ID Input -->
     <div class="card bg-base-100 border border-base-300 p-4 mb-4">
@@ -196,6 +201,22 @@ export class ConstructionStagesComponent implements OnInit {
     if (!this.projectId) return;
     this.stagesLoaded = true;
     this.store.dispatch(ConstructionActions.loadStages({ projectId: this.projectId }));
+  }
+
+  exportCsv(): void {
+    this.stages$.subscribe(stages => {
+      const headers = ['Name', 'Status', 'Progress %', 'Planned Start', 'Planned End', 'Inspections', 'Snags'];
+      const rows = stages.map(s => [
+        s.name,
+        s.status,
+        s.progressPercent?.toString() ?? '',
+        s.plannedStartDate ?? '',
+        s.plannedEndDate ?? '',
+        s.inspectionCount.toString(),
+        s.snagCount.toString()
+      ]);
+      exportToCsv('construction-stages', headers, rows);
+    }).unsubscribe();
   }
 
   onCreateStage(): void {

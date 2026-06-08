@@ -12,6 +12,7 @@ import { StatusBadgeComponent } from '../../../shared/components/status-badge/st
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
 import { SearchBoxComponent } from '../../../shared/components/search-box/search-box.component';
 import { SalesLeadItem, LeadStatus, LeadSource, CreateSalesLeadRequest } from '../../../core/models/sales.model';
+import { exportToCsv } from '../../../shared/utils/csv-export';
 import * as SalesActions from '../store/sales.actions';
 import * as SalesSelectors from '../store/sales.selectors';
 
@@ -54,6 +55,7 @@ import * as SalesSelectors from '../store/sales.selectors';
         <option value="Completed">Completed</option>
         <option value="Lost">Lost</option>
       </select>
+      <button class="btn btn-ghost btn-xs" (click)="exportCsv()" aria-label="Export to CSV">📥 Export CSV</button>
       <div class="text-xs text-base-content/50">
         {{ totalCount$ | async }} total
       </div>
@@ -280,6 +282,24 @@ export class SalesListComponent implements OnInit {
     this.store.dispatch(SalesActions.createSalesLead({ request }));
     this.leadForm.reset();
     this.showForm = false;
+  }
+
+  exportCsv(): void {
+    this.leads$.subscribe(leads => {
+      const headers = ['Name', 'Source', 'Email', 'Phone', 'Budget', 'Currency', 'Unit Ref', 'Status', 'Created'];
+      const rows = leads.map(l => [
+        l.name,
+        l.source,
+        l.email ?? '',
+        l.phone ?? '',
+        l.budget?.toString() ?? '',
+        l.currency ?? '',
+        l.interestedUnitRef ?? '',
+        l.status,
+        l.createdAt ?? ''
+      ]);
+      exportToCsv('sales-leads', headers, rows);
+    }).unsubscribe();
   }
 
   formatSource(source: LeadSource): string {

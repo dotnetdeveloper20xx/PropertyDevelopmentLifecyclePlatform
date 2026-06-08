@@ -11,6 +11,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
 import { PurchaseOrderItem, CreatePurchaseOrderRequest } from '../../../core/models/procurement.model';
+import { exportToCsv } from '../../../shared/utils/csv-export';
 import * as ProcurementActions from '../store/procurement.actions';
 import * as ProcurementSelectors from '../store/procurement.selectors';
 
@@ -45,6 +46,7 @@ import * as ProcurementSelectors from '../store/procurement.selectors';
           <button class="btn btn-sm btn-outline" [disabled]="!projectId" (click)="loadOrders()">Load</button>
         </div>
       </label>
+      <button class="btn btn-ghost btn-xs" (click)="exportCsv()" aria-label="Export to CSV">📥 Export CSV</button>
     </div>
 
     <!-- Inline Add Form -->
@@ -176,6 +178,23 @@ export class ProcurementListComponent implements OnInit {
     if (!this.showForm) {
       this.orderForm.reset();
     }
+  }
+
+  exportCsv(): void {
+    this.orders$.subscribe(orders => {
+      const headers = ['Reference', 'Supplier', 'Status', 'Currency', 'Total Value', 'Order Date', 'Expected Delivery', 'Deliveries'];
+      const rows = orders.map(o => [
+        o.orderReference,
+        o.supplierName,
+        o.status,
+        o.currency,
+        o.totalValue.toString(),
+        o.orderDate ?? '',
+        o.expectedDeliveryDate ?? '',
+        o.deliveryCount.toString()
+      ]);
+      exportToCsv('purchase-orders', headers, rows);
+    }).unsubscribe();
   }
 
   onSubmit(): void {

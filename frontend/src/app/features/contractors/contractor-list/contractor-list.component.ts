@@ -12,6 +12,7 @@ import { StatusBadgeComponent } from '../../../shared/components/status-badge/st
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
 import { SearchBoxComponent } from '../../../shared/components/search-box/search-box.component';
 import { ContractorItem, ContractorType, ContractorStatus, CreateContractorRequest } from '../../../core/models/contractor.model';
+import { exportToCsv } from '../../../shared/utils/csv-export';
 import * as ContractorsActions from '../store/contractors.actions';
 import * as ContractorsSelectors from '../store/contractors.selectors';
 
@@ -58,6 +59,7 @@ import * as ContractorsSelectors from '../store/contractors.selectors';
         <option value="Blacklisted">Blacklisted</option>
         <option value="Inactive">Inactive</option>
       </select>
+      <button class="btn btn-ghost btn-xs" (click)="exportCsv()" aria-label="Export to CSV">📥 Export CSV</button>
       <div class="text-xs text-base-content/50">
         {{ totalCount$ | async }} total
       </div>
@@ -282,6 +284,22 @@ export class ContractorListComponent implements OnInit {
     if (!this.showForm) {
       this.contractorForm.reset();
     }
+  }
+
+  exportCsv(): void {
+    this.contractors$.subscribe(contractors => {
+      const headers = ['Company', 'Type', 'Trade', 'Rating', 'Contact', 'Email', 'Status'];
+      const rows = contractors.map(c => [
+        c.companyName,
+        c.type,
+        c.trade ?? '',
+        c.rating?.toString() ?? '',
+        c.contactName ?? '',
+        c.email ?? '',
+        c.status
+      ]);
+      exportToCsv('contractors', headers, rows);
+    }).unsubscribe();
   }
 
   onSubmit(): void {

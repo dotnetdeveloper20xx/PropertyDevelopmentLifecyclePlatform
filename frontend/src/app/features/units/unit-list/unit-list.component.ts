@@ -11,6 +11,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
 import { UnitItem, UnitType, CreateUnitRequest } from '../../../core/models/unit.model';
+import { exportToCsv } from '../../../shared/utils/csv-export';
 import * as UnitsActions from '../store/units.actions';
 import * as UnitsSelectors from '../store/units.selectors';
 
@@ -45,6 +46,7 @@ import * as UnitsSelectors from '../store/units.selectors';
           <button class="btn btn-sm btn-outline" [disabled]="!projectId" (click)="loadUnits()">Load</button>
         </div>
       </label>
+      <button class="btn btn-ghost btn-xs" (click)="exportCsv()" aria-label="Export to CSV">📥 Export CSV</button>
     </div>
 
     <!-- Inline Add Form -->
@@ -202,6 +204,24 @@ export class UnitListComponent implements OnInit {
   loadUnits(): void {
     if (!this.projectId) return;
     this.store.dispatch(UnitsActions.loadUnits({ projectId: this.projectId }));
+  }
+
+  exportCsv(): void {
+    this.units$.subscribe(units => {
+      const headers = ['Reference', 'Type', 'Floor', 'Bedrooms', 'Bathrooms', 'Area (sq ft)', 'Currency', 'Price', 'Status'];
+      const rows = units.map(u => [
+        u.reference,
+        u.type,
+        u.floor?.toString() ?? '',
+        u.bedrooms.toString(),
+        u.bathrooms?.toString() ?? '',
+        u.areaSqFt?.toString() ?? '',
+        u.currency,
+        u.price.toString(),
+        u.status
+      ]);
+      exportToCsv('property-units', headers, rows);
+    }).unsubscribe();
   }
 
   toggleForm(): void {

@@ -14,6 +14,7 @@ import {
   BudgetLineItem, TransactionItem,
   CreateBudgetLineRequest, BudgetLineCategory, TransactionType
 } from '../../../core/models/finance.model';
+import { exportToCsv } from '../../../shared/utils/csv-export';
 import * as FinanceActions from '../store/finance.actions';
 import * as FinanceSelectors from '../store/finance.selectors';
 
@@ -48,6 +49,7 @@ import * as FinanceSelectors from '../store/finance.selectors';
           <button class="btn btn-sm btn-outline" [disabled]="!projectId" (click)="loadData()">Load</button>
         </div>
       </label>
+      <button class="btn btn-ghost btn-xs" (click)="exportCsv()" aria-label="Export to CSV">📥 Export CSV</button>
     </div>
 
     <!-- Inline Budget Line Form -->
@@ -222,6 +224,22 @@ export class FinanceListComponent implements OnInit {
     if (!this.projectId) return;
     this.store.dispatch(FinanceActions.loadBudgetLines({ projectId: this.projectId }));
     this.store.dispatch(FinanceActions.loadTransactions({ projectId: this.projectId }));
+  }
+
+  exportCsv(): void {
+    this.budgetLines$.subscribe(lines => {
+      const headers = ['Category', 'Description', 'Currency', 'Allocated', 'Spent', 'Remaining', 'Status'];
+      const rows = lines.map(l => [
+        l.category,
+        l.description,
+        l.currency,
+        l.allocatedAmount.toString(),
+        l.spentAmount.toString(),
+        l.remainingAmount.toString(),
+        l.status
+      ]);
+      exportToCsv('budget-lines', headers, rows);
+    }).unsubscribe();
   }
 
   toggleBudgetForm(): void {
