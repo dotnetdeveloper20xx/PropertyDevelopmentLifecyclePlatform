@@ -157,14 +157,12 @@ export const routes: Routes = [
       // Documents & Knowledge
       {
         path: 'documents',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'documents-dashboard' }
+        loadComponent: () => import('./features/documents/document-list/document-list.component').then(m => m.DocumentListComponent)
       },
       // Reports & Dashboards
       {
         path: 'reports',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'reports-dashboard' }
+        loadComponent: () => import('./features/reports/report-list/report-list.component').then(m => m.ReportListComponent)
       },
       // Administration
       {
@@ -174,8 +172,7 @@ export const routes: Routes = [
       },
       {
         path: 'admin/audit',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'admin-audit' }
+        loadComponent: () => import('./features/admin/audit-log/audit-log.component').then(m => m.AuditLogComponent)
       },
       {
         path: 'admin/settings',

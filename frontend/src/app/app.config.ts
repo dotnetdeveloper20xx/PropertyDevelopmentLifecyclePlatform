@@ -31,6 +31,10 @@ import { salesReducer } from './features/sales/store/sales.reducer';
 import { SalesEffects } from './features/sales/store/sales.effects';
 import { rentalsReducer } from './features/rentals/store/rentals.reducer';
 import { RentalsEffects } from './features/rentals/store/rentals.effects';
+import { documentsReducer } from './features/documents/store/documents.reducer';
+import { DocumentsEffects } from './features/documents/store/documents.effects';
+import { reportsReducer } from './features/reports/store/reports.reducer';
+import { ReportsEffects } from './features/reports/store/reports.effects';
 
 /**
  * Application configuration.
@@ -42,8 +46,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
-    provideStore({ opportunities: opportunitiesReducer, planning: planningReducer, legal: legalReducer, projects: projectsReducer, construction: constructionReducer, procurement: procurementReducer, contractors: contractorsReducer, finance: financeReducer, investors: investorsReducer, units: unitsReducer, sales: salesReducer, rentals: rentalsReducer }),
-    provideEffects([OpportunitiesEffects, PlanningEffects, LegalEffects, ProjectsEffects, ConstructionEffects, ProcurementEffects, ContractorsEffects, FinanceEffects, InvestorsEffects, UnitsEffects, SalesEffects, RentalsEffects]),
+    provideStore({ opportunities: opportunitiesReducer, planning: planningReducer, legal: legalReducer, projects: projectsReducer, construction: constructionReducer, procurement: procurementReducer, contractors: contractorsReducer, finance: financeReducer, investors: investorsReducer, units: unitsReducer, sales: salesReducer, rentals: rentalsReducer, documents: documentsReducer, reports: reportsReducer }),
+    provideEffects([OpportunitiesEffects, PlanningEffects, LegalEffects, ProjectsEffects, ConstructionEffects, ProcurementEffects, ContractorsEffects, FinanceEffects, InvestorsEffects, UnitsEffects, SalesEffects, RentalsEffects, DocumentsEffects, ReportsEffects]),
     provideStoreDevtools({ maxAge: 25, logOnly: false })
   ]
 };
