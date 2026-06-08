@@ -45,6 +45,15 @@ import { ToastService } from '../../../core/services/toast.service';
                 [class.input-error]="form.get('title')?.invalid && form.get('title')?.touched"
                 placeholder="e.g., Riverside Development Feasibility" />
             </app-form-field>
+            <app-form-field label="Linked Opportunity" fieldId="opportunityId"
+              helpTooltip="Link this assessment to a land opportunity (optional)">
+              <select id="opportunityId" formControlName="opportunityId" class="select select-bordered w-full">
+                <option value="">-- None (standalone) --</option>
+                @for (opp of opportunities; track opp.id) {
+                  <option [value]="opp.id">{{ opp.name }}</option>
+                }
+              </select>
+            </app-form-field>
             <div class="md:col-span-2">
               <app-form-field label="Description" fieldId="description"
                 helpTooltip="Brief description of what this assessment covers">
@@ -128,6 +137,7 @@ import { ToastService } from '../../../core/services/toast.service';
 export class FeasibilityFormComponent {
   form: FormGroup;
   saving = false;
+  opportunities: { id: string; name: string }[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -139,6 +149,7 @@ export class FeasibilityFormComponent {
     this.form = this.fb.group({
       title: ['', Validators.required],
       description: [''],
+      opportunityId: [''],
       estimatedLandCost: [null, [Validators.required, Validators.min(0)]],
       estimatedBuildCost: [null, [Validators.required, Validators.min(0)]],
       professionalFees: [null, [Validators.required, Validators.min(0)]],
@@ -146,6 +157,13 @@ export class FeasibilityFormComponent {
       grossDevelopmentValue: [null, [Validators.required, Validators.min(0)]],
       expectedRevenue: [null, [Validators.required, Validators.min(0)]],
       notes: ['']
+    });
+    this.loadOpportunities();
+  }
+
+  private loadOpportunities(): void {
+    this.http.get<any>(`${environment.apiUrl}/opportunities`).subscribe({
+      next: (r) => { this.opportunities = (r.data ?? []).map((o: any) => ({ id: o.id, name: o.name })); this.cdr.markForCheck(); }
     });
   }
 

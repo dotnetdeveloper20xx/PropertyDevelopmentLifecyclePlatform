@@ -32,6 +32,7 @@ import * as LegalSelectors from '../../store/legal.selectors';
     } @else if (contract$ | async; as contract) {
       <app-page-header [title]="contract.contractReference" [subtitle]="contract.title">
         <div class="flex gap-2">
+          <a [routerLink]="['/legal/contracts', contract.id, 'edit']" class="btn btn-primary btn-sm">Edit Contract</a>
           @if (canTerminate(contract.status)) {
             <button class="btn btn-error btn-sm" (click)="confirmTerminate()">Terminate</button>
           }

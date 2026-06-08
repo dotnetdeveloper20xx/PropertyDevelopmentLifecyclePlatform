@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { unsavedChangesGuard } from './core/guards/unsaved-changes.guard';
 
 export const routes: Routes = [
   // Root redirect
@@ -31,7 +32,8 @@ export const routes: Routes = [
       },
       {
         path: 'opportunities/new',
-        loadComponent: () => import('./features/land-acquisition/opportunities/opportunity-form/opportunity-form.component').then(m => m.OpportunityFormComponent)
+        loadComponent: () => import('./features/land-acquisition/opportunities/opportunity-form/opportunity-form.component').then(m => m.OpportunityFormComponent),
+        canDeactivate: [unsavedChangesGuard]
       },
       {
         path: 'opportunities/:id',
@@ -39,7 +41,8 @@ export const routes: Routes = [
       },
       {
         path: 'opportunities/:id/edit',
-        loadComponent: () => import('./features/land-acquisition/opportunities/opportunity-edit/opportunity-edit.component').then(m => m.OpportunityEditComponent)
+        loadComponent: () => import('./features/land-acquisition/opportunities/opportunity-edit/opportunity-edit.component').then(m => m.OpportunityEditComponent),
+        canDeactivate: [unsavedChangesGuard]
       },
       // Planning & Approvals
       {
@@ -73,7 +76,8 @@ export const routes: Routes = [
       },
       {
         path: 'legal/contracts/:id/edit',
-        loadComponent: () => import('./features/legal/contracts/contract-edit/contract-edit.component').then(m => m.ContractEditComponent)
+        loadComponent: () => import('./features/legal/contracts/contract-edit/contract-edit.component').then(m => m.ContractEditComponent),
+        canDeactivate: [unsavedChangesGuard]
       },
       {
         path: 'legal/tasks',
@@ -119,7 +123,8 @@ export const routes: Routes = [
       },
       {
         path: 'projects/new',
-        loadComponent: () => import('./features/projects/project-form/project-form.component').then(m => m.ProjectFormComponent)
+        loadComponent: () => import('./features/projects/project-form/project-form.component').then(m => m.ProjectFormComponent),
+        canDeactivate: [unsavedChangesGuard]
       },
       {
         path: 'projects/:id',
@@ -127,7 +132,8 @@ export const routes: Routes = [
       },
       {
         path: 'projects/:id/edit',
-        loadComponent: () => import('./features/projects/project-edit/project-edit.component').then(m => m.ProjectEditComponent)
+        loadComponent: () => import('./features/projects/project-edit/project-edit.component').then(m => m.ProjectEditComponent),
+        canDeactivate: [unsavedChangesGuard]
       },
       // Design & Construction
       {

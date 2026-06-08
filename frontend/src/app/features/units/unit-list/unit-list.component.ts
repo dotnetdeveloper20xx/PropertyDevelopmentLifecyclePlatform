@@ -10,6 +10,7 @@ import { LoadingStateComponent } from '../../../shared/components/loading-state/
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
+import { ActivityFeedComponent } from '../../../shared/components/activity-feed/activity-feed.component';
 import { UnitItem, UnitType, CreateUnitRequest } from '../../../core/models/unit.model';
 import { exportToCsv } from '../../../shared/utils/csv-export';
 import * as UnitsActions from '../store/units.actions';
@@ -21,7 +22,8 @@ import * as UnitsSelectors from '../store/units.selectors';
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule,
     PageHeaderComponent, PageDescriptionComponent, BreadcrumbComponent,
-    LoadingStateComponent, EmptyStateComponent, StatusBadgeComponent, ErrorStateComponent
+    LoadingStateComponent, EmptyStateComponent, StatusBadgeComponent, ErrorStateComponent,
+    ActivityFeedComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -172,6 +174,11 @@ import * as UnitsSelectors from '../store/units.selectors';
         </div>
       </div>
     }
+
+    <!-- Activity Feed -->
+    <div class="mt-6">
+      <app-activity-feed module="PropertyUnit" title="Recent Activity" [limit]="5"></app-activity-feed>
+    </div>
   `
 })
 export class UnitListComponent implements OnInit {

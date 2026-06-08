@@ -12,6 +12,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
 import { SearchBoxComponent } from '../../../shared/components/search-box/search-box.component';
+import { ActivityFeedComponent } from '../../../shared/components/activity-feed/activity-feed.component';
 import { PlanningApplicationListItem, PlanningApplicationStatus } from '../../../core/models/planning.model';
 import * as PlanningActions from '../store/planning.actions';
 import * as PlanningSelectors from '../store/planning.selectors';
@@ -22,7 +23,7 @@ import * as PlanningSelectors from '../store/planning.selectors';
   imports: [
     CommonModule, RouterLink, FormsModule, PageHeaderComponent, PageDescriptionComponent,
     BreadcrumbComponent, LoadingStateComponent, EmptyStateComponent,
-    StatusBadgeComponent, ErrorStateComponent, SearchBoxComponent
+    StatusBadgeComponent, ErrorStateComponent, SearchBoxComponent, ActivityFeedComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -143,6 +144,11 @@ import * as PlanningSelectors from '../store/planning.selectors';
         </select>
       </div>
     }
+
+    <!-- Activity Feed -->
+    <div class="mt-6">
+      <app-activity-feed module="PlanningApplication" title="Recent Activity" [limit]="5"></app-activity-feed>
+    </div>
   `
 })
 export class PlanningListComponent implements OnInit {

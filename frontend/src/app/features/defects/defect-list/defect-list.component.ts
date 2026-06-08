@@ -11,6 +11,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
 import { SearchBoxComponent } from '../../../shared/components/search-box/search-box.component';
+import { ActivityFeedComponent } from '../../../shared/components/activity-feed/activity-feed.component';
 import { DefectItem, DefectStatus, DefectPriority, CreateDefectRequest } from '../../../core/models/defect.model';
 import { exportToCsv } from '../../../shared/utils/csv-export';
 import * as DefectsActions from '../store/defects.actions';
@@ -23,7 +24,7 @@ import * as DefectsSelectors from '../store/defects.selectors';
     CommonModule, FormsModule, ReactiveFormsModule,
     PageHeaderComponent, PageDescriptionComponent, BreadcrumbComponent,
     LoadingStateComponent, EmptyStateComponent, StatusBadgeComponent,
-    ErrorStateComponent, SearchBoxComponent
+    ErrorStateComponent, SearchBoxComponent, ActivityFeedComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -203,6 +204,11 @@ import * as DefectsSelectors from '../store/defects.selectors';
         </select>
       </div>
     }
+
+    <!-- Activity Feed -->
+    <div class="mt-6">
+      <app-activity-feed module="Defect" title="Recent Activity" [limit]="5"></app-activity-feed>
+    </div>
   `
 })
 export class DefectListComponent implements OnInit {

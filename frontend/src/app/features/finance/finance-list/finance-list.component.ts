@@ -10,6 +10,7 @@ import { LoadingStateComponent } from '../../../shared/components/loading-state/
 import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
+import { ActivityFeedComponent } from '../../../shared/components/activity-feed/activity-feed.component';
 import {
   BudgetLineItem, TransactionItem,
   CreateBudgetLineRequest, BudgetLineCategory, TransactionType
@@ -24,7 +25,8 @@ import * as FinanceSelectors from '../store/finance.selectors';
   imports: [
     CommonModule, FormsModule, ReactiveFormsModule,
     PageHeaderComponent, PageDescriptionComponent, BreadcrumbComponent,
-    LoadingStateComponent, EmptyStateComponent, StatusBadgeComponent, ErrorStateComponent
+    LoadingStateComponent, EmptyStateComponent, StatusBadgeComponent, ErrorStateComponent,
+    ActivityFeedComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -191,6 +193,11 @@ import * as FinanceSelectors from '../store/finance.selectors';
         </div>
       }
     }
+
+    <!-- Activity Feed -->
+    <div class="mt-6">
+      <app-activity-feed module="FinancialTransaction" title="Recent Activity" [limit]="5"></app-activity-feed>
+    </div>
   `
 })
 export class FinanceListComponent implements OnInit {

@@ -12,6 +12,7 @@ import { EmptyStateComponent } from '../../../../shared/components/empty-state/e
 import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
 import { ErrorStateComponent } from '../../../../shared/components/error-state/error-state.component';
 import { SearchBoxComponent } from '../../../../shared/components/search-box/search-box.component';
+import { ActivityFeedComponent } from '../../../../shared/components/activity-feed/activity-feed.component';
 import { OpportunityListItem, OpportunityStatus } from '../../../../core/models/opportunity.model';
 import * as OpportunitiesActions from '../../store/opportunities.actions';
 import * as OpportunitiesSelectors from '../../store/opportunities.selectors';
@@ -30,7 +31,7 @@ import * as OpportunitiesSelectors from '../../store/opportunities.selectors';
   imports: [
     CommonModule, RouterLink, FormsModule, PageHeaderComponent, PageDescriptionComponent,
     BreadcrumbComponent, LoadingStateComponent, EmptyStateComponent,
-    StatusBadgeComponent, ErrorStateComponent, SearchBoxComponent
+    StatusBadgeComponent, ErrorStateComponent, SearchBoxComponent, ActivityFeedComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -144,6 +145,11 @@ import * as OpportunitiesSelectors from '../../store/opportunities.selectors';
         </select>
       </div>
     }
+
+    <!-- Activity Feed -->
+    <div class="mt-6">
+      <app-activity-feed module="LandOpportunity" title="Recent Activity" [limit]="5"></app-activity-feed>
+    </div>
   `
 })
 export class OpportunityListComponent implements OnInit {

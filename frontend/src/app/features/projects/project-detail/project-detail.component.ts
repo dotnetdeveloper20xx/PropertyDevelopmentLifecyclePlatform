@@ -35,6 +35,7 @@ import * as ProjectsSelectors from '../store/projects.selectors';
     } @else if (project$ | async; as project) {
       <app-page-header [title]="project.projectReference" [subtitle]="project.name">
         <div class="flex gap-2">
+          <a [routerLink]="['/projects', project.id, 'edit']" class="btn btn-primary btn-sm">Edit Project</a>
           @if (canChangeStatus(project.status)) {
             <div class="dropdown dropdown-end">
               <label tabindex="0" class="btn btn-outline btn-sm">Change Status ▾</label>

@@ -38,12 +38,14 @@ import { ToastService } from '../../../core/services/toast.service';
           <!-- Check Details -->
           <h3 class="text-sm font-semibold text-base-content/50 uppercase tracking-wider mb-4">Check Details</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <app-form-field label="Opportunity ID" fieldId="opportunityId" [required]="true"
-              helpTooltip="The land opportunity this check relates to"
-              [error]="form.get('opportunityId')?.touched && form.get('opportunityId')?.hasError('required') ? 'Opportunity ID is required' : undefined">
-              <input id="opportunityId" type="text" formControlName="opportunityId" class="input input-bordered w-full"
-                [class.input-error]="form.get('opportunityId')?.invalid && form.get('opportunityId')?.touched"
-                placeholder="e.g., paste the opportunity GUID" />
+            <app-form-field label="Linked Opportunity" fieldId="opportunityId"
+              helpTooltip="The land opportunity this check relates to (optional)">
+              <select id="opportunityId" formControlName="opportunityId" class="select select-bordered w-full">
+                <option value="">-- None (standalone) --</option>
+                @for (opp of opportunities; track opp.id) {
+                  <option [value]="opp.id">{{ opp.name }}</option>
+                }
+              </select>
             </app-form-field>
             <app-form-field label="Type" fieldId="type" [required]="true"
               helpTooltip="Category of due diligence check"
@@ -92,6 +94,7 @@ import { ToastService } from '../../../core/services/toast.service';
 export class DueDiligenceFormComponent {
   form: FormGroup;
   saving = false;
+  opportunities: { id: string; name: string }[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -101,10 +104,17 @@ export class DueDiligenceFormComponent {
     private cdr: ChangeDetectorRef
   ) {
     this.form = this.fb.group({
-      opportunityId: ['', Validators.required],
+      opportunityId: [''],
       type: ['', Validators.required],
       findings: [''],
       notes: ['']
+    });
+    this.loadOpportunities();
+  }
+
+  private loadOpportunities(): void {
+    this.http.get<any>(`${environment.apiUrl}/opportunities`).subscribe({
+      next: (r) => { this.opportunities = (r.data ?? []).map((o: any) => ({ id: o.id, name: o.name })); this.cdr.markForCheck(); }
     });
   }
 

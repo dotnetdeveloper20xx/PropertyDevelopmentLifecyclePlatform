@@ -11,6 +11,7 @@ import { EmptyStateComponent } from '../../../shared/components/empty-state/empt
 import { StatusBadgeComponent } from '../../../shared/components/status-badge/status-badge.component';
 import { ErrorStateComponent } from '../../../shared/components/error-state/error-state.component';
 import { SearchBoxComponent } from '../../../shared/components/search-box/search-box.component';
+import { ActivityFeedComponent } from '../../../shared/components/activity-feed/activity-feed.component';
 import { InvestorItem, InvestorType, InvestorStatus, CreateInvestorRequest } from '../../../core/models/investor.model';
 import { exportToCsv } from '../../../shared/utils/csv-export';
 import * as InvestorsActions from '../store/investors.actions';
@@ -23,7 +24,7 @@ import * as InvestorsSelectors from '../store/investors.selectors';
     CommonModule, FormsModule, ReactiveFormsModule,
     PageHeaderComponent, PageDescriptionComponent, BreadcrumbComponent,
     LoadingStateComponent, EmptyStateComponent, StatusBadgeComponent,
-    ErrorStateComponent, SearchBoxComponent
+    ErrorStateComponent, SearchBoxComponent, ActivityFeedComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -201,6 +202,11 @@ import * as InvestorsSelectors from '../store/investors.selectors';
         </select>
       </div>
     }
+
+    <!-- Activity Feed -->
+    <div class="mt-6">
+      <app-activity-feed module="Investor" title="Recent Activity" [limit]="5"></app-activity-feed>
+    </div>
   `
 })
 export class InvestorListComponent implements OnInit {
