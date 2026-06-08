@@ -77,19 +77,16 @@ export const routes: Routes = [
       },
       {
         path: 'legal/compliance',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'legal-compliance' }
+        loadComponent: () => import('./features/legal/compliance-list/compliance-list.component').then(m => m.ComplianceListComponent)
       },
       // Land Acquisition (expanded)
       {
         path: 'due-diligence',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'due-diligence' }
+        loadComponent: () => import('./features/land-acquisition/due-diligence-list/due-diligence-list.component').then(m => m.DueDiligenceListComponent)
       },
       {
         path: 'acquisition/dashboard',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'land-acquisition-dashboard' }
+        loadComponent: () => import('./features/land-acquisition/acquisition-dashboard/acquisition-dashboard.component').then(m => m.AcquisitionDashboardComponent)
       },
       // Project Management
       {
@@ -111,13 +108,11 @@ export const routes: Routes = [
       },
       {
         path: 'construction/projects',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'construction-projects' }
+        loadComponent: () => import('./features/construction/construction-projects/construction-projects.component').then(m => m.ConstructionProjectsComponent)
       },
       {
         path: 'construction/inspections',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'construction-inspections' }
+        loadComponent: () => import('./features/construction/construction-inspections/construction-inspections.component').then(m => m.ConstructionInspectionsComponent)
       },
       // Procurement & Materials
       {
@@ -167,8 +162,7 @@ export const routes: Routes = [
       // Administration
       {
         path: 'admin/users',
-        loadComponent: () => import('./features/future/future-page.component').then(m => m.FuturePageComponent),
-        data: { pageKey: 'admin-users' }
+        loadComponent: () => import('./features/admin/user-management/user-management.component').then(m => m.UserManagementComponent)
       },
       {
         path: 'admin/audit',
