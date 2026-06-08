@@ -201,9 +201,9 @@ For EACH role, verify the COMPLETE user journey:
 10. [x] Compliance edit page — DONE (ComplianceEditComponent + PUT endpoint + route)
 
 ### Medium (polish)
-11. [ ] Activity feed not embedded in module dashboards
-12. [ ] Some list pages missing CSV export (modules 5-14)
-13. [ ] No unsaved changes warning on edit forms
+11. [x] Activity feed embedded in module dashboards — DONE (11 module list pages)
+12. [x] CSV export on all list pages — VERIFIED (already existed on all 14 modules)
+13. [x] Unsaved changes guard — DONE (guard created + applied to key routes)
 
 ---
 
@@ -236,4 +236,4 @@ The application is only "done" when the owner can:
 - View audit trails
 - See dashboard metrics
 
-Current status: **ALL CRITICAL AND HIGH PRIORITY ITEMS RESOLVED — Medium items (11-13) remain as polish**
+Current status: **ALL ITEMS RESOLVED — Application ready for demo**
