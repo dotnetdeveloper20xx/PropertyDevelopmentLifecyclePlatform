@@ -107,6 +107,10 @@ export const routes: Routes = [
         loadComponent: () => import('./features/construction/construction-stages/construction-stages.component').then(m => m.ConstructionStagesComponent)
       },
       {
+        path: 'construction/new',
+        loadComponent: () => import('./features/construction/create-stage-form/create-stage-form.component').then(m => m.CreateStageFormComponent)
+      },
+      {
         path: 'construction/projects',
         loadComponent: () => import('./features/construction/construction-projects/construction-projects.component').then(m => m.ConstructionProjectsComponent)
       },
@@ -119,35 +123,63 @@ export const routes: Routes = [
         path: 'procurement',
         loadComponent: () => import('./features/procurement/procurement-list/procurement-list.component').then(m => m.ProcurementListComponent)
       },
+      {
+        path: 'procurement/new',
+        loadComponent: () => import('./features/procurement/create-order-form/create-order-form.component').then(m => m.CreateOrderFormComponent)
+      },
       // Contractors & Suppliers
       {
         path: 'contractors',
         loadComponent: () => import('./features/contractors/contractor-list/contractor-list.component').then(m => m.ContractorListComponent)
+      },
+      {
+        path: 'contractors/new',
+        loadComponent: () => import('./features/contractors/create-contractor-form/create-contractor-form.component').then(m => m.CreateContractorFormComponent)
       },
       // Finance & Budget Control
       {
         path: 'finance',
         loadComponent: () => import('./features/finance/finance-list/finance-list.component').then(m => m.FinanceListComponent)
       },
+      {
+        path: 'finance/new',
+        loadComponent: () => import('./features/finance/create-transaction-form/create-transaction-form.component').then(m => m.CreateTransactionFormComponent)
+      },
       // Investors & Funding
       {
         path: 'investors',
         loadComponent: () => import('./features/investors/investor-list/investor-list.component').then(m => m.InvestorListComponent)
+      },
+      {
+        path: 'investors/new',
+        loadComponent: () => import('./features/investors/create-investor-form/create-investor-form.component').then(m => m.CreateInvestorFormComponent)
       },
       // Property Units
       {
         path: 'units',
         loadComponent: () => import('./features/units/unit-list/unit-list.component').then(m => m.UnitListComponent)
       },
+      {
+        path: 'units/new',
+        loadComponent: () => import('./features/units/create-unit-form/create-unit-form.component').then(m => m.CreateUnitFormComponent)
+      },
       // Sales & Marketing
       {
         path: 'sales',
         loadComponent: () => import('./features/sales/sales-list/sales-list.component').then(m => m.SalesListComponent)
       },
+      {
+        path: 'sales/new',
+        loadComponent: () => import('./features/sales/create-lead-form/create-lead-form.component').then(m => m.CreateLeadFormComponent)
+      },
       // Rental Management
       {
         path: 'rentals',
         loadComponent: () => import('./features/rentals/tenancy-list/tenancy-list.component').then(m => m.TenancyListComponent)
+      },
+      {
+        path: 'rentals/new',
+        loadComponent: () => import('./features/rentals/create-tenancy-form/create-tenancy-form.component').then(m => m.CreateTenancyFormComponent)
       },
       // Documents & Knowledge
       {
