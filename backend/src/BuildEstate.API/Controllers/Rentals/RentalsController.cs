@@ -1,4 +1,5 @@
 using BuildEstate.Application.Features.Rentals.Commands.CreateTenancy;
+using BuildEstate.Application.Features.Rentals.Commands.UpdateTenancy;
 using BuildEstate.Application.Features.Rentals.DTOs;
 using BuildEstate.Application.Features.Rentals.Queries.GetTenancies;
 using BuildEstate.Shared.Models;
@@ -32,5 +33,15 @@ public class RentalsController : ControllerBase
     {
         var result = await _mediator.Send(command, ct);
         return StatusCode(StatusCodes.Status201Created, ApiResponse<TenancyDto>.Ok(result, "Tenancy created successfully."));
+    }
+
+    [HttpPut("{id:guid}")]
+    [Authorize(Roles = "SuperAdmin,PropertyManager")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateTenancyCommand command, CancellationToken ct)
+    {
+        if (id != command.Id) return BadRequest(new { success = false, errors = new[] { "Route ID does not match body ID." } });
+        await _mediator.Send(command, ct);
+        return NoContent();
     }
 }

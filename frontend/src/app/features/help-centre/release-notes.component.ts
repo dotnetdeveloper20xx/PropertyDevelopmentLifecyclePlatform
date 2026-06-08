@@ -90,6 +90,36 @@ interface ReleaseNote {
 export class ReleaseNotesComponent {
   releases: ReleaseNote[] = [
     {
+      version: '2.0.0',
+      date: '8 June 2026',
+      title: 'Platform Complete — All 14 Modules Delivered',
+      highlights: [
+        'All 14 core modules fully operational with backend APIs, frontend pages, and unit tests',
+        'Executive Dashboard with Chart.js visualisations (progress donuts, budget bar chart, sales pie)',
+        'Comprehensive demo data seeded across all modules for immediate demonstration',
+        'Notification Centre with bell icon, unread count, and activity feed',
+        'File upload endpoint supporting PDF, DOCX, XLSX, PNG, JPG, DWG (50MB max)',
+        'Create Project from Opportunity workflow connection',
+        'Detail view pages for Contractors, Investors, Sales Leads, Tenancies, Documents, Reports',
+        'Create form pages for all modules 5-14 with multi-step progress indicators',
+        'Update (PUT) endpoints for Contractors, Investors, Sales, Rentals'
+      ],
+      improvements: [
+        '178 backend unit tests covering all command handlers and validators',
+        '50 frontend routes — zero placeholders remaining',
+        'All sidebar items marked as Built with no partial or planned badges',
+        'Help Centre articles for every module (30+ articles)',
+        'Audit Log viewer with pagination and entity/user filtering',
+        'User Management page showing roles and current user info',
+        'System Settings page showing platform configuration'
+      ],
+      fixes: [
+        'Dashboard no longer labelled as Land Acquisition specific — now Executive Dashboard',
+        'Root route redirect properly sends to /dashboard via auth guard',
+        'All modules now have both list AND create pages (previously 5-14 had list only)'
+      ]
+    },
+    {
       version: '1.4.0',
       date: '7 June 2026',
       title: 'Module 3: Legal & Compliance',

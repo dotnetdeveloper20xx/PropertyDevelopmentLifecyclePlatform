@@ -1,4 +1,5 @@
 using BuildEstate.Application.Features.Investors.Commands.CreateInvestor;
+using BuildEstate.Application.Features.Investors.Commands.UpdateInvestor;
 using BuildEstate.Application.Features.Investors.DTOs;
 using BuildEstate.Application.Features.Investors.Queries.GetInvestors;
 using BuildEstate.Shared.Models;
@@ -32,5 +33,15 @@ public class InvestorsController : ControllerBase
     {
         var result = await _mediator.Send(command, ct);
         return StatusCode(StatusCodes.Status201Created, ApiResponse<InvestorDto>.Ok(result, "Investor created successfully."));
+    }
+
+    [HttpPut("{id:guid}")]
+    [Authorize(Roles = "SuperAdmin,FinanceDirector")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateInvestorCommand command, CancellationToken ct)
+    {
+        if (id != command.Id) return BadRequest(new { success = false, errors = new[] { "Route ID does not match body ID." } });
+        await _mediator.Send(command, ct);
+        return NoContent();
     }
 }

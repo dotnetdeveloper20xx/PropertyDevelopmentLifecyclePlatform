@@ -1,4 +1,5 @@
 using BuildEstate.Application.Features.Sales.Commands.CreateSalesLead;
+using BuildEstate.Application.Features.Sales.Commands.UpdateSalesLead;
 using BuildEstate.Application.Features.Sales.DTOs;
 using BuildEstate.Application.Features.Sales.Queries.GetSalesLeads;
 using BuildEstate.Shared.Models;
@@ -32,5 +33,15 @@ public class SalesController : ControllerBase
     {
         var result = await _mediator.Send(command, ct);
         return StatusCode(StatusCodes.Status201Created, ApiResponse<SalesLeadDto>.Ok(result, "Sales lead created successfully."));
+    }
+
+    [HttpPut("{id:guid}")]
+    [Authorize(Roles = "SuperAdmin,SalesManager")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateSalesLeadCommand command, CancellationToken ct)
+    {
+        if (id != command.Id) return BadRequest(new { success = false, errors = new[] { "Route ID does not match body ID." } });
+        await _mediator.Send(command, ct);
+        return NoContent();
     }
 }

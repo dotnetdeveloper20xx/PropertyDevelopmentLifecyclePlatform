@@ -1,4 +1,5 @@
 using BuildEstate.Application.Features.Contractors.Commands.CreateContractor;
+using BuildEstate.Application.Features.Contractors.Commands.UpdateContractor;
 using BuildEstate.Application.Features.Contractors.DTOs;
 using BuildEstate.Application.Features.Contractors.Queries.GetContractors;
 using BuildEstate.Shared.Models;
@@ -32,5 +33,15 @@ public class ContractorsController : ControllerBase
     {
         var result = await _mediator.Send(command, ct);
         return StatusCode(StatusCodes.Status201Created, ApiResponse<ContractorDto>.Ok(result, "Contractor created successfully."));
+    }
+
+    [HttpPut("{id:guid}")]
+    [Authorize(Roles = "SuperAdmin,ProjectManager")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateContractorCommand command, CancellationToken ct)
+    {
+        if (id != command.Id) return BadRequest(new { success = false, errors = new[] { "Route ID does not match body ID." } });
+        await _mediator.Send(command, ct);
+        return NoContent();
     }
 }
