@@ -27,7 +27,7 @@ public class ProjectTaskConfiguration : IEntityTypeConfiguration<ProjectTask>
         builder.HasOne(x => x.Project)
             .WithMany(p => p.Tasks)
             .HasForeignKey(x => x.ProjectId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(x => x.Milestone)
             .WithMany()

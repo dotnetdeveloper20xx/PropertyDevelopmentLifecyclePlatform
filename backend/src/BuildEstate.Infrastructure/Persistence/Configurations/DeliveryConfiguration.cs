@@ -16,7 +16,7 @@ public class DeliveryConfiguration : IEntityTypeConfiguration<Delivery>
         builder.Property(x => x.Notes).HasMaxLength(4000);
         builder.HasIndex(x => x.PurchaseOrderId);
         builder.HasIndex(x => x.Status);
-        builder.HasOne(x => x.PurchaseOrder).WithMany(po => po.Deliveries).HasForeignKey(x => x.PurchaseOrderId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.PurchaseOrder).WithMany(po => po.Deliveries).HasForeignKey(x => x.PurchaseOrderId).OnDelete(DeleteBehavior.Restrict);
         builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

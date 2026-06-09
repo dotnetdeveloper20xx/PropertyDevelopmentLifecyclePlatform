@@ -18,7 +18,7 @@ public class BudgetLineConfiguration : IEntityTypeConfiguration<BudgetLine>
         builder.Ignore(x => x.VarianceAmount);
         builder.HasIndex(x => x.ProjectId);
         builder.HasIndex(x => x.Status);
-        builder.HasOne(x => x.Project).WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.Project).WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
         builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

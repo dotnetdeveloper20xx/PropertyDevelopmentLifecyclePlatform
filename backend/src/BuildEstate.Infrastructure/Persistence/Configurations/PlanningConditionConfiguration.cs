@@ -27,7 +27,7 @@ public class PlanningConditionConfiguration : IEntityTypeConfiguration<PlanningC
         builder.HasOne(x => x.PlanningApplication)
             .WithMany(p => p.Conditions)
             .HasForeignKey(x => x.PlanningApplicationId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasQueryFilter(x => !x.IsDeleted);
     }

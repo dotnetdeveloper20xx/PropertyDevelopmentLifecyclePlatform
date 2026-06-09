@@ -24,7 +24,7 @@ public class ProjectRiskConfiguration : IEntityTypeConfiguration<ProjectRisk>
         builder.HasOne(x => x.Project)
             .WithMany(p => p.Risks)
             .HasForeignKey(x => x.ProjectId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasQueryFilter(x => !x.IsDeleted);
     }

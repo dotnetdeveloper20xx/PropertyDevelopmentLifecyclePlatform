@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BuildEstate.Infrastructure.Persistence.Migrations
+namespace BuildEstate.Infrastructure.Migrations
 {
     [DbContext(typeof(BuildEstateDbContext))]
-    [Migration("20260608094132_AddPermissions")]
-    partial class AddPermissions
+    [Migration("20260608154005_Fresh")]
+    partial class Fresh
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -3502,7 +3502,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -3513,7 +3513,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Construction.ConstructionStage", "ConstructionStage")
                         .WithMany("Inspections")
                         .HasForeignKey("ConstructionStageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ConstructionStage");
@@ -3524,7 +3524,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Construction.ConstructionStage", "ConstructionStage")
                         .WithMany("Snags")
                         .HasForeignKey("ConstructionStageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("BuildEstate.Domain.Entities.Construction.Inspection", "Inspection")
@@ -3552,7 +3552,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -3574,7 +3574,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -3585,7 +3585,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -3596,7 +3596,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Identity.Permission", "Permission")
                         .WithMany()
                         .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Permission");
@@ -3607,7 +3607,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.LandAcquisition.LandOpportunity", "Opportunity")
                         .WithMany("Documents")
                         .HasForeignKey("OpportunityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Opportunity");
@@ -3618,7 +3618,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.LandAcquisition.LandOpportunity", "Opportunity")
                         .WithMany("DueDiligences")
                         .HasForeignKey("OpportunityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Opportunity");
@@ -3650,7 +3650,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.LandAcquisition.LandOpportunity", "Opportunity")
                         .WithMany("Offers")
                         .HasForeignKey("OpportunityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Opportunity");
@@ -3703,7 +3703,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Planning.PlanningApplication", "PlanningApplication")
                         .WithMany("Appeals")
                         .HasForeignKey("PlanningApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PlanningApplication");
@@ -3725,7 +3725,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Planning.PlanningApplication", "PlanningApplication")
                         .WithMany("Conditions")
                         .HasForeignKey("PlanningApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PlanningApplication");
@@ -3736,7 +3736,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Planning.PlanningApplication", "PlanningApplication")
                         .WithMany("Documents")
                         .HasForeignKey("PlanningApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PlanningApplication");
@@ -3747,7 +3747,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Procurement.PurchaseOrder", "PurchaseOrder")
                         .WithMany("Deliveries")
                         .HasForeignKey("PurchaseOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PurchaseOrder");
@@ -3769,7 +3769,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany("Milestones")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -3791,7 +3791,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany("Risks")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -3807,7 +3807,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany("Tasks")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Milestone");
@@ -3820,7 +3820,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Units.PropertyUnit", "PropertyUnit")
                         .WithMany()
                         .HasForeignKey("PropertyUnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PropertyUnit");
@@ -3831,7 +3831,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");

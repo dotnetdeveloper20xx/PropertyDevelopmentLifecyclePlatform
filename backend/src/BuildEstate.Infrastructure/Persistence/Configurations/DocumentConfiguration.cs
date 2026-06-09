@@ -24,7 +24,7 @@ public class DocumentConfiguration : IEntityTypeConfiguration<Document>
         builder.HasOne(x => x.Opportunity)
             .WithMany(o => o.Documents)
             .HasForeignKey(x => x.OpportunityId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasQueryFilter(x => !x.IsDeleted);
     }

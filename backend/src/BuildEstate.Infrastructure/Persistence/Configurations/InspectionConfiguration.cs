@@ -16,7 +16,7 @@ public class InspectionConfiguration : IEntityTypeConfiguration<Inspection>
         builder.HasIndex(x => x.ConstructionStageId);
         builder.HasIndex(x => x.Status);
         builder.HasIndex(x => x.ScheduledDate);
-        builder.HasOne(x => x.ConstructionStage).WithMany(s => s.Inspections).HasForeignKey(x => x.ConstructionStageId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.ConstructionStage).WithMany(s => s.Inspections).HasForeignKey(x => x.ConstructionStageId).OnDelete(DeleteBehavior.Restrict);
         builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

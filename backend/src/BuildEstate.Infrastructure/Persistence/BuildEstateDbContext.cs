@@ -117,6 +117,13 @@ public class BuildEstateDbContext : IdentityDbContext<ApplicationUser, Applicati
 
         builder.ApplyConfigurationsFromAssembly(typeof(BuildEstateDbContext).Assembly);
 
+        // Fix Identity cascade delete to avoid SQL Server multiple cascade path error
+        // AspNetUserRoles has FK to both Users AND Roles — can't have CASCADE on both
+        builder.Entity<Microsoft.AspNetCore.Identity.IdentityUserRole<string>>()
+            .HasOne<ApplicationUser>().WithMany().HasForeignKey(ur => ur.UserId).OnDelete(DeleteBehavior.NoAction);
+        builder.Entity<Microsoft.AspNetCore.Identity.IdentityUserRole<string>>()
+            .HasOne<ApplicationRole>().WithMany().HasForeignKey(ur => ur.RoleId).OnDelete(DeleteBehavior.NoAction);
+
         // Apply RowVersion concurrency token to ALL entities inheriting BaseEntity
         foreach (var entityType in builder.Model.GetEntityTypes())
         {

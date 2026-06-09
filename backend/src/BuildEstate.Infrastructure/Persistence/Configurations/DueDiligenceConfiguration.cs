@@ -25,7 +25,7 @@ public class DueDiligenceConfiguration : IEntityTypeConfiguration<DueDiligence>
         builder.HasOne(x => x.Opportunity)
             .WithMany(o => o.DueDiligences)
             .HasForeignKey(x => x.OpportunityId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasQueryFilter(x => !x.IsDeleted);
     }

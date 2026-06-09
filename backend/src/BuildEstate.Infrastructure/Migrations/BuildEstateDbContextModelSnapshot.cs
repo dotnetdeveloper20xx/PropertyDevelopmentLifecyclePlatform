@@ -4,19 +4,16 @@ using BuildEstate.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BuildEstate.Infrastructure.Persistence.Migrations
+namespace BuildEstate.Infrastructure.Migrations
 {
     [DbContext(typeof(BuildEstateDbContext))]
-    [Migration("20260608085409_AddNewModules")]
-    partial class AddNewModules
+    partial class BuildEstateDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -952,6 +949,43 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.ToTable("Investors", (string)null);
                 });
 
+            modelBuilder.Entity("BuildEstate.Domain.Entities.Identity.Permission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Module")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("Module", "Action");
+
+                    b.ToTable("Permissions", (string)null);
+                });
+
             modelBuilder.Entity("BuildEstate.Domain.Entities.Identity.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1031,6 +1065,32 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasIndex("UserId", "IsRevoked");
 
                     b.ToTable("RefreshTokens", (string)null);
+                });
+
+            modelBuilder.Entity("BuildEstate.Domain.Entities.Identity.RolePermission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PermissionId");
+
+                    b.HasIndex("RoleId", "PermissionId")
+                        .IsUnique();
+
+                    b.ToTable("RolePermissions", (string)null);
                 });
 
             modelBuilder.Entity("BuildEstate.Domain.Entities.LandAcquisition.Document", b =>
@@ -3439,7 +3499,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -3450,7 +3510,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Construction.ConstructionStage", "ConstructionStage")
                         .WithMany("Inspections")
                         .HasForeignKey("ConstructionStageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("ConstructionStage");
@@ -3461,7 +3521,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Construction.ConstructionStage", "ConstructionStage")
                         .WithMany("Snags")
                         .HasForeignKey("ConstructionStageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("BuildEstate.Domain.Entities.Construction.Inspection", "Inspection")
@@ -3489,7 +3549,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -3511,7 +3571,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -3522,10 +3582,21 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("BuildEstate.Domain.Entities.Identity.RolePermission", b =>
+                {
+                    b.HasOne("BuildEstate.Domain.Entities.Identity.Permission", "Permission")
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Permission");
                 });
 
             modelBuilder.Entity("BuildEstate.Domain.Entities.LandAcquisition.Document", b =>
@@ -3533,7 +3604,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.LandAcquisition.LandOpportunity", "Opportunity")
                         .WithMany("Documents")
                         .HasForeignKey("OpportunityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Opportunity");
@@ -3544,7 +3615,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.LandAcquisition.LandOpportunity", "Opportunity")
                         .WithMany("DueDiligences")
                         .HasForeignKey("OpportunityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Opportunity");
@@ -3576,7 +3647,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.LandAcquisition.LandOpportunity", "Opportunity")
                         .WithMany("Offers")
                         .HasForeignKey("OpportunityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Opportunity");
@@ -3629,7 +3700,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Planning.PlanningApplication", "PlanningApplication")
                         .WithMany("Appeals")
                         .HasForeignKey("PlanningApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PlanningApplication");
@@ -3651,7 +3722,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Planning.PlanningApplication", "PlanningApplication")
                         .WithMany("Conditions")
                         .HasForeignKey("PlanningApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PlanningApplication");
@@ -3662,7 +3733,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Planning.PlanningApplication", "PlanningApplication")
                         .WithMany("Documents")
                         .HasForeignKey("PlanningApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PlanningApplication");
@@ -3673,7 +3744,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Procurement.PurchaseOrder", "PurchaseOrder")
                         .WithMany("Deliveries")
                         .HasForeignKey("PurchaseOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PurchaseOrder");
@@ -3695,7 +3766,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany("Milestones")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -3717,7 +3788,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany("Risks")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -3733,7 +3804,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany("Tasks")
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Milestone");
@@ -3746,7 +3817,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Units.PropertyUnit", "PropertyUnit")
                         .WithMany()
                         .HasForeignKey("PropertyUnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("PropertyUnit");
@@ -3757,7 +3828,7 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Domain.Entities.Projects.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Project");
@@ -3795,13 +3866,13 @@ namespace BuildEstate.Infrastructure.Persistence.Migrations
                     b.HasOne("BuildEstate.Infrastructure.Identity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BuildEstate.Infrastructure.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });
 

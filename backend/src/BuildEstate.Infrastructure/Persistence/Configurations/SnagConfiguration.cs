@@ -19,7 +19,7 @@ public class SnagConfiguration : IEntityTypeConfiguration<Snag>
         builder.HasIndex(x => x.InspectionId);
         builder.HasIndex(x => x.Status);
         builder.HasIndex(x => x.Priority);
-        builder.HasOne(x => x.ConstructionStage).WithMany(s => s.Snags).HasForeignKey(x => x.ConstructionStageId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.ConstructionStage).WithMany(s => s.Snags).HasForeignKey(x => x.ConstructionStageId).OnDelete(DeleteBehavior.Restrict);
         builder.HasOne(x => x.Inspection).WithMany().HasForeignKey(x => x.InspectionId).OnDelete(DeleteBehavior.SetNull);
         builder.HasQueryFilter(x => !x.IsDeleted);
     }

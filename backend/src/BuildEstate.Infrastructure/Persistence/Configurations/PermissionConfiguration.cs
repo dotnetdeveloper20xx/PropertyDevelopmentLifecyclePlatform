@@ -27,6 +27,6 @@ public class RolePermissionConfiguration : IEntityTypeConfiguration<RolePermissi
         builder.HasKey(x => x.Id);
         builder.Property(x => x.RoleId).IsRequired().HasMaxLength(450);
         builder.HasIndex(x => new { x.RoleId, x.PermissionId }).IsUnique();
-        builder.HasOne(x => x.Permission).WithMany().HasForeignKey(x => x.PermissionId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.Permission).WithMany().HasForeignKey(x => x.PermissionId).OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -19,7 +19,7 @@ public class FinancialTransactionConfiguration : IEntityTypeConfiguration<Financ
         builder.HasIndex(x => x.ProjectId);
         builder.HasIndex(x => x.Type);
         builder.HasIndex(x => x.TransactionDate);
-        builder.HasOne(x => x.Project).WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.Project).WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
         builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

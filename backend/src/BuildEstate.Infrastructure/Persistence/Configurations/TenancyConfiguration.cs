@@ -17,7 +17,7 @@ public class TenancyConfiguration : IEntityTypeConfiguration<Tenancy>
         builder.Property(x => x.Notes).HasMaxLength(4000);
         builder.HasIndex(x => x.PropertyUnitId);
         builder.HasIndex(x => x.Status);
-        builder.HasOne(x => x.PropertyUnit).WithMany().HasForeignKey(x => x.PropertyUnitId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.PropertyUnit).WithMany().HasForeignKey(x => x.PropertyUnitId).OnDelete(DeleteBehavior.Restrict);
         builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

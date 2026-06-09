@@ -25,7 +25,7 @@ public class OfferConfiguration : IEntityTypeConfiguration<Offer>
         builder.HasOne(x => x.Opportunity)
             .WithMany(o => o.Offers)
             .HasForeignKey(x => x.OpportunityId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasQueryFilter(x => !x.IsDeleted);
     }

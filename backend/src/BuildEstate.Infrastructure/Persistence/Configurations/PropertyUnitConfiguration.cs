@@ -19,7 +19,7 @@ public class PropertyUnitConfiguration : IEntityTypeConfiguration<PropertyUnit>
         builder.HasIndex(x => x.ProjectId);
         builder.HasIndex(x => x.Status);
         builder.HasIndex(x => x.UnitReference);
-        builder.HasOne(x => x.Project).WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.Project).WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
         builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }

@@ -22,7 +22,7 @@ public class MilestoneConfiguration : IEntityTypeConfiguration<Milestone>
         builder.HasOne(x => x.Project)
             .WithMany(p => p.Milestones)
             .HasForeignKey(x => x.ProjectId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasQueryFilter(x => !x.IsDeleted);
     }

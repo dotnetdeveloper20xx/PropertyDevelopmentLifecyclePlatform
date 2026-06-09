@@ -19,7 +19,7 @@ public class DesignPackageConfiguration : IEntityTypeConfiguration<DesignPackage
         builder.Property(x => x.Notes).HasMaxLength(4000);
         builder.HasIndex(x => x.ProjectId);
         builder.HasIndex(x => x.Status);
-        builder.HasOne(x => x.Project).WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(x => x.Project).WithMany().HasForeignKey(x => x.ProjectId).OnDelete(DeleteBehavior.Restrict);
         builder.HasQueryFilter(x => !x.IsDeleted);
     }
 }
